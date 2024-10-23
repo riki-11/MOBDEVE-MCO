@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'register.dart';
+import 'package:mobdeve_mco/pages/login.dart';
 
 
 class MyHomePage extends StatelessWidget {

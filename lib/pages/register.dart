@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/widgets/email_field_widget.dart';
 import 'package:passwordfield/passwordfield.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage>{
+class _RegisterPageState extends State<RegisterPage>{
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
 
@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage>{
         padding: const EdgeInsets.all(16),
         child: Flex(
           direction: Axis.vertical,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Form(
                 child: Flex(
@@ -98,13 +98,15 @@ class _LoginPageState extends State<LoginPage>{
                   ),
                 ),
                 onPressed: () {
+                  // TODO: Add register functionality
                 },
                 child: Text(
                   'Confirm',
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: Theme.of(context).colorScheme.onPrimary
                   )
-                ))
+                )
+            )
           ],
         )
 
