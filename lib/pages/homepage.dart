@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'register.dart';
 
-class MyHomePage extends StatefulWidget {
+
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -16,24 +18,6 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -42,7 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Welcome to UniGuide',
+              'Welcome to Uniguide',
               style: Theme.of(context).textTheme.displayMedium,
               textAlign: TextAlign.center,
             ),
@@ -54,7 +38,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
               ),
               onPressed: () {
-                print('Button pressed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage())
+                );
               },
               child: Text(
                   'Get started',
