@@ -13,7 +13,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text(
+          'Articles',
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
@@ -23,7 +26,42 @@ class _HomePageState extends State<HomePage> {
           )
         ]
       ),
-      body: const SizedBox(height: 16),
+      body: Flex(
+        direction: Axis.vertical,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SearchAnchor(
+              builder: (BuildContext context, SearchController controller) {
+                return SearchBar(
+                  controller: controller,
+                  padding: const WidgetStatePropertyAll<EdgeInsets>(
+                    EdgeInsets.symmetric(horizontal: 16.0)
+                  ),
+                  onTap: () {
+                    controller.openView();
+                  },
+                  onChanged: (_) {
+                    controller.openView();
+                  },
+                  leading: const Icon(Icons.search)
+                );
+              },
+              suggestionsBuilder: (BuildContext context, SearchController controller) {
+                return List<ListTile>.generate(5, (int index) {
+                  final String article = 'Article $index';
+                  return ListTile(
+                    title: Text(article),
+                    onTap: () {
+                      setState(() {
+                        controller.closeView(article);
+                      });
+                    }
+                  );
+                });
+              }
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Create',

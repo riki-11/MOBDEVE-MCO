@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         )
 
       ),
-      home: MyHomePage(title: 'UniGuide'),
+      home: const MyHomePage(title: 'UniGuide'),
     );
   }
 }
