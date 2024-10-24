@@ -32,11 +32,10 @@ class _EmailFieldWidgetState extends State<EmailFieldWidget> {
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
     decoration: InputDecoration(
-      hintText: 'Email',
+      hintText: 'Email Address',
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5)
       ),
-      prefixIcon: const Icon(Icons.mail_outline),
       suffixIcon: widget.controller.text.isEmpty
         ? Container(width: 0)
         : IconButton(
