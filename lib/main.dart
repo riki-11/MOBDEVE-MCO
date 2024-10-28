@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mobdeve_mco/pages/homepage.dart';
+import 'package:mobdeve_mco/pages/landing.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         )
 
       ),
-      home: MyHomePage(title: 'UniGuide'),
+      home: const MyHomePage(title: 'UniGuide'),
     );
   }
 }

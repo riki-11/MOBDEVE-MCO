@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:mobdeve_mco/pages/register.dart';
-import 'package:mobdeve_mco/widgets/email_field_widget.dart';
 import 'package:passwordfield/passwordfield.dart';
+
+import 'package:mobdeve_mco/pages/register.dart';
+import 'package:mobdeve_mco/pages/homepage.dart';
+import 'package:mobdeve_mco/widgets/email_field_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -60,10 +63,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 onPressed: () {
-                  // TODO: Add login functionality
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage())
+                  );
                 },
                 child: Text(
-                    'Confirm',
+                    'Login',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary
                     )

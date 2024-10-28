@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:mobdeve_mco/widgets/email_field_widget.dart';
 import 'package:passwordfield/passwordfield.dart';
+
+import 'package:mobdeve_mco/pages/homepage.dart';
+
+import 'package:mobdeve_mco/widgets/email_field_widget.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -25,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage>{
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register Account'),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -44,7 +48,6 @@ class _RegisterPageState extends State<RegisterPage>{
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5)
                         ),
-                        prefixIcon: const Icon(Icons.person_outline),
                         hintText: 'First Name'
                       )
                     ),
@@ -54,7 +57,6 @@ class _RegisterPageState extends State<RegisterPage>{
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5)
                             ),
-                            prefixIcon: const Icon(Icons.person_outline),
                             hintText: 'Last Name'
                         )
                     ),
@@ -98,7 +100,10 @@ class _RegisterPageState extends State<RegisterPage>{
                   ),
                 ),
                 onPressed: () {
-                  // TODO: Add register functionality
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage())
+                  );
                 },
                 child: Text(
                   'Confirm',
