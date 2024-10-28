@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/pages/write-article.dart';
 import 'package:mobdeve_mco/widgets/checkbox_options.dart';
 
 class CreateArticle extends StatefulWidget {
@@ -57,7 +58,11 @@ class _CreateArticleState extends State<CreateArticle> {
                   Theme.of(context).colorScheme.primary
                 )
               ),
-              onPressed: () {}, //TODO: Push Article Edit page
+              onPressed: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const WriteArticle())
+                );
+              }, 
               child: Text("Create",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   color: Theme.of(context).colorScheme.onPrimary
