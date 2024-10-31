@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,8 +29,7 @@ class _HomePageState extends State<HomePage> {
           )
         ]
       ),
-      body: Flex(
-        direction: Axis.vertical,
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SearchAnchor(
@@ -44,7 +45,13 @@ class _HomePageState extends State<HomePage> {
                   onChanged: (_) {
                     controller.openView();
                   },
-                  leading: const Icon(Icons.search)
+                  leading: const Icon(Icons.search),
+                  trailing: <Widget>[
+                    IconButton(
+                        onPressed: (){},
+                        icon: const Icon(Icons.filter_alt_outlined)
+                    ),
+                  ],
                 );
               },
               suggestionsBuilder: (BuildContext context, SearchController controller) {
@@ -59,10 +66,42 @@ class _HomePageState extends State<HomePage> {
                     }
                   );
                 });
-              }
-          )
+              },
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                ArticleContainerListView(
+                    authorName: "Enrique Lejano",
+                    title: "The Ultimate Guide to Computer Science at DLSU (Junior Year, Term 1)",
+                    college: "CCS",
+                    date: DateTime.now(),
+                ),
+                ArticleContainerListView(
+                    authorName: "Luis Roxas",
+                    title: "Why bouldering made me decide to shift from CCS to COB",
+                    college: "COB",
+                    date: DateTime.now(),
+                ),
+                ArticleContainerListView(
+                    authorName: "Patrick Leonida",
+                    title: "I'm a star that live sunder the ocean",
+                    college: "CCS",
+                    date: DateTime.now(),
+                ),
+                ArticleContainerListView(
+                    authorName: "Lebron James",
+                    title: "Why Basketball sucks and we should all play football (#stoptheads)",
+                    college: "GCOE",
+                    date: DateTime.now()
+                ),
+              ],
+            ),
+          ),
+
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
