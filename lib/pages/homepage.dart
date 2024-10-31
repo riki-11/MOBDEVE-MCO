@@ -68,17 +68,6 @@ class _HomePageState extends State<HomePage> {
               },
           ),
           Expanded(
-            // child: ListView.builder(
-            //   itemCount: 5,
-            //   itemBuilder: (context, index) {
-            //     return const ArticleContainerListView(
-            //       title: "yes",
-            //       author_name: "yes",
-            //       college: "yes",
-            //       date: "yes",
-            //     );
-            //   },
-            // ),
             child: ListView(
               children: [
                 ArticleContainerListView(
