@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -63,7 +64,12 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CreateArticle())
+          );
+        },
         tooltip: 'Create',
         child: const Icon(Icons.edit),
       ),
