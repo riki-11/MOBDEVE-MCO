@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
+// FIXME: Keyboard popup only shows when pressing right under the header.
+// FIXME: Text can overflow and user cannot scroll down to continue writing.
+
 class WriteArticle extends StatefulWidget {
   const WriteArticle({super.key});
 
