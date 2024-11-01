@@ -21,55 +21,58 @@ class ArticleContainerListView extends StatelessWidget {
         decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(color: Colors.black))
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(authorName),
-                  Expanded(child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  ),
-                  Card(
-                    color: Colors.black,    // ← And also this.
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5, right: 5),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(authorName),
+                    Expanded(
                       child: Text(
-                          college,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          )
+                        title,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
-                  ),
-                ],
+                    Card(
+                      color: Colors.black,    // ← And also this.
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: Text(
+                            college,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            )
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    color: Colors.purple,
-                    width: 100,
-                    height: 65,
-                  ), // replace with a placeholder image
-                  Text(date.toString()),
-                ],
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      color: Colors.purple,
+                      width: 100,
+                      height: 65,
+                    ), // replace with a placeholder image
+                    Text(date.toString()),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        )
       ),
       onTap: () {
         Navigator.push(
