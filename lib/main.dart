@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
 
 void main() {
+  // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
   runApp(const MyApp());
 }
 
