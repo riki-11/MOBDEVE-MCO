@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
 
 void main() {
+  // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
   runApp(const MyApp());
 }
 
@@ -19,7 +21,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
-
         // Default font family is Merriweather.
         fontFamily: GoogleFonts.merriweather().fontFamily,
         // Define specific font for body text
@@ -28,7 +29,6 @@ class MyApp extends StatelessWidget {
           bodyMedium: GoogleFonts.sourceSans3(),
           bodySmall: GoogleFonts.sourceSans3(),
         )
-
       ),
       home: const MyHomePage(title: 'UniGuide'),
     );
