@@ -25,11 +25,6 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.search_outlined),
-            tooltip: 'Search Article'
-          ),
-          IconButton(
-            onPressed: () {},
             icon: const Icon(Icons.notifications_outlined),
             tooltip: 'Notification'
           )
@@ -38,6 +33,45 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: SearchAnchor(
+              builder: (BuildContext context, SearchController controller) {
+                return SearchBar(
+                  controller: controller,
+                  padding: const WidgetStatePropertyAll<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 16.0)
+                  ),
+                  onTap: () {
+                    controller.openView();
+                  },
+                  onChanged: (_) {
+                    controller.openView();
+                  },
+                  leading: const Icon(Icons.search),
+                  trailing: <Widget>[
+                    IconButton(
+                        onPressed: (){},
+                        icon: const Icon(Icons.filter_alt_outlined)
+                    ),
+                  ],
+                );
+              },
+              suggestionsBuilder: (BuildContext context, SearchController controller) {
+                return List<ListTile>.generate(5, (int index) {
+                  final String article = 'Article $index';
+                  return ListTile(
+                      title: Text(article),
+                      onTap: () {
+                        setState(() {
+                          controller.closeView(article);
+                        });
+                      }
+                  );
+                });
+              },
+            ),
+          ),
           Expanded(
             child: StandardScrollbar(
               child: ListView(
@@ -70,8 +104,10 @@ class _HomePageState extends State<HomePage> {
               ),
             )
           ),
+
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

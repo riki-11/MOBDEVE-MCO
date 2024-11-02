@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
+
         // Default font family is Merriweather.
         fontFamily: GoogleFonts.merriweather().fontFamily,
         // Define specific font for body text
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: GoogleFonts.sourceSans3(),
           bodySmall: GoogleFonts.sourceSans3(),
         )
+
       ),
       home: const MyHomePage(title: 'UniGuide'),
     );
