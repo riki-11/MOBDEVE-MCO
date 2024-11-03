@@ -16,6 +16,21 @@ class _ViewArticleState extends State<ViewArticle> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DisappearingTopBar(
+          actions: [
+          IconButton(onPressed: (){}, icon: const Icon(Icons.ios_share_rounded)),
+          PopupMenuButton<String>(
+              icon: const Icon(Icons.more_horiz),
+              onSelected: (String value) {
+                print("Selected option: $value");
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'report-article',
+                  child: Text('Report article', style: Theme.of(context).textTheme.bodyMedium),
+                )
+              ]
+          ),
+        ],
           body: StandardScrollbar(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
