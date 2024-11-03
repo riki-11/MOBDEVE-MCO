@@ -3,7 +3,7 @@ import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
-
+import 'package:multi_dropdown/multi_dropdown.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,8 +13,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var items = [
+    DropdownItem(label: 'Nepal', value: 1),
+    DropdownItem(label: 'Test 2', value: 2)
+  ];
   @override
   Widget build(BuildContext context) {
+    final dropdownController = MultiSelectController<int>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -51,7 +57,9 @@ class _HomePageState extends State<HomePage> {
                   leading: const Icon(Icons.search),
                   trailing: <Widget>[
                     IconButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          dropdownController.openDropdown();
+                        },
                         icon: const Icon(Icons.filter_alt_outlined)
                     ),
                   ],
@@ -70,6 +78,20 @@ class _HomePageState extends State<HomePage> {
                   );
                 });
               },
+            ),
+          ),
+          MultiDropdown<int>(
+            items: items,
+            controller: dropdownController,
+            dropdownDecoration: const DropdownDecoration(
+              maxHeight: 200.0,
+            ),
+            fieldDecoration: FieldDecoration(
+              hintText: null,
+              border: null,
+              suffixIcon: null,
+              borderRadius: 0.0,
+              padding: EdgeInsets.all(5.0),
             ),
           ),
           Expanded(
