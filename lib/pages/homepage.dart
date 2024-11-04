@@ -29,10 +29,28 @@ class _HomePageState extends State<HomePage> {
         ),
         automaticallyImplyLeading: false,
         actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search_outlined),
-            tooltip: 'Search Article'
+          SearchAnchor(
+            builder: (BuildContext context, SearchController controller) {
+              return IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  controller.openView();
+                },
+              );
+            },
+            suggestionsBuilder: (BuildContext context, SearchController controller) {
+              return List<ListTile>.generate(5, (int index) {
+                final String article = 'Article $index';
+                return ListTile(
+                    title: Text(article),
+                    onTap: () {
+                      setState(() {
+                        controller.closeView(article);
+                      });
+                    }
+                );
+              });
+            },
           ),
           IconButton(
             onPressed: () {},
