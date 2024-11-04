@@ -31,6 +31,11 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             onPressed: () {},
+            icon: const Icon(Icons.search_outlined),
+            tooltip: 'Search Article'
+          ),
+          IconButton(
+            onPressed: () {},
             icon: const Icon(Icons.notifications_outlined),
             tooltip: 'Notification'
           )
@@ -39,54 +44,13 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
-            child: SearchAnchor(
-              builder: (BuildContext context, SearchController controller) {
-                return SearchBar(
-                  controller: controller,
-                  padding: const WidgetStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 16.0)
-                  ),
-                  onTap: () {
-                    controller.openView();
-                  },
-                  onChanged: (_) {
-                    controller.openView();
-                  },
-                  leading: const Icon(Icons.search),
-                  trailing: <Widget>[
-                    IconButton(
-                        onPressed: (){
-                          dropdownController.openDropdown();
-                        },
-                        icon: const Icon(Icons.filter_alt_outlined)
-                    ),
-                  ],
-                );
-              },
-              suggestionsBuilder: (BuildContext context, SearchController controller) {
-                return List<ListTile>.generate(5, (int index) {
-                  final String article = 'Article $index';
-                  return ListTile(
-                      title: Text(article),
-                      onTap: () {
-                        setState(() {
-                          controller.closeView(article);
-                        });
-                      }
-                  );
-                });
-              },
-            ),
-          ),
           MultiDropdown<int>(
             items: items,
             controller: dropdownController,
             dropdownDecoration: const DropdownDecoration(
               maxHeight: 200.0,
             ),
-            fieldDecoration: FieldDecoration(
+            fieldDecoration: const FieldDecoration(
               hintText: null,
               border: null,
               suffixIcon: null,
@@ -126,10 +90,8 @@ class _HomePageState extends State<HomePage> {
               ),
             )
           ),
-
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
