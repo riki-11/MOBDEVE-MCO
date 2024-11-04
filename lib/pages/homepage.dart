@@ -14,13 +14,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var items = [
-    DropdownItem(label: 'Nepal', value: 1),
-    DropdownItem(label: 'Test 2', value: 2)
+    DropdownItem(label: 'Thoughts', value: 1),
+    DropdownItem(label: 'What You\'ll Learn', value: 1),
+    DropdownItem(label: 'Projects', value: 1),
+    DropdownItem(label: 'Tips for doing well', value: 1),
+    DropdownItem(label: 'Links and Resources', value: 2)
   ];
   @override
   Widget build(BuildContext context) {
-    final dropdownController = MultiSelectController<int>();
-
+    final _dropdownController = MultiSelectController<int>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -64,16 +66,19 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           MultiDropdown<int>(
             items: items,
-            controller: dropdownController,
+            controller: _dropdownController,
             dropdownDecoration: const DropdownDecoration(
               maxHeight: 200.0,
             ),
             fieldDecoration: const FieldDecoration(
-              hintText: null,
-              border: null,
-              suffixIcon: null,
-              borderRadius: 0.0,
+              prefixIcon: Icon(Icons.filter_alt_outlined),
+              // border: null,
+              // suffixIcon: null,
+              // borderRadius: 0.0,
               padding: EdgeInsets.all(5.0),
+            ),
+            chipDecoration: ChipDecoration(
+              labelStyle: Theme.of(context).textTheme.labelSmall
             ),
           ),
           Expanded(
