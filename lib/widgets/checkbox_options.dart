@@ -26,7 +26,7 @@ class CheckboxOptions extends StatelessWidget {
               ),
               value: value,
               onChanged: onChange),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width * 0.875,
             child: const Divider(),
           )
