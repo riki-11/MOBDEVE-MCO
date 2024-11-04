@@ -3,6 +3,7 @@ import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
+import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -16,23 +17,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Articles',
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        automaticallyImplyLeading: false,
-        forceMaterialTransparency: true,
-        actions: <Widget>[
+      appBar: StandardAppBar(
+      title: 'Articles',
+        actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search_outlined),
-            tooltip: 'Search Article'
+              onPressed: () {},
+              icon: const Icon(Icons.search_outlined),
+              tooltip: 'Search Article'
           ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined),
-            tooltip: 'Notification'
+              onPressed: () {},
+              icon: const Icon(Icons.notifications_outlined),
+              tooltip: 'Notification'
           )
         ]
       ),
