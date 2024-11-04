@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/pages/view-article.dart';
 import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
@@ -46,9 +47,10 @@ class _HomePageState extends State<HomePage> {
                 return ListTile(
                     title: Text(article),
                     onTap: () {
-                      setState(() {
-                        controller.closeView(article);
-                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ViewArticle())
+                      );
                     }
                 );
               });
