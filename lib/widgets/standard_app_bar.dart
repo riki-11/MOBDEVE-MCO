@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class StandardAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
+  final PreferredSizeWidget? tabBar;
 
   const StandardAppBar({
     super.key,
     required this.title,
     this.actions,
+    this.tabBar
   });
 
   @override
@@ -23,9 +25,14 @@ class StandardAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       forceMaterialTransparency: true,
       actions: actions ?? [],
+      bottom: tabBar
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize {
+    // Dynamically incorporates the tab bar's height, if it exists.
+    final tabBarHeight = tabBar?.preferredSize.height ?? 0;
+    return Size.fromHeight(kToolbarHeight + tabBarHeight);
+  }
 }
