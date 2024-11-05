@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
+import 'package:mobdeve_mco/pages/your-library.dart';
 
 void main() {
   // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
@@ -15,7 +17,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UniGuide',
-
       // Defines the fonts, color themes, etc. for the entire app
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
@@ -29,7 +30,13 @@ class MyApp extends StatelessWidget {
           bodySmall: GoogleFonts.sourceSans3(),
         )
       ),
-      home: const MyHomePage(title: 'UniGuide'),
+      home: const HomePage(),
+      initialRoute: '/landing',
+      routes: {
+        '/landing': (context) => const LandingPage(title: 'UniGuide'),
+        '/home': (context) => const HomePage(),
+        '/library': (context) => const YourLibrary()
+      },
     );
   }
 }

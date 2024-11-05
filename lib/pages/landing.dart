@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/pages/login.dart';
 
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+class LandingPage extends StatelessWidget {
+  const LandingPage({super.key, required this.title});
 
   final String title;
 
