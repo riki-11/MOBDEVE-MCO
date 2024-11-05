@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
 
-class StandardBottomBar extends StatelessWidget {
+class StandardBottomBar extends StatefulWidget {
   const StandardBottomBar({super.key});
 
-  void onDestinationTapped(BuildContext context, int index) {
+  @override
+  State<StandardBottomBar> createState() => _StandardBottomBarState();
+}
+
+// FIXME: Ensure that the selected page index is maintained when switching over to a new page.
+class _StandardBottomBarState extends State<StandardBottomBar> {
+  int curPageIndex = 0;
+
+  void onDestinationTapped(int index) {
+    setState(() {
+      curPageIndex = index;
+    });
+
     switch (index) {
       case 0:
         Navigator.pushReplacementNamed(context, '/home');
         break;
       case 1:
         Navigator.pushReplacementNamed(context, '/library');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/conversations');
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(context, '/user-profile');
         break;
     }
   }
@@ -19,9 +37,10 @@ class StandardBottomBar extends StatelessWidget {
     return SizedBox(
         height: MediaQuery.sizeOf(context).height * .10,
         child: NavigationBar(
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           backgroundColor: Theme.of(context).colorScheme.surface,
-          onDestinationSelected: (int index) => onDestinationTapped(context, index),
+          selectedIndex: curPageIndex,
+          onDestinationSelected: onDestinationTapped,
           destinations: const <Widget>[
             NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
             NavigationDestination(icon: Icon(Icons.bookmarks_outlined), label: 'Library'),
