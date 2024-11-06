@@ -99,12 +99,26 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
-                    MultiSelectContainer(items: [
-                      MultiSelectCard(value: 'Projects', label: 'Projects'),
-                      MultiSelectCard(value: 'Tips for Doing Well', label: 'Tips for Doing Well'),
-                      MultiSelectCard(value: 'What You’ll Learn', label: 'What You’ll Learn'),
-                      MultiSelectCard(value: 'Thoughts and Experiences', label: 'Thoughts and Experiences'),
-                    ], onChange: (allSelectedItems, selectedItem) {}),
+                    MultiSelectContainer(
+                      itemsDecoration: MultiSelectDecorations(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        selectedDecoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          border: Border.all(color: Theme.of(context).primaryColor),
+                          borderRadius: BorderRadius.circular(20)
+                        )
+                      ),
+                      items: [
+                        MultiSelectCard(value: 'Projects', label: 'Projects'),
+                        MultiSelectCard(value: 'Tips for Doing Well', label: 'Tips for Doing Well'),
+                        MultiSelectCard(value: 'What You’ll Learn', label: 'What You’ll Learn'),
+                        MultiSelectCard(value: 'Thoughts and Experiences', label: 'Thoughts and Experiences'),
+                      ],
+                      onChange: (allSelectedItems, selectedItem) {}),
                   ],
                 ),
               ),
