@@ -14,8 +14,8 @@ class WriteArticle extends StatefulWidget {
 class _WriteArticleState extends State<WriteArticle> {
 
 
-  QuillController _controllerWYL = QuillController.basic();
-  QuillController _controllerThoughts = QuillController.basic();
+  final QuillController _controllerWYL = QuillController.basic();
+  final QuillController _controllerThoughts = QuillController.basic();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _WriteArticleState extends State<WriteArticle> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsets.only(bottom: 8.0),
               child: Text("What You'll Learn",
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.left,
@@ -84,7 +84,7 @@ class _WriteArticleState extends State<WriteArticle> {
 
 
             Padding(
-              padding: EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsets.only(bottom: 8.0),
               child: Text("Thoughts",
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.left,

@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         automaticallyImplyLeading: false,
+        forceMaterialTransparency: true,
         actions: <Widget>[
           IconButton(
               onPressed: (){
