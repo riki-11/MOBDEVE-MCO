@@ -4,7 +4,7 @@ import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
-import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,16 +14,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var items = [
-    DropdownItem(label: 'Thoughts', value: 1),
-    DropdownItem(label: 'What You\'ll Learn', value: 1),
-    DropdownItem(label: 'Projects', value: 1),
-    DropdownItem(label: 'Tips for doing well', value: 1),
-    DropdownItem(label: 'Links and Resources', value: 2)
-  ];
+  bool _isToggled = false;
   @override
   Widget build(BuildContext context) {
-    final _dropdownController = MultiSelectController<int>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -32,6 +25,14 @@ class _HomePageState extends State<HomePage> {
         ),
         automaticallyImplyLeading: false,
         actions: <Widget>[
+          IconButton(
+              onPressed: (){
+                setState(() {
+                  _isToggled = !_isToggled;
+                });
+              },
+              icon: const Icon(Icons.filter_alt_outlined)
+          ),
           SearchAnchor(
             builder: (BuildContext context, SearchController controller) {
               return IconButton(
@@ -55,6 +56,19 @@ class _HomePageState extends State<HomePage> {
                 );
               });
             },
+            viewBuilder: (suggestions){
+              return Column(
+                children: [
+
+                  Flexible(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: suggestions.toList(),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           IconButton(
             onPressed: () {},
@@ -66,21 +80,34 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          MultiDropdown<int>(
-            items: items,
-            controller: _dropdownController,
-            dropdownDecoration: const DropdownDecoration(
-              maxHeight: 200.0,
-            ),
-            fieldDecoration: const FieldDecoration(
-              prefixIcon: Icon(Icons.filter_alt_outlined),
-              // border: null,
-              // suffixIcon: null,
-              // borderRadius: 0.0,
-              padding: EdgeInsets.all(5.0),
-            ),
-            chipDecoration: ChipDecoration(
-              labelStyle: Theme.of(context).textTheme.labelSmall
+          Visibility(
+            visible: _isToggled,
+            child: Card(
+              elevation: 10,
+              margin: EdgeInsets.all(10),
+              color: Theme.of(context).cardColor,
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Text(
+                        "Tags",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                    MultiSelectContainer(items: [
+                      MultiSelectCard(value: 'Projects', label: 'Projects'),
+                      MultiSelectCard(value: 'Tips for Doing Well', label: 'Tips for Doing Well'),
+                      MultiSelectCard(value: 'What You’ll Learn', label: 'What You’ll Learn'),
+                      MultiSelectCard(value: 'Thoughts and Experiences', label: 'Thoughts and Experiences'),
+                    ], onChange: (allSelectedItems, selectedItem) {}),
+                  ],
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -113,8 +140,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-            )
+            ),
           ),
+
         ],
       ),
       floatingActionButton: FloatingActionButton(
