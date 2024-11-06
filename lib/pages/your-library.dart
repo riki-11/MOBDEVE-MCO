@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/widgets/library_tab_bar.dart';
+import 'package:mobdeve_mco/widgets/list_container_view.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 
@@ -30,7 +31,13 @@ class _YourLibraryState extends State<YourLibrary> {
         ),
         body: const TabBarView(
           children: <Widget>[
-            Center(child: Text("Your Lists")),
+            // Your Lists Tab
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListContainerView()
+              ],
+            ),
             Center(child: Text("Highlights")),
             Center(child: Text("Recently Read")),
           ]
