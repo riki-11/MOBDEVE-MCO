@@ -3,6 +3,7 @@ import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
+import 'package:mobdeve_mco/pages/view-course-list.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const CreateArticle())
+              MaterialPageRoute(builder: (context) => const ViewCourseList())
           );
         },
         tooltip: 'Create',
