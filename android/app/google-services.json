@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "559923216662",
+    "project_id": "uniguided",
+    "storage_bucket": "uniguided.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559923216662:android:b49998cabd7b550fa99037",
+        "android_client_info": {
+          "package_name": "com.mobdeve.mco.uniguided"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8jNDiZ3r8fmnIyUhrd-AwnuQ4pbbJLRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
