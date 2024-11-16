@@ -6,6 +6,8 @@ import 'package:mobdeve_mco/pages/landing.dart';
 import 'package:mobdeve_mco/pages/your-library.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> main() async {
   // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
@@ -14,6 +16,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
