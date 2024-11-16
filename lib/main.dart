@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
+import 'package:mobdeve_mco/pages/your-library.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+Future<void> main() async {
   // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
   runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,7 +26,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UniGuide',
-
       // Defines the fonts, color themes, etc. for the entire app
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
@@ -29,7 +39,13 @@ class MyApp extends StatelessWidget {
           bodySmall: GoogleFonts.sourceSans3(),
         )
       ),
-      home: const MyHomePage(title: 'UniGuide'),
+      home: const HomePage(),
+      initialRoute: '/landing',
+      routes: {
+        '/landing': (context) => const LandingPage(title: 'UniGuide'),
+        '/home': (context) => const HomePage(),
+        '/library': (context) => const YourLibrary()
+      },
     );
   }
 }
