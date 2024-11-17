@@ -14,8 +14,6 @@ class AuthenticationRepository extends GetxController{
 
   @override
   void onReady() {
-    // TODO: make sure this is ran on main.dart so we know if the user is logged in
-    // TODO: implement onReady
     Future.delayed(const Duration(seconds: 6));
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.userChanges());
