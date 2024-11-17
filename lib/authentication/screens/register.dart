@@ -130,14 +130,9 @@ class _RegisterPageState extends State<RegisterPage>{
                     final confirmPassword = controller.confirmPassword.text.trim();
 
                     if (password == confirmPassword){
-                      // TODO: Implement register user
                       SignUpController.instance.registerUser(
                           email,
                           password
-                      );
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const HomePage())
                       );
                     }
                     else {
