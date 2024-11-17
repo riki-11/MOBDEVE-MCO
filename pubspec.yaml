@@ -41,7 +41,6 @@ dependencies:
   flutter_quill: ^10.8.5
   flutter_multi_select_items: ^0.4.3
   multi_dropdown: ^3.0.1
-  flutter_multi_select_items: ^0.4.3
   firebase_core: ^3.8.0
   cloud_firestore: ^5.5.0
 

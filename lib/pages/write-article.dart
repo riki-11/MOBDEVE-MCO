@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:mobdeve_mco/widgets/header_plus_textbox.dart';
 
 // FIXME: Keyboard popup only shows when pressing right under the header.
 // FIXME: Text can overflow and user cannot scroll down to continue writing.
 
 class WriteArticle extends StatefulWidget {
-  const WriteArticle({super.key});
+  final Map<String, bool> categoryOptions;
+
+  const WriteArticle({super.key, required this.categoryOptions});
 
   @override
   State<WriteArticle> createState() => _WriteArticleState();
@@ -16,6 +19,7 @@ class _WriteArticleState extends State<WriteArticle> {
 
   final QuillController _controllerWYL = QuillController.basic();
   final QuillController _controllerThoughts = QuillController.basic();
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +47,17 @@ class _WriteArticleState extends State<WriteArticle> {
               PopupMenuItem<String>(
                 value: 'Option 1',
                 child: Text('Draft', style: Theme.of(context).textTheme.bodyMedium),
+                onTap: (){}, // TODO: Implement Draft function
               ),
               PopupMenuItem<String>(
                 value: 'Option 2',
                 child: Text('Add or Edit Topics', style: Theme.of(context).textTheme.bodyMedium),
+                onTap: (){}, // TODO: Implement add or Edit Topics
               ),
               PopupMenuItem<String>(
                 value: 'Option 3',
                 child: Text('Submit to Publication', style: Theme.of(context).textTheme.bodyMedium),
+                onTap: (){}, // TODO: Implement Submit to Publication
               ),
             ],
           ),
@@ -69,32 +76,11 @@ class _WriteArticleState extends State<WriteArticle> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text("What You'll Learn",
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.left,
-              ),
-            ),
-
-            QuillEditor.basic(
-              controller: _controllerWYL,
-              configurations: const QuillEditorConfigurations(),
-            ),
-
-
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text("Thoughts",
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.left,
-              ),
-            ),
-
-            QuillEditor.basic(
-              controller: _controllerThoughts,
-              configurations: const QuillEditorConfigurations(),
-            ),
+            // Build Header and textbox options of only the selected categories
+            // .where filters entries that are only true
+            ...widget.categoryOptions.entries.where((category) => category.value).map((category) {
+                return HeaderPlusTextbox(header: category.key);
+            })
           ],
         ),
       ),
