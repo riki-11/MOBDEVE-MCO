@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobdeve_mco/authentication/controllers/signup_controller.dart';
 
 import 'package:passwordfield/passwordfield.dart';
 
@@ -14,12 +16,17 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage>{
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
+  // final emailController = TextEditingController();
+  // final firstNameController = TextEditingController();
+  // final lastNameController = TextEditingController();
+  // final passwordController = TextEditingController();
+  // final confirmPasswordController = TextEditingController();
+  // final confirmPasswordController = TextEditingController();
+  final controller = Get.put(SignUpController());
   @override
   void dispose() {
-    emailController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -37,13 +44,21 @@ class _RegisterPageState extends State<RegisterPage>{
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Form(
+                key: _formKey,
                 child: Flex(
                   direction: Axis.vertical,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    EmailFieldWidget(controller: emailController),
+                    EmailFieldWidget(controller: controller.email),
                     const SizedBox(height: 16),
                     TextFormField(
+                        controller: controller.firstName,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your first name';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5)
@@ -53,6 +68,13 @@ class _RegisterPageState extends State<RegisterPage>{
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                        controller: controller.lastName,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your last name';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5)
@@ -63,6 +85,7 @@ class _RegisterPageState extends State<RegisterPage>{
                     // TODO: Reimplement password field ourselves because font is different
                     const SizedBox(height: 16),
                     PasswordField(
+                      controller: controller.password,
                       hintText: 'Password',
                       border: PasswordBorder(
                         border: OutlineInputBorder(
@@ -77,6 +100,7 @@ class _RegisterPageState extends State<RegisterPage>{
                     ),
                     const SizedBox(height: 16),
                     PasswordField(
+                      controller: controller.confirmPassword,
                       hintText: 'Confirm Password',
                       border: PasswordBorder(
                           border: OutlineInputBorder(
@@ -100,10 +124,28 @@ class _RegisterPageState extends State<RegisterPage>{
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage())
-                  );
+                  if(_formKey.currentState!.validate()){
+                    final email = controller.email.text.trim();
+                    final password = controller.password.text.trim();
+                    final confirmPassword = controller.confirmPassword.text.trim();
+
+                    if (password == confirmPassword){
+                      // TODO: Implement register user
+                      SignUpController.instance.registerUser(
+                          email,
+                          password
+                      );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HomePage())
+                      );
+                    }
+                    else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Passwords do not match')),
+                      );
+                    }
+                  }
                 },
                 child: Text(
                   'Confirm',
