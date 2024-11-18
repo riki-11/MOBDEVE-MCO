@@ -8,6 +8,7 @@ import 'package:mobdeve_mco/pages/landing.dart';
 import 'package:mobdeve_mco/pages/your-library.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'helpers/firestore_seeder.dart';
 
 Future<void> main() async {
   // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
@@ -15,6 +16,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthenticationRepository()));
+
+  // Uncomment this to add dummy data to Cloud Firestore
+  // FirestoreSeeder seeder = FirestoreSeeder();
+  // await seeder.seedData();
 }
 
 
