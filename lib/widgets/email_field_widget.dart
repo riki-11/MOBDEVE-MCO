@@ -46,7 +46,7 @@ class _EmailFieldWidgetState extends State<EmailFieldWidget> {
     keyboardType: TextInputType.emailAddress,
     autofillHints: const [AutofillHints.email],
     validator: (email) => email != null && !EmailValidator.validate(email)
-      ? 'Enter a valid emal'
+      ? 'Enter a valid email'
       : null
   );
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobdeve_mco/authentication/authentication_repository.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
 import 'package:mobdeve_mco/pages/your-library.dart';
@@ -14,7 +16,7 @@ Future<void> main() async {
   runApp(const MyApp());
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
+  ).then((value) => Get.put(AuthenticationRepository()));
 }
 
 
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'UniGuide',
       // Defines the fonts, color themes, etc. for the entire app
       theme: ThemeData(

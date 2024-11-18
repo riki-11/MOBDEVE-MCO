@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:mobdeve_mco/pages/login.dart';
+import 'package:mobdeve_mco/authentication/screens/login.dart';
 
 
 class LandingPage extends StatelessWidget {
