@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/articles/controller/article_controller.dart';
 import 'package:mobdeve_mco/pages/view-article.dart';
 import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
@@ -10,7 +11,11 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final ArticleController controller;
+  const HomePage({
+    super.key,
+    required this.controller,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -125,33 +130,17 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: StandardScrollbar(
-              child: ListView(
-                children: [
-                  ArticleContainerListView(
-                    authorName: "Enrique Lejano",
-                    title: "The Ultimate Guide to Computer Science at DLSU (Junior Year, Term 1)",
-                    college: "CCS",
-                    date: DateTime.now(),
-                  ),
-                  ArticleContainerListView(
-                    authorName: "Luis Roxas",
-                    title: "Why bouldering made me decide to shift from CCS to COB",
-                    college: "COB",
-                    date: DateTime.now(),
-                  ),
-                  ArticleContainerListView(
-                    authorName: "Patrick Leonida",
-                    title: "I'm a star that live sunder the ocean",
-                    college: "CCS",
-                    date: DateTime.now(),
-                  ),
-                  ArticleContainerListView(
-                      authorName: "Lebron James",
-                      title: "Why Basketball sucks and we should all play football (#stoptheads)",
-                      college: "GCOE",
-                      date: DateTime.now()
-                  ),
-                ],
+              child: ListView.builder(
+                itemCount: widget.controller.articles.length,
+                itemBuilder: (context, index) {
+                  final article = widget.controller.articles[index];
+                  return ArticleContainerListView(
+                    authorName: article.authorId, 
+                    title: article.title, 
+                    college: "FOO", 
+                    date: article.datePosted,
+                    );
+                },
               ),
             ),
           ),

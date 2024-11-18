@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobdeve_mco/articles/controller/article_controller.dart';
 import 'package:mobdeve_mco/authentication/authentication_repository.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
@@ -41,11 +42,15 @@ class MyApp extends StatelessWidget {
           bodySmall: GoogleFonts.sourceSans3(),
         )
       ),
-      home: const HomePage(),
+      home: HomePage(
+          controller: ArticleController(),
+        ),
       initialRoute: '/landing',
       routes: {
         '/landing': (context) => const LandingPage(title: 'UniGuide'),
-        '/home': (context) => const HomePage(),
+        '/home': (context) => HomePage(
+            controller: ArticleController(),
+          ),
         '/library': (context) => const YourLibrary()
       },
     );
