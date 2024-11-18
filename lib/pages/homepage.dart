@@ -11,9 +11,11 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 
 
 class HomePage extends StatefulWidget {
+  final int pageIndex;
   final ArticleController controller;
   const HomePage({
     super.key,
+    this.pageIndex = 0,
     required this.controller,
   });
 
@@ -23,6 +25,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isToggled = false;
+  late int pageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    pageIndex = widget.pageIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,7 +167,7 @@ class _HomePageState extends State<HomePage> {
         tooltip: 'Create',
         child: const Icon(Icons.edit),
       ),
-      bottomNavigationBar: const StandardBottomBar()
+      bottomNavigationBar: StandardBottomBar(curPageIndex: pageIndex)
     );
   }
 }

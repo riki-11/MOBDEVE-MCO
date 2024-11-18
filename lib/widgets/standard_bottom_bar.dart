@@ -1,33 +1,54 @@
 import 'package:flutter/material.dart';
 
 class StandardBottomBar extends StatefulWidget {
-  const StandardBottomBar({super.key});
+  final int curPageIndex;
+  const StandardBottomBar({required this.curPageIndex, super.key});
 
   @override
   State<StandardBottomBar> createState() => _StandardBottomBarState();
 }
 
-// FIXME: Ensure that the selected page index is maintained when switching over to a new page.
 class _StandardBottomBarState extends State<StandardBottomBar> {
-  int curPageIndex = 0;
+  late int curPageIndex;
+
+  @override initState() {
+    super.initState();
+    curPageIndex = widget.curPageIndex;
+  }
 
   void onDestinationTapped(int index) {
+
+    // TODO: Add page refreshing functionality here.
+    if (curPageIndex == index) return;
+
     setState(() {
       curPageIndex = index;
     });
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(
+          context,
+          '/home',
+        );
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, '/library');
+        Navigator.pushReplacementNamed(
+          context,
+          '/library',
+        );
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/conversations');
+        Navigator.pushReplacementNamed(
+          context,
+          '/conversations',
+        );
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, '/user-profile');
+        Navigator.pushReplacementNamed(
+          context,
+          '/user-profile',
+        );
         break;
     }
   }

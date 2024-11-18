@@ -49,9 +49,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/landing': (context) => const LandingPage(title: 'UniGuide'),
         '/home': (context) => HomePage(
+            pageIndex: 0,
             controller: ArticleController(),
           ),
-        '/library': (context) => const YourLibrary()
+        '/library': (context) => const YourLibrary(pageIndex: 1)
       },
     );
   }
