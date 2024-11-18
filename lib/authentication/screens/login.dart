@@ -1,7 +1,10 @@
 import 'package:flutter/gestures.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/authentication/controllers/login_controller.dart';
 
 import 'package:passwordfield/passwordfield.dart';
+
 
 import 'package:mobdeve_mco/authentication/screens/register.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
@@ -15,12 +18,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final controller = Get.put(LoginController());
 
   @override
   void dispose() {
-    emailController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -42,9 +45,10 @@ class _LoginPageState extends State<LoginPage> {
                 direction: Axis.vertical,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  EmailFieldWidget(controller: emailController),
+                  EmailFieldWidget(controller: controller.email),
                   const SizedBox(height: 16),
                   PasswordField(
+                    controller: controller.password,
                     hintText: 'Password',
                     border: PasswordBorder(
                       border: OutlineInputBorder(
@@ -63,11 +67,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage())
-                  );
-                },
+                  if(_formKey.currentState!.validate()){
+                    LoginController.instance.loginUser(
+                      controller.email.text.trim(), 
+                      controller.password.text.trim());
+                  }
+               },
                 child: Text(
                     'Login',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
