@@ -41,12 +41,12 @@ class MyApp extends StatelessWidget {
           bodySmall: GoogleFonts.sourceSans3(),
         )
       ),
-      home: const HomePage(),
+      home: const HomePage(pageIndex: 0),
       initialRoute: '/landing',
       routes: {
         '/landing': (context) => const LandingPage(title: 'UniGuide'),
-        '/home': (context) => const HomePage(),
-        '/library': (context) => const YourLibrary()
+        '/home': (context) => const HomePage(pageIndex: 0),
+        '/library': (context) => const YourLibrary(pageIndex: 1)
       },
     );
   }
