@@ -38,16 +38,11 @@ class _StandardBottomBarState extends State<StandardBottomBar> {
           '/library',
         );
         break;
+      // TODO: insert Conversations page when ready.
       case 2:
         Navigator.pushReplacementNamed(
           context,
-          '/conversations',
-        );
-        break;
-      case 3:
-        Navigator.pushReplacementNamed(
-          context,
-          '/user-profile',
+          '/my-profile',
         );
         break;
     }
@@ -65,7 +60,8 @@ class _StandardBottomBarState extends State<StandardBottomBar> {
           destinations: const <Widget>[
             NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
             NavigationDestination(icon: Icon(Icons.bookmarks_outlined), label: 'Library'),
-            NavigationDestination(icon: Icon(Icons.chat_bubble_outline_rounded), label: 'Conversations'),
+            // TODO: Add implementation for this page.
+            // NavigationDestination(icon: Icon(Icons.chat_bubble_outline_rounded), label: 'Conversations'),
             NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'Profile'),
           ],
         )
