@@ -46,7 +46,7 @@ class AuthenticationRepository extends GetxController{
       firebaseUser.value != null ? Get.offAll(() => HomePage(controller: ArticleController())) : Get.to(() => const LoginPage());
 
     } on FirebaseAuthException catch(e){
-      print("ERROR");
+      print("ERROR $e");
     } catch(_){
       print("ERROR");
     }
