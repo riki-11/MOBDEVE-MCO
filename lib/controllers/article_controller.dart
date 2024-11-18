@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobdeve_mco/articles/model/article.dart';
+import 'package:mobdeve_mco/models/article.dart';
 
 class ArticleController extends GetxController{
   static ArticleController get instance => Get.find();

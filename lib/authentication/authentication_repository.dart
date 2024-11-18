@@ -1,8 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:mobdeve_mco/articles/controller/article_controller.dart';
-import 'package:mobdeve_mco/authentication/screens/login.dart';
+import 'package:mobdeve_mco/controllers/article_controller.dart';
+import 'package:mobdeve_mco/pages/login.dart';
 import 'package:mobdeve_mco/authentication/signup_email_password_failure.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';

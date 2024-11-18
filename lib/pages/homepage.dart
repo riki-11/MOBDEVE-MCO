@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobdeve_mco/articles/controller/article_controller.dart';
+import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/pages/view-article.dart';
 import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
