@@ -92,53 +92,8 @@ class _HomePageState extends State<HomePage> {
           )
         ]
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Stack(
         children: <Widget>[
-          Visibility(
-            visible: _isToggled,
-            child: Card(
-              elevation: 10,
-              margin: EdgeInsets.all(10),
-              color: Theme.of(context).cardColor,
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "Tags",
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ),
-                    MultiSelectContainer(
-                      itemsDecoration: MultiSelectDecorations(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          border: Border.all(color: Colors.black12),
-                          borderRadius: BorderRadius.circular(20)
-                        ),
-                        selectedDecoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          border: Border.all(color: Theme.of(context).primaryColor),
-                          borderRadius: BorderRadius.circular(20)
-                        )
-                      ),
-                      items: [
-                        MultiSelectCard(value: 'Projects', label: 'Projects'),
-                        MultiSelectCard(value: 'Tips for Doing Well', label: 'Tips for Doing Well'),
-                        MultiSelectCard(value: 'What You’ll Learn', label: 'What You’ll Learn'),
-                        MultiSelectCard(value: 'Thoughts and Experiences', label: 'Thoughts and Experiences'),
-                      ],
-                      onChange: (allSelectedItems, selectedItem) {}),
-                  ],
-                ),
-              ),
-            ),
-          ),
           Expanded(
             child: StandardScrollbar(
               child: GetX<ArticleController>(
@@ -161,7 +116,54 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          Visibility(
+            visible: _isToggled,
+            child: SizedBox(
+              height: MediaQuery.sizeOf(context).height * .25,
+              width: double.infinity,
+              child: Card(
+                elevation: 10,
+                color: Theme.of(context).cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Text(
+                          "Tags",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                      MultiSelectContainer(
+                          itemsDecoration: MultiSelectDecorations(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  border: Border.all(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(20)
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  border: Border.all(color: Theme.of(context).primaryColor),
+                                  borderRadius: BorderRadius.circular(20)
+                              )
+                          ),
+                          items: [
+                            MultiSelectCard(value: 'Projects', label: 'Projects'),
+                            MultiSelectCard(value: 'Tips for Doing Well', label: 'Tips for Doing Well'),
+                            MultiSelectCard(value: 'What You’ll Learn', label: 'What You’ll Learn'),
+                            MultiSelectCard(value: 'Thoughts and Experiences', label: 'Thoughts and Experiences'),
+                          ],
+                          onChange: (allSelectedItems, selectedItem) {}),
+                    ],
+                  ),
+                ),
+              ),
+            ),
 
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
