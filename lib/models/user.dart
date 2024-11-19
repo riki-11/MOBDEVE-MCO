@@ -5,7 +5,7 @@ class User {
   late String email;
   late String firstName;
   late String lastName;
-  late String colleges;
+  late List<String> colleges;
   late List<String> programs;
   late List<String> lists;
 
@@ -23,8 +23,11 @@ class User {
     email = documentSnapshot['email'];
     firstName = documentSnapshot['firstName'];
     lastName = documentSnapshot['lastName'];
-    colleges = documentSnapshot['colleges'];
+    colleges = List<String>.from(documentSnapshot['colleges']);
     programs = List<String>.from(documentSnapshot['programs']);
-    lists = List<String>.from(documentSnapshot['lists']);
+  }
+
+  String getName() {
+    return "$firstName $lastName";
   }
 }

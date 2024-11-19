@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobdeve_mco/models/program.dart';
+import 'package:mobdeve_mco/models/user.dart';
 import '../constants/global_consts.dart';
 import 'college.dart';
 
 class Article {
   String? id;
-  late String authorId;
+  late User author;
   late String title;
   late String content;
   late Timestamp datePosted;
@@ -13,7 +14,7 @@ class Article {
   late Program program;
   Article({
     required this.id,
-    required this.authorId,
+    required this.author,
     required this.title,
     required this.content,
     required this.datePosted,
@@ -23,17 +24,11 @@ class Article {
 
   Article.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot}) {
     id = documentSnapshot.id;
-    authorId = documentSnapshot[AUTHOR_ID];
     title = documentSnapshot[TITLE];
     content = documentSnapshot[CONTENT];
     datePosted = documentSnapshot[DATE_POSTED];
-    college =
-        College(id: documentSnapshot[COLLEGE], name: "FOO", acronym: "FOO");
-    program = Program(
-        id: documentSnapshot[PROGRAM],
-        name: 'FOO',
-        acronym: 'FOO',
-        college: college);
+    // collegeId = documentSnapshot[COLLEGE];
+    // program = documentSnapshot[PROGRAM];
   }
   // factory Article.fromFirestore(Map<String, dynamic> data) {
   //   return Article(

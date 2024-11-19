@@ -18,8 +18,5 @@ class Program {
     id = documentSnapshot.id;
     name = documentSnapshot['name'];
     acronym = documentSnapshot['acronym'];
-    college = College.fromDocumentSnapshot(
-      documentSnapshot: documentSnapshot['college'],
-    );
   }
 }
