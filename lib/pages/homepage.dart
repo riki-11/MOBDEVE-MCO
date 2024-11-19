@@ -94,26 +94,26 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Stack(
         children: <Widget>[
-          Expanded(
-            child: StandardScrollbar(
-              child: GetX<ArticleController>(
-                init: Get.put<ArticleController>(ArticleController()),
-                builder: (ArticleController articleController) {
-                  return ListView.builder(
-                    itemCount: articleController.articles.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      print("ARTICLE PRINT: ${articleController.articles[index].content}");
-                      final articleModel = articleController.articles[index];
-                      return ArticleContainerListView(
-                          authorName: articleModel.author.getName(),
-                          title: articleModel.title,
-                          college: articleModel.college.acronym,
-                          date: articleModel.datePosted.toDate()
-                      );
-                    }
-                  );
-                }
-              ),
+          StandardScrollbar(
+            child: GetX<ArticleController>(
+              init: Get.put<ArticleController>(ArticleController()),
+              builder: (ArticleController articleController) {
+                return ListView.builder(
+                  itemCount: articleController.articles.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    print("ARTICLE PRINT: ${articleController.articles[index].content}");
+                    final articleModel = articleController.articles[index];
+                    return ArticleContainerListView(
+                        authorName: articleModel.author.getName(),
+                        title: articleModel.title,
+                        college: articleModel.college.acronym,
+                        date: articleModel.datePosted.toDate(),
+                        articleId: articleModel.id ?? "-1",
+                        content: articleModel.content,
+                    );
+                  }
+                );
+              }
             ),
           ),
           Visibility(
