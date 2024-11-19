@@ -8,43 +8,43 @@ class FirestoreSeeder {
     try {
       // Add colleges
       DocumentReference engCollegeRef = await firestore.collection('colleges').add({
-        'name': 'College of Engineering',
-        'acronym': 'COE',
+        'name': 'Gokungwei College of Engineering',
+        'acronym': 'GCOE',
       });
 
       DocumentReference artsCollegeRef = await firestore.collection('colleges').add({
-        'name': 'College of Arts',
-        'acronym': 'CA',
+        'name': 'College of Liberal Arts',
+        'acronym': 'CLA',
       });
 
       // Add programs
       DocumentReference csProgramRef = await firestore.collection('programs').add({
-        'name': 'Computer Science',
-        'acronym': 'CS',
+        'name': 'Bachelor of Computer Science, Major in Software Technology',
+        'acronym': 'BSCS-ST',
         'college': engCollegeRef,
       });
 
       DocumentReference gdProgramRef = await firestore.collection('programs').add({
-        'name': 'Graphic Design',
-        'acronym': 'GD',
+        'name': 'Bachelor of Arts in Political Science',
+        'acronym': 'AB-PLS',
         'college': artsCollegeRef,
       });
 
       // Add users
       DocumentReference user1Ref = await firestore.collection('users').add({
         'email': 'john.doe@example.com',
-        'username': 'john_doe',
-        'colleges': engCollegeRef.id,
-        'programs': csProgramRef.id,
-        'lists': 'Todo List 1',
+        'firstName': 'John',
+        'lastName': 'Doe',
+        'colleges': [engCollegeRef.id],
+        'programs': [csProgramRef.id],
       });
 
       DocumentReference user2Ref = await firestore.collection('users').add({
         'email': 'jane.doe@example.com',
-        'username': 'jane_doe',
-        'colleges': artsCollegeRef.id,
-        'programs': gdProgramRef.id,
-        'lists': 'Todo List 2',
+        'firstName': 'Jane',
+        'lastName': 'Doe',
+        'colleges': [artsCollegeRef.id],
+        'programs': [gdProgramRef.id],
       });
 
       // Add articles
