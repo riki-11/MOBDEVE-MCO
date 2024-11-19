@@ -1,13 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mobdeve_mco/authentication/controllers/login_controller.dart';
-
+import 'package:mobdeve_mco/controllers/login_controller.dart';
+import 'package:mobdeve_mco/pages/register.dart';
 import 'package:passwordfield/passwordfield.dart';
-
-
-import 'package:mobdeve_mco/authentication/screens/register.dart';
-import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/widgets/email_field_widget.dart';
 
 class LoginPage extends StatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
-import 'package:mobdeve_mco/pages/write-article.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 class ViewCourseList extends StatefulWidget {
   const ViewCourseList({super.key});

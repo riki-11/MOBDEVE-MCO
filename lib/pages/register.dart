@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobdeve_mco/authentication/controllers/signup_controller.dart';
 
 import 'package:passwordfield/passwordfield.dart';
 
-import 'package:mobdeve_mco/pages/homepage.dart';
 
 import 'package:mobdeve_mco/widgets/email_field_widget.dart';
+
+import '../../controllers/signup_controller.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
