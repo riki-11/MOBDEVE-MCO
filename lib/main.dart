@@ -12,11 +12,11 @@ import 'helpers/firestore_seeder.dart';
 
 Future<void> main() async {
   // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthenticationRepository()));
-
+  runApp(const MyApp());
   // Uncomment this to add dummy data to Cloud Firestore
   // FirestoreSeeder seeder = FirestoreSeeder();
   // await seeder.seedData();
