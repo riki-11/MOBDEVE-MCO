@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/controllers/reaction_controller.dart';
 
 class ArticleBottomBar extends StatefulWidget {
-  const ArticleBottomBar({super.key});
+  final String articleId;
+  const ArticleBottomBar({super.key, required this.articleId});
 
   @override
   State<ArticleBottomBar> createState() => _ArticleBottomBarState();
@@ -10,7 +12,6 @@ class ArticleBottomBar extends StatefulWidget {
 class _ArticleBottomBarState extends State<ArticleBottomBar> {
   bool isLiked = false;
   bool isBookmarked = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,10 +31,19 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
                   // TODO: Change this to darker shade of red
                   color: isLiked ? Colors.red : null,
                 ),
-                onPressed: () {
-                  setState(() {
-                    isLiked = !isLiked;
-                  });
+                onPressed: () async {
+                  bool isLikedNow = await ReactionController.isArticleLikedByUser(widget.articleId);
+                  if (isLikedNow) {
+                    await ReactionController.unlikePost(widget.articleId);
+                    setState(() {
+                      isLiked = false;
+                    });
+                  } else {
+                    await ReactionController.likePost(widget.articleId);
+                    setState(() {
+                      isLiked = true;
+                    });
+                  }
                 },
               ),
               const Text("153"),
@@ -63,4 +73,22 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
       ),
     );
   }
+  @override
+  void initState() {
+    super.initState();
+    _initializeState();
+  }
+  _initializeState() async {
+    // Simulate an asynchronous operation, like fetching data or checking a condition
+    bool liked = await ReactionController.isArticleLikedByUser(widget.articleId);
+
+    // Update state after the async operation is done
+    setState(() {
+      isLiked = liked;
+    });
+    print("THE ARTICLE ${widget.articleId} isLiked: $isLiked");
+  }
+  // Future<void> initLikes() async {
+  //   isLiked = await ReactionController.isArticleLikedByUser()
+  // }
 }

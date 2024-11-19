@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
-import 'package:mobdeve_mco/controllers/college_controller.dart';
 import 'package:mobdeve_mco/pages/view-article.dart';
 import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
@@ -104,6 +103,7 @@ class _HomePageState extends State<HomePage> {
                     print("ARTICLE PRINT: ${articleController.articles[index].content}");
                     final articleModel = articleController.articles[index];
                     return ArticleContainerListView(
+                        authorId: articleModel.author.id ?? "-1",
                         authorName: articleModel.author.getName(),
                         title: articleModel.title,
                         college: articleModel.college.acronym,

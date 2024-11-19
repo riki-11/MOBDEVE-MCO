@@ -1,8 +1,8 @@
 class Reaction {
   // User who liked
-  String userId;
+  late String userId;
   // Article he liked
-  String articleId;
+  late String articleId;
 
   Reaction({required this.userId, required this.articleId});
 }

@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/pages/view-article.dart';
 import 'package:intl/intl.dart';
-
-import '../controllers/article_controller.dart';
-
 class ArticleContainerListView extends StatelessWidget {
   final String authorName;
   final String title;
   final String college;
   final DateTime date;
   final String articleId;
+  final String authorId;
   final String content;
 
   const ArticleContainerListView(
@@ -20,7 +18,7 @@ class ArticleContainerListView extends StatelessWidget {
       required this.college,
       required this.date,
       required this.articleId,
-        required this.content});
+        required this.content, required this.authorId});
 
   @override
   Widget build(BuildContext context) {

@@ -110,7 +110,9 @@ class _ViewArticleState extends State<ViewArticle> {
       bottomNavigationBar: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         height: showBottomBar ? kBottomNavigationBarHeight : 0.0,
-        child: const ArticleBottomBar(),
+        child: ArticleBottomBar(
+          articleId: data['articleId'],
+        ),
       )
     );
   }
