@@ -76,7 +76,8 @@ class ArticleContainerListView extends StatelessWidget {
                       ),
                       // replace with a placeholder image
                       // TODO: Replace this with the date from the database.
-                      Text(DateFormat.yMMMd().format(DateTime.now())),
+                      // Text(DateFormat.yMMMd().format(DateTime.now())),
+                      Text(DateFormat.yMMMd().format(date)),
                     ],
                   ),
                 )
