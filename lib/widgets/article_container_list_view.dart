@@ -19,8 +19,8 @@ class ArticleContainerListView extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         height: 170.0,
         // color: Colors.green,
-        decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.black))
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1.0))
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
