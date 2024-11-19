@@ -85,11 +85,6 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications_outlined),
-              tooltip: 'Notification'
-          )
         ]
       ),
       body: Stack(
