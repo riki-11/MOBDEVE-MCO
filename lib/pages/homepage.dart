@@ -26,7 +26,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isToggled = false;
-  late int pageIndex = 0;
+  late int pageIndex;
 
   @override
   void initState() {
@@ -162,7 +162,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-
           ),
         ],
       ),

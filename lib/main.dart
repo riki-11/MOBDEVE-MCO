@@ -5,6 +5,7 @@ import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/authentication/authentication_repository.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
+import 'package:mobdeve_mco/pages/my-profile.dart';
 import 'package:mobdeve_mco/pages/your-library.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -51,10 +52,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/landing': (context) => const LandingPage(title: 'UniGuide'),
         '/home': (context) => HomePage(
-            pageIndex: 0,
-            controller: ArticleController(),
-          ),
-        '/library': (context) => const YourLibrary(pageIndex: 1)
+           pageIndex: 0,
+           controller: ArticleController(),
+        ),
+        '/library': (context) => const YourLibrary(pageIndex: 1),
+        // TODO: insert Conversations page when ready.
+        '/my-profile': (context) => const MyProfilePage(pageIndex: 2)
       },
     );
   }
