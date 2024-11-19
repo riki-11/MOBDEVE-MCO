@@ -1,7 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:mobdeve_mco/authentication/screens/login.dart';
+import 'package:mobdeve_mco/controllers/article_controller.dart';
+import 'package:mobdeve_mco/pages/login.dart';
 import 'package:mobdeve_mco/authentication/signup_email_password_failure.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
@@ -22,7 +23,7 @@ class AuthenticationRepository extends GetxController{
 
   _setInitialScreen(User? user) {
     user == null ? Get.offAll(() => const LandingPage(title: "UniGuide"))
-        : Get.offAll(() => const HomePage());
+        : Get.offAll(() => HomePage(controller: ArticleController()));
   }
   
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
@@ -42,10 +43,10 @@ class AuthenticationRepository extends GetxController{
   Future<void> loginUserWithEmailAndPassword(String email, String password) async {
     try{
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      firebaseUser.value != null ? Get.offAll(() => const HomePage()) : Get.to(() => const LoginPage());
+      firebaseUser.value != null ? Get.offAll(() => HomePage(controller: ArticleController())) : Get.to(() => const LoginPage());
 
     } on FirebaseAuthException catch(e){
-      print("ERROR");
+      print("ERROR $e");
     } catch(_){
       print("ERROR");
     }
