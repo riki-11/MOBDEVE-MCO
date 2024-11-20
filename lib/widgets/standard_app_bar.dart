@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class StandardAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
+  final bool automaticallyImplyleading;
   final PreferredSizeWidget? tabBar;
 
   const StandardAppBar({
     super.key,
     required this.title,
+    this.automaticallyImplyleading = false,
     this.actions,
     this.tabBar
   });
@@ -22,7 +24,7 @@ class StandardAppBar extends StatelessWidget implements PreferredSizeWidget {
             .textTheme
             .headlineLarge,
       ),
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: automaticallyImplyleading,
       forceMaterialTransparency: true,
       actions: actions ?? [],
       bottom: tabBar
