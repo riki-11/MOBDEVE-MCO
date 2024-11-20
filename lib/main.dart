@@ -13,7 +13,7 @@ import 'firebase_options.dart';
 import 'helpers/firestore_seeder.dart';
 
 Future<void> main() async {
-  //debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
+  // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
