@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/controllers/college_controller.dart';
 import 'package:mobdeve_mco/controllers/program_controller.dart';
+import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/models/program.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
+import 'package:mobdeve_mco/pages/homepage.dart';
 class ViewCourseList extends StatefulWidget {
   const ViewCourseList({super.key});
 
@@ -12,6 +15,7 @@ class ViewCourseList extends StatefulWidget {
   State<ViewCourseList> createState() => _ViewCourseListState();
 }
 
+final MultiSelectController<String?> _controller = MultiSelectController();
 class _ViewCourseListState extends State<ViewCourseList> {
   // Currently, these are placeholder values
   Map<String, int> collegeOptions = {
@@ -54,6 +58,7 @@ class _ViewCourseListState extends State<ViewCourseList> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return MultiSelectContainer(
+                      controller: _controller,
                         maxSelectableCount: 1,
                         itemsDecoration: MultiSelectDecorations(
                             decoration: BoxDecoration(
@@ -90,8 +95,22 @@ class _ViewCourseListState extends State<ViewCourseList> {
                             Colors.black
                         )
                     ),
-                    onPressed: () {
-                      Get.to(CreateArticle());
+                    onPressed: () async {
+                      var collegeId = data['collegeId'];
+                      var selectedProgramId = _controller.getSelectedItems().single;
+
+                      if (collegeId != null && selectedProgramId != null) {
+                        try {
+                          await UserController.instance.assignCollegeAndProgram(collegeId, selectedProgramId);
+                          // Navigate to the Home Page
+                          Get.offAll(() => HomePage(controller: ArticleController()));
+                        } catch (e) {
+                          print("Error assigning college and program: $e");
+                          Get.snackbar("Error", "Failed to update your details. Please try again.");
+                        }
+                      } else {
+                        Get.snackbar("Selection Required", "Please select a program before proceeding.");
+                      }
                     },
                     child: Text("Next",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
