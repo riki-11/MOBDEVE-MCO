@@ -20,6 +20,10 @@ class _SocialMediaSharingPopupState extends State<SocialMediaSharingPopup> {
     // {'icon': Icons.linkedin, 'name': 'LinkedIn', 'color': Colors.blue[700]},
   ];
 
+  // Social Media Sharing plugin functionality.
+
+
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

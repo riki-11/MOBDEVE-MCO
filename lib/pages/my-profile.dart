@@ -4,10 +4,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:mobdeve_mco/pages/settings.dart';
 import 'package:mobdeve_mco/widgets/profile_content_dropdown.dart';
-import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/profile_header.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../controllers/article_controller.dart';
 import '../widgets/article_container_list_view.dart';
@@ -78,14 +78,22 @@ class _MyProfilePageState extends State<MyProfilePage>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: TextButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const SocialMediaSharingPopup();
-                            }
+                      // TODO: Add sharing functionality.
+                      onPressed: () async {
+                        final result = await Share.share(
+                          'Check out my profile at https://medium.com/@rikilejano'
                         );
-                      }, // TODO: Add sharing functionality.
+
+                        if (result.status == ShareResultStatus.success) {
+                          print('Thank you for sharing my website!');
+                        }
+                        // showModalBottomSheet(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       return const SocialMediaSharingPopup();
+                        //     }
+                        // );
+                      },
                       style: TextButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
                       ),
