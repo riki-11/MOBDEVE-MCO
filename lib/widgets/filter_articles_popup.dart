@@ -147,7 +147,7 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                // Close popup after applying.
+                                // TODO: Apply filter and close popup.
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: Theme.of(context).colorScheme.primary,
