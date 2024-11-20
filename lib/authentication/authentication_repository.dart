@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
+import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/pages/login.dart';
 import 'package:mobdeve_mco/authentication/signup_email_password_failure.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
@@ -26,16 +27,17 @@ class AuthenticationRepository extends GetxController{
         : Get.offAll(() => HomePage(controller: ArticleController()));
   }
   
-  Future<void> createUserWithEmailAndPassword(String email, String password) async {
+  Future<void> createUserWithEmailAndPassword(String email, String password, String firstName, String lastName) async {
     try{
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await UserController.instance.registerUserToFirestore(email, firstName, lastName);
     } on FirebaseAuthException catch(e){
       final ex = SignUpWithEmailAndPasswordFailure(e.code);
       print('FIREBASE AUTH EXCEPTION - ${ex.message}');
       throw ex;
-    } catch(_){
+    } catch(e){
       const ex = SignUpWithEmailAndPasswordFailure();
-      print('EXCEPTION - ${ex.message}');
+      print('EXCEPTION - ${e}');
       throw ex;
     }
   }
