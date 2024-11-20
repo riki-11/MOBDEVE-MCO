@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 import 'package:mobdeve_mco/widgets/article_bottom_bar.dart';
+import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
 import 'package:mobdeve_mco/widgets/disappearing_top_bar.dart';
 
@@ -34,7 +35,16 @@ class _ViewArticleState extends State<ViewArticle> {
     return Scaffold(
       body: DisappearingTopBar(
           actions: [
-            IconButton(onPressed: (){}, icon: const Icon(Icons.ios_share_rounded)),
+            IconButton(
+                onPressed: (){
+                  showModalBottomSheet(
+                    context: context,
+                    builder:  (BuildContext context) {
+                      return const SocialMediaSharingPopup();
+                    }
+                  );
+                },
+                icon: const Icon(Icons.ios_share_rounded)),
             PopupMenuButton<String>(
                 icon: const Icon(Icons.more_horiz),
                 onSelected: (String value) {

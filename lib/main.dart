@@ -17,7 +17,7 @@ import 'firebase_options.dart';
 import 'helpers/firestore_seeder.dart';
 
 Future<void> main() async {
-  //debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
+  // debugPaintSizeEnabled = true; // Uncomment and restart app if you want to see page and widget layouts
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -38,38 +38,39 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'UniGuide',
-      // Defines the fonts, color themes, etc. for the entire app
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
-        // Default font family is Merriweather.
         fontFamily: GoogleFonts.merriweather().fontFamily,
-        // Define specific font for body text
         textTheme: TextTheme(
           bodyLarge: GoogleFonts.sourceSans3(),
           bodyMedium: GoogleFonts.sourceSans3(),
           bodySmall: GoogleFonts.sourceSans3(),
-        )
+        ),
       ),
-      home: HomePage(
-          controller: ArticleController(),
-        ),
       initialRoute: '/landing',
-      routes: {
-        '/landing': (context) => const LandingPage(title: 'UniGuide'),
-        '/home': (context) => HomePage(
-           pageIndex: 0,
-           controller: ArticleController(),
+      getPages: [
+        GetPage(
+          name: '/landing',
+          page: () => const LandingPage(title: 'UniGuide'),
         ),
-        '/library': (context) => const YourLibrary(pageIndex: 1),
-        // TODO: insert Conversations page when ready.
-        '/my-profile': (context) => const MyProfilePage(pageIndex: 2)
-      },
+        GetPage(
+          name: '/home',
+          page: () => HomePage(pageIndex: 0, controller: ArticleController()),
+        ),
+        GetPage(
+          name: '/library',
+          page: () => const YourLibrary(pageIndex: 1),
+        ),
+        GetPage(
+          name: '/my-profile',
+          page: () => const MyProfilePage(pageIndex: 2),
+        ),
+      ],
     );
   }
 }
