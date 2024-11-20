@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
+import 'package:mobdeve_mco/controllers/login_controller.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/pages/login.dart';
 import 'package:mobdeve_mco/authentication/signup_email_password_failure.dart';
@@ -25,6 +26,7 @@ class AuthenticationRepository extends GetxController{
   _setInitialScreen(User? user) {
     user == null ? Get.offAll(() => const LandingPage(title: "UniGuide"))
         : Get.offAll(() => HomePage(controller: ArticleController()));
+    LoginController.instance.checkUserInCloudFirestore();
   }
   
   Future<void> createUserWithEmailAndPassword(String email, String password, String firstName, String lastName) async {
