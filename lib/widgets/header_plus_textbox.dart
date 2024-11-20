@@ -18,8 +18,10 @@ class HeaderPlusTextbox extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(header,
-          style: Theme.of(context).textTheme.headlineMedium,
+        Text(header.toUpperCase(),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold
+          ),
           textAlign: TextAlign.left,
         ),
 

@@ -1,6 +1,18 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:get/get.dart';
+import 'package:mobdeve_mco/constants/global_consts.dart';
+import 'package:mobdeve_mco/models/article.dart';
+import 'package:mobdeve_mco/models/college.dart';
+import 'package:mobdeve_mco/models/program.dart';
+import 'package:mobdeve_mco/models/user.dart';
+import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/widgets/header_plus_textbox.dart';
+
+import '../controllers/article_controller.dart';
 
 class WriteArticle extends StatefulWidget {
   final Map<String, bool> categoryOptions;
@@ -12,6 +24,9 @@ class WriteArticle extends StatefulWidget {
 }
 
 class _WriteArticleState extends State<WriteArticle> {
+  // TextController for title
+  final TextEditingController _titleController = TextEditingController();
+
   // Initialize Quill controllers
   final QuillController _controllerWYL = QuillController.basic();
   final QuillController _controllerThoughts = QuillController.basic();
@@ -89,6 +104,20 @@ class _WriteArticleState extends State<WriteArticle> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextField(
+                  textAlign: TextAlign.center,
+                  controller: _titleController,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  decoration: InputDecoration(
+                    border: InputBorder.none, // Removes the border
+                    hintText: '<TITLE HERE>', // Adds hint text
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                ),
+
                 // Build Header and textbox options of only the selected categories
                 // .where filters entries that are only true
                 ...widget.categoryOptions.entries.where((category) => category.value).map((category) {
@@ -104,6 +133,9 @@ class _WriteArticleState extends State<WriteArticle> {
 
   @override
   void dispose() {
+
+    // Dispose Controllers
+    _titleController.dispose();
     _controllerTips.dispose();
     _controllerLnR.dispose();
     _controllerProjects.dispose();
