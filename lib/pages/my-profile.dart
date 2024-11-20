@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+import 'package:mobdeve_mco/controllers/login_controller.dart';
 import 'package:mobdeve_mco/widgets/profile_content_dropdown.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
@@ -44,7 +45,9 @@ class _MyProfilePageState extends State<MyProfilePage>
         title: 'My Profile',
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              LoginController.instance.logoutUser();
+            },
             icon: const Icon(Icons.settings),
           )
         ],
