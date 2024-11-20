@@ -3,14 +3,14 @@ import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/college_controller.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
-class ViewCourseList extends StatefulWidget {
-  const ViewCourseList({super.key});
+class ViewCollegeList extends StatefulWidget {
+  const ViewCollegeList({super.key});
 
   @override
-  State<ViewCourseList> createState() => _ViewCourseListState();
+  State<ViewCollegeList> createState() => _ViewCollegeListState();
 }
 
-class _ViewCourseListState extends State<ViewCourseList> {
+class _ViewCollegeListState extends State<ViewCollegeList> {
   // Currently, these are placeholder values
   Map<String, int> collegeOptions = {
     "CCS":  1,

@@ -22,7 +22,7 @@ class UserController extends GetxController{
       if (userSnapshot.exists && userSnapshot.data() != null) {
         var data = userSnapshot.data() as Map<String, dynamic>;
         var isAssignedCollege = data.containsKey('college') && data['college'] != null;
-        if (!isAssignedCollege) Get.offAll(const ViewCourseList());
+        if (!isAssignedCollege) Get.offAll(const ViewCollegeList());
       }
   }
   Future <void> registerUserToFirestore(String email, String firstName, String lastName) async {

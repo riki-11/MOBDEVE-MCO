@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ViewCourseList())
+              MaterialPageRoute(builder: (context) => const ViewCollegeList())
           );
         },
         tooltip: 'Create',
