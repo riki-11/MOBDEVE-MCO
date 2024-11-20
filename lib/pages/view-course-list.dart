@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/college_controller.dart';
+import 'package:mobdeve_mco/controllers/program_controller.dart';
+import 'package:mobdeve_mco/models/program.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
-import 'package:mobdeve_mco/pages/view-course-list.dart';
-class ViewCollegeList extends StatefulWidget {
-  const ViewCollegeList({super.key});
+class ViewCourseList extends StatefulWidget {
+  const ViewCourseList({super.key});
 
   @override
-  State<ViewCollegeList> createState() => _ViewCollegeListState();
+  State<ViewCourseList> createState() => _ViewCourseListState();
 }
 
-class _ViewCollegeListState extends State<ViewCollegeList> {
+class _ViewCourseListState extends State<ViewCourseList> {
   // Currently, these are placeholder values
   Map<String, int> collegeOptions = {
     "CCS":  1,
@@ -23,13 +24,13 @@ class _ViewCollegeListState extends State<ViewCollegeList> {
     "COS":  7,
     "SOE":  8,
   };
-  final MultiSelectController<String?> _controller = MultiSelectController();
 
+  var data = Get.arguments;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Choose your College"),
+        title: const Text("Choose your Program"),
       ),
       body: Center(
         child: Padding(
@@ -39,19 +40,20 @@ class _ViewCollegeListState extends State<ViewCollegeList> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: Text("What is your college?",
+                  child: Text("What is your course?",
                     style: Theme.of(context).textTheme.headlineLarge,
                     textAlign: TextAlign.center,
                   ),
                 ),
-                GetX<CollegeController>(
-                  init: Get.put<CollegeController>(CollegeController()),
-                  builder: (CollegeController controller) {
-                    if (controller.collegeList.value.isEmpty) {
+                GetX<ProgramController>(
+                  init: Get.put<ProgramController>(ProgramController()),
+                  builder: (ProgramController controller) {
+                    var collegeId = data['collegeId'];
+                    var programsUnderCollege = controller.getProgramListFromCollege(collegeId);
+                    if (programsUnderCollege.isEmpty) {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return MultiSelectContainer(
-                        controller: _controller,
                         maxSelectableCount: 1,
                         itemsDecoration: MultiSelectDecorations(
                             decoration: BoxDecoration(
@@ -66,8 +68,8 @@ class _ViewCollegeListState extends State<ViewCollegeList> {
                             )
                         ),
                         items: [
-                          ...controller.collegeList.value.map((college){
-                            print("COLLEGE: ${college.acronym}");
+                          ...programsUnderCollege.map((college){
+                            print("PROGRAM: ${college.acronym}");
                             return MultiSelectCard(
                               value: college.id,
                               label: college.acronym,
@@ -82,17 +84,14 @@ class _ViewCollegeListState extends State<ViewCollegeList> {
                 },),
                 const Padding(padding: EdgeInsets.only(bottom: 20.0)),
 
-                ElevatedButton( // TODO: disable button if _controller.getSelectedItems().isEmpty
+                ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(
                             Colors.black
                         )
                     ),
                     onPressed: () {
-                      Get.to(
-                          ViewCourseList(),
-                          arguments: {'collegeId': _controller.getSelectedItems().single}
-                      );
+                      Get.to(CreateArticle());
                     },
                     child: Text("Next",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
