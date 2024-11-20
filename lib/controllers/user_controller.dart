@@ -5,6 +5,13 @@ import 'package:mobdeve_mco/constants/global_consts.dart';
 class UserController extends GetxController{
   static UserController get instance => Get.find();
 
+  Future<User> getUserData(String userId) async{
+
+    final userSnapshot = await firebaseFirestore.collection('users').doc(userId).get();
+    final user = User.fromDocumentSnapshot(documentSnapshot: userSnapshot);
+    return user;
+
+  }
   Future <void> registerUserToFirestore(String email, String firstName, String lastName) async {
     // TODO: Add college and course here
     await firebaseFirestore.collection('users').doc(auth.currentUser!.uid).set({
@@ -14,6 +21,5 @@ class UserController extends GetxController{
     });
   }
 
-  // TODO: implement user being generated if they're not found, then reset?
 
 }
