@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 
 import 'package:mobdeve_mco/widgets/article_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
@@ -15,7 +18,7 @@ class ViewArticle extends StatefulWidget {
 
 class _ViewArticleState extends State<ViewArticle> {
   bool showBottomBar = true;
-
+  var data = Get.arguments;
   void onScroll(Notification notif) {
     if (notif is UserScrollNotification) {
       final scrollDirection = notif.direction;
@@ -67,12 +70,11 @@ class _ViewArticleState extends State<ViewArticle> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "How I got a 4.0 in CSOPESY",
+                        data['title'],
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        // TODO: Fade this text a bit.
                           "This is a short description of the article",
                           style: Theme.of(context).textTheme.bodyLarge
                       ),
@@ -84,15 +86,14 @@ class _ViewArticleState extends State<ViewArticle> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                // TODO: Bold the name.
-                                  "Enrique Lejano",
+                                  data['authorName'],
                                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     fontWeight: FontWeight.w600
                                   )
                               ),
                               Text(
-                                  "OCT 11, 2024",
-                                  style: Theme.of(context).textTheme.bodySmall
+                                DateFormat.yMMMd().format(data['date']),
+                                style: Theme.of(context).textTheme.bodySmall
                               ),
                             ],
                           ),
@@ -106,7 +107,8 @@ class _ViewArticleState extends State<ViewArticle> {
                       ),
                       const SizedBox(height: 32.0), // Spacing between title and content
                       Text(
-                        "This is the body of the article. " * 1000,
+                        // TODO: Add proper styling that is similar to article-write later
+                        data['content'],
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -118,7 +120,9 @@ class _ViewArticleState extends State<ViewArticle> {
       bottomNavigationBar: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         height: showBottomBar ? kBottomNavigationBarHeight : 0.0,
-        child: const ArticleBottomBar(),
+        child: ArticleBottomBar(
+          articleId: data['articleId'],
+        ),
       )
     );
   }

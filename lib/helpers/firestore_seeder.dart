@@ -21,13 +21,13 @@ class FirestoreSeeder {
       DocumentReference csProgramRef = await firestore.collection('programs').add({
         'name': 'Bachelor of Computer Science, Major in Software Technology',
         'acronym': 'BSCS-ST',
-        'college': engCollegeRef,
+        'college': engCollegeRef.id,
       });
 
       DocumentReference gdProgramRef = await firestore.collection('programs').add({
         'name': 'Bachelor of Arts in Political Science',
         'acronym': 'AB-PLS',
-        'college': artsCollegeRef,
+        'college': artsCollegeRef.id,
       });
 
       // Add users
@@ -64,17 +64,6 @@ class FirestoreSeeder {
         'datePosted': DateTime.now(),
         'college': artsCollegeRef.id,
         'program': gdProgramRef.id,
-      });
-
-      // Add reactions
-      await firestore.collection('reactions').add({
-        'userId': user1Ref.id,
-        'articleId': article2Ref.id,
-      });
-
-      await firestore.collection('reactions').add({
-        'userId': user2Ref.id,
-        'articleId': article1Ref.id,
       });
 
       print('Dummy data seeded successfully.');

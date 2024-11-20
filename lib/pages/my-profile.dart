@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+import 'package:mobdeve_mco/controllers/login_controller.dart';
 import 'package:mobdeve_mco/pages/settings.dart';
 import 'package:mobdeve_mco/widgets/profile_content_dropdown.dart';
 import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
@@ -47,6 +48,7 @@ class _MyProfilePageState extends State<MyProfilePage>
         actions: [
           IconButton(
             onPressed: () {
+              // TODO: Use LoginController.instance.logoutUser(); ?
               showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) {
@@ -156,10 +158,13 @@ class _MyProfilePageState extends State<MyProfilePage>
                             print("ARTICLE PRINT: ${articleController.articles[index].content}");
                             final articleModel = articleController.articles[index];
                             return ArticleContainerListView(
+                                authorId: articleModel.author.id ?? "-1",
                                 authorName: articleModel.author.getName(),
                                 title: articleModel.title,
                                 college: articleModel.college.acronym,
-                                date: articleModel.datePosted.toDate()
+                                date: articleModel.datePosted.toDate(),
+                                articleId: articleModel.id ?? "-1",
+                                content: articleModel.content,
                             );
                           }
                       );

@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/controllers/college_controller.dart';
-import 'package:mobdeve_mco/controllers/program_controller.dart';
-import 'package:mobdeve_mco/controllers/user_controller.dart';
-import 'package:mobdeve_mco/models/program.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
-import 'package:mobdeve_mco/pages/homepage.dart';
-class ViewCourseList extends StatefulWidget {
-  const ViewCourseList({super.key});
+import 'package:mobdeve_mco/pages/view-course-list.dart';
+class ViewCollegeList extends StatefulWidget {
+  const ViewCollegeList({super.key});
 
   @override
-  State<ViewCourseList> createState() => _ViewCourseListState();
+  State<ViewCollegeList> createState() => _ViewCollegeListState();
 }
 
-final MultiSelectController<String?> _controller = MultiSelectController();
-class _ViewCourseListState extends State<ViewCourseList> {
+class _ViewCollegeListState extends State<ViewCollegeList> {
   // Currently, these are placeholder values
   Map<String, int> collegeOptions = {
     "CCS":  1,
@@ -28,13 +23,13 @@ class _ViewCourseListState extends State<ViewCourseList> {
     "COS":  7,
     "SOE":  8,
   };
+  final MultiSelectController<String?> _controller = MultiSelectController();
 
-  var data = Get.arguments;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Choose your Program"),
+        title: const Text("Choose your College"),
       ),
       body: Center(
         child: Padding(
@@ -44,21 +39,19 @@ class _ViewCourseListState extends State<ViewCourseList> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: Text("What is your course?",
+                  child: Text("What is your college?",
                     style: Theme.of(context).textTheme.headlineLarge,
                     textAlign: TextAlign.center,
                   ),
                 ),
-                GetX<ProgramController>(
-                  init: Get.put<ProgramController>(ProgramController()),
-                  builder: (ProgramController controller) {
-                    var collegeId = data['collegeId'];
-                    var programsUnderCollege = controller.getProgramListFromCollege(collegeId);
-                    if (programsUnderCollege.isEmpty) {
+                GetX<CollegeController>(
+                  init: Get.put<CollegeController>(CollegeController()),
+                  builder: (CollegeController controller) {
+                    if (controller.collegeList.value.isEmpty) {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return MultiSelectContainer(
-                      controller: _controller,
+                        controller: _controller,
                         maxSelectableCount: 1,
                         itemsDecoration: MultiSelectDecorations(
                             decoration: BoxDecoration(
@@ -73,8 +66,8 @@ class _ViewCourseListState extends State<ViewCourseList> {
                             )
                         ),
                         items: [
-                          ...programsUnderCollege.map((college){
-                            print("PROGRAM: ${college.acronym}");
+                          ...controller.collegeList.value.map((college){
+                            print("COLLEGE: ${college.acronym}");
                             return MultiSelectCard(
                               value: college.id,
                               label: college.acronym,
@@ -89,28 +82,17 @@ class _ViewCourseListState extends State<ViewCourseList> {
                 },),
                 const Padding(padding: EdgeInsets.only(bottom: 20.0)),
 
-                ElevatedButton(
+                ElevatedButton( // TODO: disable button if _controller.getSelectedItems().isEmpty
                     style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(
                             Colors.black
                         )
                     ),
-                    onPressed: () async {
-                      var collegeId = data['collegeId'];
-                      var selectedProgramId = _controller.getSelectedItems().single;
-
-                      if (collegeId != null && selectedProgramId != null) {
-                        try {
-                          await UserController.instance.assignCollegeAndProgram(collegeId, selectedProgramId);
-                          // Navigate to the Home Page
-                          Get.offAll(() => HomePage(controller: ArticleController()));
-                        } catch (e) {
-                          print("Error assigning college and program: $e");
-                          Get.snackbar("Error", "Failed to update your details. Please try again.");
-                        }
-                      } else {
-                        Get.snackbar("Selection Required", "Please select a program before proceeding.");
-                      }
+                    onPressed: () {
+                      Get.to(
+                          ViewCourseList(),
+                          arguments: {'collegeId': _controller.getSelectedItems().single}
+                      );
                     },
                     child: Text("Next",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(

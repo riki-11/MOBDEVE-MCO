@@ -4,11 +4,15 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/authentication/authentication_repository.dart';
+import 'package:mobdeve_mco/controllers/college_controller.dart';
+import 'package:mobdeve_mco/controllers/login_controller.dart';
+import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
 import 'package:mobdeve_mco/pages/my-profile.dart';
 import 'package:mobdeve_mco/pages/your-library.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'controllers/program_controller.dart';
 import 'firebase_options.dart';
 import 'helpers/firestore_seeder.dart';
 
@@ -18,6 +22,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthenticationRepository()));
+
+  Get.put(LoginController());
+  Get.put(UserController());
+  Get.put(CollegeController());
+  Get.put(ProgramController());
+
   runApp(const MyApp());
   // Uncomment this to add dummy data to Cloud Firestore
   // FirestoreSeeder seeder = FirestoreSeeder();

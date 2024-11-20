@@ -128,11 +128,15 @@ class _RegisterPageState extends State<RegisterPage>{
                     final email = controller.email.text.trim();
                     final password = controller.password.text.trim();
                     final confirmPassword = controller.confirmPassword.text.trim();
+                    final firstName = controller.firstName.text.trim();
+                    final lastName = controller.lastName.text.trim();
 
                     if (password == confirmPassword){
                       SignUpController.instance.registerUser(
                           email,
-                          password
+                          password,
+                          firstName,
+                          lastName,
                       );
                     }
                     else {

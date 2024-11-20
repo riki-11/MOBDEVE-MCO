@@ -12,7 +12,7 @@ class SignUpController extends GetxController {
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
 
-  void registerUser(String email, String password){
-    AuthenticationRepository.instance.createUserWithEmailAndPassword(email, password);
+  void registerUser(String email, String password, String firstName, String lastName){
+    AuthenticationRepository.instance.createUserWithEmailAndPassword(email, password, firstName, lastName);
   }
 }
