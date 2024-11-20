@@ -10,6 +10,7 @@ class CreateArticle extends StatefulWidget {
 }
 
 class _CreateArticleState extends State<CreateArticle> {
+  // Map of article categories
   Map<String, bool> categoryOptions = {
     "Thoughts":           false,
     "What you'll learn":  false,
@@ -18,12 +19,27 @@ class _CreateArticleState extends State<CreateArticle> {
     "Links and Resources":false
   };
 
+  // Variable for error handling
+  bool isEmpty = false;
+
   void handleOptionChange(String option, bool? newValue) {
     setState(() {
       categoryOptions[option] = newValue ?? false;
+      hideError();
     });
   }
 
+  void showError() {
+    setState(() {
+      isEmpty = true;
+    });
+  }
+
+  void hideError() {
+    setState(() {
+      isEmpty = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +66,9 @@ class _CreateArticleState extends State<CreateArticle> {
                   onChange: (newValue) => handleOptionChange(option, newValue));
             }),
 
+            // TODO: Fix error message
+            Visibility(visible: isEmpty,child: Text("Error")),
+
             const Padding(padding: EdgeInsets.only(bottom: 20.0)),
 
             ElevatedButton(
@@ -59,8 +78,13 @@ class _CreateArticleState extends State<CreateArticle> {
                 )
               ),
               onPressed: () {
+                if (!categoryOptions.values.contains(true)) { // If no option is picked
+                  showError();
+                  return;
+                }
+
                 Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const WriteArticle())
+                  MaterialPageRoute(builder: (context) => WriteArticle(categoryOptions: categoryOptions,))
                 );
               }, 
               child: Text("Create",

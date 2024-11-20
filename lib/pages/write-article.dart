@@ -1,21 +1,57 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:get/get.dart';
+import 'package:mobdeve_mco/constants/global_consts.dart';
+import 'package:mobdeve_mco/models/article.dart';
+import 'package:mobdeve_mco/models/college.dart';
+import 'package:mobdeve_mco/models/program.dart';
+import 'package:mobdeve_mco/models/user.dart';
+import 'package:mobdeve_mco/pages/homepage.dart';
+import 'package:mobdeve_mco/widgets/header_plus_textbox.dart';
 
-// FIXME: Keyboard popup only shows when pressing right under the header.
-// FIXME: Text can overflow and user cannot scroll down to continue writing.
+import '../controllers/article_controller.dart';
 
 class WriteArticle extends StatefulWidget {
-  const WriteArticle({super.key});
+  final Map<String, bool> categoryOptions;
+
+  const WriteArticle({super.key, required this.categoryOptions});
 
   @override
   State<WriteArticle> createState() => _WriteArticleState();
 }
 
 class _WriteArticleState extends State<WriteArticle> {
+  // TextController for title
+  final TextEditingController _titleController = TextEditingController();
 
-
+  // Initialize Quill controllers
   final QuillController _controllerWYL = QuillController.basic();
   final QuillController _controllerThoughts = QuillController.basic();
+  final QuillController _controllerProjects = QuillController.basic();
+  final QuillController _controllerTips = QuillController.basic();
+  final QuillController _controllerLnR = QuillController.basic();
+
+  // Category-QuillController map
+  late Map<String, QuillController> controlMap;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Configure controller map
+    controlMap = {
+      "Thoughts":           _controllerThoughts,
+      "What you'll learn":  _controllerWYL,
+      "Projects":           _controllerProjects,
+      "Tips for doing well":_controllerTips,
+      "Links and Resources":_controllerLnR
+    };
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +59,10 @@ class _WriteArticleState extends State<WriteArticle> {
       appBar: AppBar(
         leadingWidth: 75,
         leading: TextButton(
-            onPressed: () { Navigator.pop(context); },
+            onPressed: () {
+              Navigator.pop(context);
+              // TODO: Make pop-up ensuring user wants to delete draft
+              },
             child: Text("Cancel",
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Colors.grey.shade700
@@ -42,16 +81,9 @@ class _WriteArticleState extends State<WriteArticle> {
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
                 value: 'Option 1',
-                child: Text('Draft', style: Theme.of(context).textTheme.bodyMedium),
-              ),
-              PopupMenuItem<String>(
-                value: 'Option 2',
-                child: Text('Add or Edit Topics', style: Theme.of(context).textTheme.bodyMedium),
-              ),
-              PopupMenuItem<String>(
-                value: 'Option 3',
-                child: Text('Submit to Publication', style: Theme.of(context).textTheme.bodyMedium),
-              ),
+                child: Text('Save as draft', style: Theme.of(context).textTheme.bodyMedium),
+                onTap: (){}, // TODO: Implement Draft function
+              )
             ],
           ),
           TextButton(
@@ -64,38 +96,36 @@ class _WriteArticleState extends State<WriteArticle> {
         ],
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text("What You'll Learn",
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.left,
-              ),
-            ),
+      // TODO: Add edit text for title
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  textAlign: TextAlign.center,
+                  controller: _titleController,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  decoration: InputDecoration(
+                    border: InputBorder.none, // Removes the border
+                    hintText: '<TITLE HERE>', // Adds hint text
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                ),
 
-            QuillEditor.basic(
-              controller: _controllerWYL,
-              configurations: const QuillEditorConfigurations(),
+                // Build Header and textbox options of only the selected categories
+                // .where filters entries that are only true
+                ...widget.categoryOptions.entries.where((category) => category.value).map((category) {
+                    return HeaderPlusTextbox(header: category.key, controller: controlMap[category.key],);
+                })
+              ],
             ),
-
-
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text("Thoughts",
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.left,
-              ),
-            ),
-
-            QuillEditor.basic(
-              controller: _controllerThoughts,
-              configurations: const QuillEditorConfigurations(),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -103,7 +133,15 @@ class _WriteArticleState extends State<WriteArticle> {
 
   @override
   void dispose() {
-    FocusNode().dispose();
+
+    // Dispose Controllers
+    _titleController.dispose();
+    _controllerTips.dispose();
+    _controllerLnR.dispose();
+    _controllerProjects.dispose();
+    _controllerWYL.dispose();
+    _controllerThoughts.dispose();
+
     super.dispose();
   }
 }
