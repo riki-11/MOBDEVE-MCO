@@ -21,6 +21,18 @@ class CollegeController extends GetxController {
     });
   }
 
+  // Future<void> fetchColleges() async{
+  //   var collegeList = await getCollegeList();
+  //   this.collegeList.value = collegeList;
+  // }
+  //
+  // Future<List<College>> getCollegeList() async{
+  //   var querySnapshot = await firebaseFirestore.collection(COLLEGE).get();
+  //   List<College> collegeList = querySnapshot.docs.map((college) {
+  //     return College.fromDocumentSnapshot(documentSnapshot: college);
+  //   }).toList();
+  //   return collegeList;
+  // }
   static Future<College> getCollege(String documentId) async {
     DocumentSnapshot college = await collegeCollection.doc(documentId).get();
     return College.fromDocumentSnapshot(documentSnapshot: college);

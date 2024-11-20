@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobdeve_mco/controllers/college_controller.dart';
 import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 class ViewCourseList extends StatefulWidget {
@@ -40,31 +42,41 @@ class _ViewCourseListState extends State<ViewCourseList> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                MultiSelectContainer(
-                    maxSelectableCount: 1,
-                    itemsDecoration: MultiSelectDecorations(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: Border.all(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(20),
+                GetX<CollegeController>(
+                  init: Get.put<CollegeController>(CollegeController()),
+                  builder: (CollegeController controller) {
+                    if (controller.collegeList.value.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return MultiSelectContainer(
+                        maxSelectableCount: 1,
+                        itemsDecoration: MultiSelectDecorations(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              border: Border.all(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            selectedDecoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                border: Border.all(color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(20)
+                            )
                         ),
-                        selectedDecoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            border: Border.all(color: Theme.of(context).primaryColor),
-                            borderRadius: BorderRadius.circular(20)
-                        )
-                    ),
-                    items: [
-                      ...collegeOptions.keys.map((option) {
-                        return MultiSelectCard(
-                          value: collegeOptions[option]!,
-                          label: option,
-                        );
-                      })
-                    ],
-                    onChange: (allSelectedItems, selectedItem) {}
-                ),
+                        items: [
+                          ...controller.collegeList.value.map((college){
+                            print("COLLEGE: ${college.acronym}");
+                            return MultiSelectCard(
+                              value: college.id,
+                              label: college.acronym,
+                            );
+                          })
+                        ],
+                        onChange: (allSelectedItems, selectedItem){
+                          print("Selected College: $selectedItem");
+                        }
+                    );
 
+                },),
                 const Padding(padding: EdgeInsets.only(bottom: 20.0)),
 
                 ElevatedButton(

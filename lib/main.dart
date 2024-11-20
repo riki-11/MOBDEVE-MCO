@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/authentication/authentication_repository.dart';
+import 'package:mobdeve_mco/controllers/college_controller.dart';
 import 'package:mobdeve_mco/controllers/login_controller.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
@@ -23,6 +24,7 @@ Future<void> main() async {
 
   Get.put(LoginController());
   Get.put(UserController());
+  Get.put(CollegeController());
   runApp(const MyApp());
   // Uncomment this to add dummy data to Cloud Firestore
   // FirestoreSeeder seeder = FirestoreSeeder();
