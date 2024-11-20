@@ -9,6 +9,8 @@ import 'package:mobdeve_mco/authentication/signup_email_password_failure.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/landing.dart';
 
+import '../constants/global_consts.dart';
+
 class AuthenticationRepository extends GetxController{
   static AuthenticationRepository get instance => Get.find();
 
@@ -23,7 +25,20 @@ class AuthenticationRepository extends GetxController{
     ever(firebaseUser, _setInitialScreen);
   }
 
-  _setInitialScreen(User? user) {
+  _setInitialScreen(User? user) async {
+    if (user == null) {
+      Get.offAll(const LandingPage(title: "UniGuide"));
+    }
+    else{
+      final isRegistered = await _isUserRegisteredInFirestore(user.uid);
+      if (isRegistered){
+        Get.offAll(HomePage(controller: ArticleController()));
+
+      } else {
+       await _deleteUnregisteredUser();
+       Get.offAll(const LoginPage());
+      }
+    }
     user == null ? Get.offAll(() => const LandingPage(title: "UniGuide"))
         : Get.offAll(() => HomePage(controller: ArticleController()));
     LoginController.instance.checkUserInCloudFirestore();
@@ -58,4 +73,27 @@ class AuthenticationRepository extends GetxController{
 
   Future<void> logout() async => await _auth.signOut();
 
+  /// Checks if the user is registered in Firestore
+  Future<bool> _isUserRegisteredInFirestore(String uid) async {
+    try {
+      final userDoc = await firebaseFirestore.collection('users').doc(uid).get();
+      return userDoc.exists;
+    } catch (e) {
+      print("Error checking Firestore: $e");
+      return false;
+    }
+  }
+
+  /// Deletes the current user from Firebase Authentication
+  Future<void> _deleteUnregisteredUser() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        await user.delete();
+        print("Unregistered user deleted from Firebase Auth.");
+      }
+    } catch (e) {
+      print("Error deleting user: $e");
+    }
+  }
 }
