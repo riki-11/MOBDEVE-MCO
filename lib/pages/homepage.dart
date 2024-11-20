@@ -9,7 +9,7 @@ import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/widgets/filter_articles_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
-import 'package:mobdeve_mco/pages/view-course-list.dart';
+import 'package:mobdeve_mco/pages/view-college-list.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 class HomePage extends StatefulWidget {

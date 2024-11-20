@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/models/user.dart';
 import 'package:mobdeve_mco/constants/global_consts.dart';
-import 'package:mobdeve_mco/pages/view-course-list.dart';
+import 'package:mobdeve_mco/pages/view-college-list.dart';
 
 class UserController extends GetxController{
   static UserController get instance => Get.find();
