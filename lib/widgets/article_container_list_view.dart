@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/pages/view-article.dart';
-
+import 'package:intl/intl.dart';
 
 class ArticleContainerListView extends StatelessWidget {
   final String authorName;
@@ -10,6 +10,7 @@ class ArticleContainerListView extends StatelessWidget {
 
   const ArticleContainerListView({super.key, required this.authorName, required this.title, required this.college, required this.date});
 
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -18,8 +19,8 @@ class ArticleContainerListView extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         height: 170.0,
         // color: Colors.green,
-        decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.black))
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1.0))
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -55,20 +56,30 @@ class ArticleContainerListView extends StatelessWidget {
                   ],
                 ),
               ),
+
               Expanded(
                 flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      color: Colors.purple,
-                      width: 100,
-                      height: 65,
-                    ), // replace with a placeholder image
-                    Text(date.toString()),
-                  ],
-                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Center(
+                          child: Container(
+                            color: Colors.green, // Inner green container
+                            height: 65, // Adjust height to fit inside the purple container
+                          ),
+                        ),
+                      ),
+                      // replace with a placeholder image
+                      // TODO: Replace this with the date from the database.
+                      Text(DateFormat.yMMMd().format(DateTime.now())),
+                    ],
+                  ),
+                )
               ),
             ],
           ),

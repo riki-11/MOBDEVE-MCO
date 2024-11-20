@@ -5,13 +5,22 @@ import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 
 class YourLibrary extends StatefulWidget {
-  const YourLibrary({super.key});
+  final int pageIndex;
+  const YourLibrary({this.pageIndex = 1, super.key});
 
   @override
   State<YourLibrary> createState() => _YourLibraryState();
 }
 
 class _YourLibraryState extends State<YourLibrary> {
+  late int pageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    pageIndex = widget.pageIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -42,7 +51,7 @@ class _YourLibraryState extends State<YourLibrary> {
             Center(child: Text("Recently Read")),
           ]
         ),
-        bottomNavigationBar: const StandardBottomBar(),
+        bottomNavigationBar: StandardBottomBar(curPageIndex: pageIndex),
       ),
     );}
 }
