@@ -28,11 +28,15 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
   @override
   void initState() {
     super.initState();
-    selectedCollege = null;
-    selectedProgram = null;
-    programList = [];
-  }
 
+    // Initialize selectedCollege and selectedProgram from ArticleController
+    final articleController = ArticleController.instance;
+    selectedCollege = articleController.collegeFilter.value;
+    selectedProgram = articleController.programFilter.value;
+
+    print("INIT FILTERS: $selectedProgram $selectedCollege");
+    // Initialize programList if selectedCollege is not null
+  }
   void updateProgramList(College? college) {
     setState(() {
       selectedCollege = college;
@@ -55,7 +59,6 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
       List<Program> programList = programController.getProgramListFromCollege(collegeId);
       result[college] = programList;
     }
-
     return result;
   }
   @override
