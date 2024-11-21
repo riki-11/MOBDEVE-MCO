@@ -46,17 +46,23 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
                   }
                 },
               ),
-              const Text("153"),
-            ],
-          ),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.chat_outlined),
-                onPressed: () {},
+              FutureBuilder<int>(
+                future: ReactionController.instance.getLikeCountOfArticle(widget.articleId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a loading indicator while fetching data
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    // Handle error state
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData) {
+                    // Handle the case where there's no data
+                    return const Center(child: Text('No data available'));
+                  }
+                  return Text(snapshot.data.toString() ?? '-1');
+                }
               ),
-              const Text("15")
-            ]
+            ],
           ),
           IconButton(
             icon: Icon(
