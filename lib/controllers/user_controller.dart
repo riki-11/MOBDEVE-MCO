@@ -1,14 +1,20 @@
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/authentication/authentication_repository.dart';
+import 'package:mobdeve_mco/controllers/college_controller.dart';
+import 'package:mobdeve_mco/controllers/program_controller.dart';
 import 'package:mobdeve_mco/models/user.dart';
 import 'package:mobdeve_mco/constants/global_consts.dart';
 import 'package:mobdeve_mco/pages/view-college-list.dart';
+
+import '../models/college.dart';
+import '../models/program.dart';
 
 class UserController extends GetxController {
   static UserController get instance => Get.find();
 
   var currentUser = Rxn<User>();
-
+  var currentUserCollege = Rxn<College>();
+  var currentUserProgram = Rxn<Program>();
   Future<void> loadCurrentUser() async {
     final authRepo = AuthenticationRepository.instance;
 
@@ -21,6 +27,12 @@ class UserController extends GetxController {
           if (userSnapshot.exists) {
             currentUser.value =
                 User.fromDocumentSnapshot(documentSnapshot: userSnapshot);
+            if(currentUser.value?.colleges != null) {
+              currentUserCollege.value = await CollegeController.instance.getCollege(currentUser.value!.colleges);
+            }
+            if(currentUser.value?.colleges != null){
+              currentUserProgram.value = await ProgramController.instance.getProgram(currentUser.value!.programs);
+            }
           } else {
             print("User document not found in Firestore for UID: ${user.uid}");
           }
