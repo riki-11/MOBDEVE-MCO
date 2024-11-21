@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart';
 
 import 'package:mobdeve_mco/widgets/article_bottom_bar.dart';
@@ -9,6 +10,7 @@ import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
 import 'package:mobdeve_mco/widgets/disappearing_top_bar.dart';
 
+import '../constants/global_consts.dart';
 import '../controllers/college_controller.dart';
 import '../controllers/program_controller.dart';
 import '../controllers/user_controller.dart';
@@ -26,10 +28,45 @@ class ViewArticle extends StatefulWidget {
 }
 
 class _ViewArticleState extends State<ViewArticle> {
+
+  // Initialize Quill controllers
+  final QuillController _controllerWYL = QuillController.basic();
+  final QuillController _controllerThoughts = QuillController.basic();
+  final QuillController _controllerProjects = QuillController.basic();
+  final QuillController _controllerTips = QuillController.basic();
+  final QuillController _controllerLnR = QuillController.basic();
+
+  // Category-QuillController map
+  late Map<String, QuillController> controlMap;
+
   bool showBottomBar = true;
   late College college;
   late Program program;
   late User author;
+
+  @override
+  void initState() {
+    super.initState();
+    // Configure controller map
+    controlMap = {
+      HEADER_THOUGHTS:  _controllerThoughts,
+      HEADER_WYL:       _controllerWYL,
+      HEADER_PROJECTS:  _controllerProjects,
+      HEADER_TIPS:      _controllerTips,
+      HEADER_LNR:       _controllerLnR
+    };
+
+    loadData();
+  }
+
+  void loadData() {
+    for (var entry in widget.article.content.entries) {
+      controlMap[entry.key]?.document = Document.fromJson(jsonDecode(entry.value));
+      controlMap[entry.key]?.readOnly = true;
+    }
+
+  }
+
   Future<Map<String, dynamic>> fetchCollegeAndAuthor() async {
     // college = await CollegeController.instance.getCollege(widget.article.collegeId);
     college = CollegeController.instance.collegeList.value.firstWhere(
@@ -152,10 +189,9 @@ class _ViewArticleState extends State<ViewArticle> {
                                     style: Theme.of(context).textTheme.headlineSmall,
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Text(
-                                    entry.value, // Section content
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                  ),
+                                  QuillEditor.basic(
+                                    controller: controlMap[entry.key],
+                                  )
                                 ],
                               ),
                             );
@@ -176,6 +212,15 @@ class _ViewArticleState extends State<ViewArticle> {
         );
       }
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    for (var entry in controlMap.entries) {
+      controlMap[entry.key]?.dispose();
+    }
+    super.dispose();
   }
 }
 
