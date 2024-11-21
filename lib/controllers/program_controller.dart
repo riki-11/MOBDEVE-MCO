@@ -21,7 +21,7 @@ class ProgramController extends GetxController {
             Program.fromDocumentSnapshot(documentSnapshot: program);
         final collegeSnapshot = await firebaseFirestore
             .collection('colleges')
-            .doc(program[COLLEGE])
+            .doc(program[COLLEGE_ID])
             .get();
         programModel.college = College.fromDocumentSnapshot(documentSnapshot: collegeSnapshot);
         print("PROGRAM HAS COLLEGE ${programModel.college}");
@@ -32,6 +32,10 @@ class ProgramController extends GetxController {
       }
       return programs;
     });
+  }
+
+  Future<Program> getProgram(String programId) async{
+    return Program.fromDocumentSnapshot(documentSnapshot: await programCollection.doc(programId).get());
   }
 
   List<Program> getProgramListFromCollege(String collegeId) {

@@ -33,7 +33,7 @@ class UserController extends GetxController {
     });
   }
 
-  static Future<User> getUserData(String userId) async {
+  Future<User> getUserData(String userId) async {
     final userSnapshot =
         await firebaseFirestore.collection('users').doc(userId).get();
     final user = User.fromDocumentSnapshot(documentSnapshot: userSnapshot);

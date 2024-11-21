@@ -33,7 +33,7 @@ class CollegeController extends GetxController {
   //   }).toList();
   //   return collegeList;
   // }
-  static Future<College> getCollege(String documentId) async {
+  Future<College> getCollege(String documentId) async {
     DocumentSnapshot college = await collegeCollection.doc(documentId).get();
     return College.fromDocumentSnapshot(documentSnapshot: college);
   }
