@@ -141,11 +141,25 @@ class _ViewArticleState extends State<ViewArticle> {
                             ],
                           ),
                           const SizedBox(height: 32.0), // Spacing between title and content
-                          Text(
-                            // TODO: Add proper styling that is similar to article-write later
-                            widget.article.content,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+                          ...widget.article.content.entries.map((entry) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    entry.key, // Section title
+                                    style: Theme.of(context).textTheme.headlineSmall,
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Text(
+                                    entry.value, // Section content
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                         ],
                       ),
                     )
@@ -164,4 +178,5 @@ class _ViewArticleState extends State<ViewArticle> {
     );
   }
 }
+
 
