@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/pages/write-article.dart';
 import 'package:mobdeve_mco/widgets/checkbox_options.dart';
+import '../constants/global_consts.dart';
 
 class CreateArticle extends StatefulWidget {
   const CreateArticle({super.key});
@@ -12,11 +13,11 @@ class CreateArticle extends StatefulWidget {
 class _CreateArticleState extends State<CreateArticle> {
   // Map of article categories
   Map<String, bool> categoryOptions = {
-    "Thoughts":           false,
-    "What you'll learn":  false,
-    "Projects":           false,
-    "Tips for doing well":false,
-    "Links and Resources":false
+    HEADER_THOUGHTS:  false,
+    HEADER_WYL:       false,
+    HEADER_PROJECTS:  false,
+    HEADER_TIPS:      false,
+    HEADER_LNR:       false
   };
 
   // Variable for error handling

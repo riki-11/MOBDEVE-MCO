@@ -86,10 +86,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CreateArticle())
-          );
+          Get.to(() => const CreateArticle());
         },
         tooltip: 'Create',
         child: const Icon(Icons.edit),

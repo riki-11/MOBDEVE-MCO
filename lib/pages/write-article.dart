@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/constants/global_consts.dart';
+import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/models/article.dart';
 import 'package:mobdeve_mco/models/college.dart';
 import 'package:mobdeve_mco/models/program.dart';
@@ -43,13 +44,46 @@ class _WriteArticleState extends State<WriteArticle> {
 
     // Configure controller map
     controlMap = {
-      "Thoughts":           _controllerThoughts,
-      "What you'll learn":  _controllerWYL,
-      "Projects":           _controllerProjects,
-      "Tips for doing well":_controllerTips,
-      "Links and Resources":_controllerLnR
+      HEADER_THOUGHTS:  _controllerThoughts,
+      HEADER_WYL:       _controllerWYL,
+      HEADER_PROJECTS:  _controllerProjects,
+      HEADER_TIPS:      _controllerTips,
+      HEADER_LNR:       _controllerLnR
     };
 
+  }
+
+  void saveArticle() async {
+    // TODO: Separate data for each quill controller
+    late String json;
+    late Map<String, String> data = {};
+
+    final String title = _titleController.text.toString(); // Article Title
+
+    // Get user data
+    var currentUser = UserController.instance.currentUser;
+    var college = UserController.instance.currentUserCollege;
+    var program = UserController.instance.currentUserProgram;
+
+
+    controlMap.forEach((category, controller) {
+      if (controller.document.toPlainText().trim().isNotEmpty) {
+        json = jsonEncode(controller.document.toDelta().toJson());
+        data[category] = json;
+      }
+    });
+
+    Article newArticle = Article(
+        id: null,
+        authorId: currentUser.value!.id.toString(),
+        title: title,
+        content: data,
+        datePosted: Timestamp.now(),
+        collegeId: college.value!.id.toString(),
+        programId: program.value!.id.toString()
+    );
+
+    await ArticleController.instance.addArticle(newArticle);
   }
 
 
@@ -87,7 +121,10 @@ class _WriteArticleState extends State<WriteArticle> {
             ],
           ),
           TextButton(
-              onPressed: (){},
+              onPressed: () {
+                saveArticle();
+                Get.to(() => HomePage(controller: ArticleController()));
+              },
               child: Text("Next",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.primary
