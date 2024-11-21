@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:mobdeve_mco/controllers/login_controller.dart';
+import 'package:mobdeve_mco/pages/settings.dart';
 import 'package:mobdeve_mco/widgets/profile_content_dropdown.dart';
+import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
 import 'package:mobdeve_mco/widgets/profile_header.dart';
@@ -46,7 +48,13 @@ class _MyProfilePageState extends State<MyProfilePage>
         actions: [
           IconButton(
             onPressed: () {
-              LoginController.instance.logoutUser();
+              // TODO: Use LoginController.instance.logoutUser(); ?
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return SettingsPage(); // Custom settings content
+                },
+              );
             },
             icon: const Icon(Icons.settings),
           )
@@ -72,7 +80,14 @@ class _MyProfilePageState extends State<MyProfilePage>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: TextButton(
-                      onPressed: () {}, // TODO: Add sharing functionality.
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const SocialMediaSharingPopup();
+                            }
+                        );
+                      }, // TODO: Add sharing functionality.
                       style: TextButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
                       ),
