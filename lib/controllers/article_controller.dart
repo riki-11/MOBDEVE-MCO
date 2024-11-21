@@ -25,6 +25,34 @@ class ArticleController extends GetxController{
           return articles;
     });
   }
+
+  Future<void> addArticle(Article article) async {
+    try {
+      // Map the article to a Firestore-compatible format
+      Map<String, dynamic> articleData = {
+        'authorId': article.authorId,
+        'title': article.title,
+        'content': article.content,
+        'datePosted': article.datePosted,
+        'collegeId': article.collegeId,
+        'programId': article.programId,
+      };
+
+
+      // Add the article to the "articles" collection
+      await firebaseFirestore.collection('articles').add(articleData);
+
+      print('Article added successfully!');
+    } catch (e) {
+      print('Failed to add article: $e');
+      rethrow;
+    }
+  }
+
+
+
+
+
   @override
   void onReady() {
     articleList.bindStream(articleStream());

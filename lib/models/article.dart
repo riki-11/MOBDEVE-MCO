@@ -8,7 +8,7 @@ class Article {
   String? id;
   late String authorId;
   late String title;
-  late String content;
+  late Map<String, String> content;
   late Timestamp datePosted;
   late String collegeId;
   late String programId;
