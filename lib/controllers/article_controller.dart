@@ -30,12 +30,12 @@ class ArticleController extends GetxController{
     try {
       // Map the article to a Firestore-compatible format
       Map<String, dynamic> articleData = {
-        'authorId': article.authorId,
-        'title': article.title,
-        'content': article.content,
-        'datePosted': article.datePosted,
-        'collegeId': article.collegeId,
-        'programId': article.programId,
+        AUTHOR_ID: article.authorId,
+        TITLE: article.title,
+        CONTENT: article.content,
+        DATE_POSTED: article.datePosted,
+        COLLEGE_ID: article.collegeId,
+        PROGRAM_ID: article.programId,
       };
 
 
