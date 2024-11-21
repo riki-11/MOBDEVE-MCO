@@ -20,23 +20,6 @@ class ArticleController extends GetxController{
           for (var article in query.docs) {
             final articleModel =
                 Article.fromDocumentSnapshot(documentSnapshot: article);
-
-            final userSnapshot = await firebaseFirestore
-              .collection('users')
-              .doc(article[AUTHOR_ID])
-              .get();
-            articleModel.author = User.fromDocumentSnapshot(documentSnapshot: userSnapshot);
-            final programSnapshot = await firebaseFirestore
-              .collection('programs')
-              .doc(article[PROGRAM])
-              .get();
-            articleModel.program = Program.fromDocumentSnapshot(documentSnapshot: programSnapshot);
-            final collegeSnapshot = await firebaseFirestore
-              .collection('colleges')
-              .doc(article[COLLEGE])
-              .get();
-            articleModel.college = College.fromDocumentSnapshot(documentSnapshot: collegeSnapshot);
-            articleModel.program.college = articleModel.college;
             articles.add(articleModel);
           }
           return articles;

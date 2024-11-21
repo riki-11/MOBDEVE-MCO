@@ -9,8 +9,17 @@ import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
 import 'package:mobdeve_mco/widgets/disappearing_top_bar.dart';
 
+import '../controllers/college_controller.dart';
+import '../controllers/program_controller.dart';
+import '../controllers/user_controller.dart';
+import '../models/article.dart';
+import '../models/college.dart';
+import '../models/program.dart';
+import '../models/user.dart';
+
 class ViewArticle extends StatefulWidget {
-  const ViewArticle({super.key});
+  final Article article;
+  const ViewArticle({super.key, required this.article});
 
   @override
   State<ViewArticle> createState() => _ViewArticleState();
@@ -18,7 +27,19 @@ class ViewArticle extends StatefulWidget {
 
 class _ViewArticleState extends State<ViewArticle> {
   bool showBottomBar = true;
-  var data = Get.arguments;
+  late College college;
+  late Program program;
+  late User author;
+  Future<Map<String, dynamic>> fetchCollegeAndAuthor() async {
+    // college = await CollegeController.instance.getCollege(widget.article.collegeId);
+    college = CollegeController.instance.collegeList.value.firstWhere(
+            (college) => college.id == widget.article.collegeId,
+        orElse: () => throw Exception("College not Found"));
+    program =
+    await ProgramController.instance.getProgram(widget.article.programId);
+    author = await UserController.instance.getUserData(widget.article.authorId);
+    return {'college': college, 'program': program, 'author': author};
+  }
   void onScroll(Notification notif) {
     if (notif is UserScrollNotification) {
       final scrollDirection = notif.direction;
@@ -32,98 +53,114 @@ class _ViewArticleState extends State<ViewArticle> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: DisappearingTopBar(
-          actions: [
-            IconButton(
-                onPressed: (){
-                  showModalBottomSheet(
-                    context: context,
-                    builder:  (BuildContext context) {
-                      return const SocialMediaSharingPopup();
-                    }
-                  );
+    return FutureBuilder(
+      future: fetchCollegeAndAuthor(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while fetching data
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // Handle error state
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData) {
+          // Handle the case where there's no data
+          return const Center(child: Text('No data available'));
+        }
+
+        return Scaffold(
+          body: DisappearingTopBar(
+              actions: [
+                IconButton(
+                    onPressed: (){
+                      showModalBottomSheet(
+                        context: context,
+                        builder:  (BuildContext context) {
+                          return const SocialMediaSharingPopup();
+                        }
+                      );
+                    },
+                    icon: const Icon(Icons.ios_share_rounded)),
+                PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_horiz),
+                    onSelected: (String value) {
+                      print("Selected option: $value");
+                    },
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: 'report-article',
+                        child: Text('Report article', style: Theme.of(context).textTheme.bodyMedium),
+                      )
+                    ]
+                ),
+              ],
+              body: NotificationListener<UserScrollNotification>(
+                onNotification: (notif) {
+                  onScroll(notif);
+                  return true;
                 },
-                icon: const Icon(Icons.ios_share_rounded)),
-            PopupMenuButton<String>(
-                icon: const Icon(Icons.more_horiz),
-                onSelected: (String value) {
-                  print("Selected option: $value");
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'report-article',
-                    child: Text('Report article', style: Theme.of(context).textTheme.bodyMedium),
-                  )
-                ]
-            ),
-          ],
-          body: NotificationListener<UserScrollNotification>(
-            onNotification: (notif) {
-              onScroll(notif);
-              return true;
-            },
-            child: StandardScrollbar(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        data['title'],
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                          "This is a short description of the article",
-                          style: Theme.of(context).textTheme.bodyLarge
-                      ),
-                      const SizedBox(height: 8.0),
-                      Row(
+                child: StandardScrollbar(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Flex(
-                            direction: Axis.vertical,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Text(
+                            widget.article.title,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                              "This is a short description of the article",
+                              style: Theme.of(context).textTheme.bodyLarge
+                          ),
+                          const SizedBox(height: 8.0),
+                          Row(
                             children: [
-                              Text(
-                                  data['authorName'],
-                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600
-                                  )
+                              Flex(
+                                direction: Axis.vertical,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      author.getName(),
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                        fontWeight: FontWeight.w600
+                                      )
+                                  ),
+                                  Text(
+                                    DateFormat.yMMMd().format(widget.article.datePosted.toDate()),
+                                    style: Theme.of(context).textTheme.bodySmall
+                                  ),
+                                ],
                               ),
-                              Text(
-                                DateFormat.yMMMd().format(data['date']),
-                                style: Theme.of(context).textTheme.bodySmall
+                              const Expanded(
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Icon(Icons.account_circle_rounded)
+                                  )
                               ),
                             ],
                           ),
-                          const Expanded(
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(Icons.account_circle_rounded)
-                              )
+                          const SizedBox(height: 32.0), // Spacing between title and content
+                          Text(
+                            // TODO: Add proper styling that is similar to article-write later
+                            widget.article.content,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
-                      const SizedBox(height: 32.0), // Spacing between title and content
-                      Text(
-                        // TODO: Add proper styling that is similar to article-write later
-                        data['content'],
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                )
+                    )
+                ),
+              )
+          ),
+          bottomNavigationBar: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: showBottomBar ? kBottomNavigationBarHeight : 0.0,
+            child: ArticleBottomBar(
+              articleId: widget.article.id!,
             ),
           )
-      ),
-      bottomNavigationBar: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        height: showBottomBar ? kBottomNavigationBarHeight : 0.0,
-        child: ArticleBottomBar(
-          articleId: data['articleId'],
-        ),
-      )
+        );
+      }
     );
   }
 }

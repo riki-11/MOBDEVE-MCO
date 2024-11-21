@@ -1,20 +1,49 @@
 import 'package:get/get.dart';
+import 'package:mobdeve_mco/authentication/authentication_repository.dart';
 import 'package:mobdeve_mco/models/user.dart';
 import 'package:mobdeve_mco/constants/global_consts.dart';
 import 'package:mobdeve_mco/pages/view-college-list.dart';
 
-class UserController extends GetxController{
+class UserController extends GetxController {
   static UserController get instance => Get.find();
 
-  Future<User> getUserData(String userId) async{
+  var currentUser = Rxn<User>();
 
-    final userSnapshot = await firebaseFirestore.collection('users').doc(userId).get();
+  Future<void> loadCurrentUser() async {
+    final authRepo = AuthenticationRepository.instance;
+
+    // Listens to Firebase Auth user
+    authRepo.firebaseUser.listen((user) async {
+      if (user != null) {
+        try {
+          final userSnapshot =
+          await firebaseFirestore.collection('users').doc(user.uid).get();
+          if (userSnapshot.exists) {
+            currentUser.value =
+                User.fromDocumentSnapshot(documentSnapshot: userSnapshot);
+          } else {
+            print("User document not found in Firestore for UID: ${user.uid}");
+          }
+        } catch (e) {
+          print("Error loading user: $e");
+        }
+      } else {
+        currentUser.value = null; // Reset when user logs out
+      }
+    });
+  }
+
+  Future<User> getUserData(String userId) async {
+    final userSnapshot =
+        await firebaseFirestore.collection('users').doc(userId).get();
     final user = User.fromDocumentSnapshot(documentSnapshot: userSnapshot);
     return user;
-
   }
-  Future<void> assignCollegeAndProgram(String collegeId, String programId) async {
-    final userDocRef = firebaseFirestore.collection('users').doc(auth.currentUser!.uid);
+
+  Future<void> assignCollegeAndProgram(
+      String collegeId, String programId) async {
+    final userDocRef =
+        firebaseFirestore.collection('users').doc(auth.currentUser!.uid);
 
     try {
       // Update the user's document with collegeId and programId
@@ -33,17 +62,24 @@ class UserController extends GetxController{
       }
     }
   }
-  Future<void> checkIfAssignedCollege() async{
-    final userSnapshot = await firebaseFirestore.collection('users').doc(auth.currentUser!.uid).get();
-    
+
+  Future<void> checkIfAssignedCollege() async {
+    final userSnapshot = await firebaseFirestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .get();
+
     // Check if the "college" field exists and is not null
-      if (userSnapshot.exists && userSnapshot.data() != null) {
-        var data = userSnapshot.data() as Map<String, dynamic>;
-        var isAssignedCollege = data.containsKey('college') && data['college'] != null;
-        if (!isAssignedCollege) Get.offAll(const ViewCollegeList());
-      }
+    if (userSnapshot.exists && userSnapshot.data() != null) {
+      var data = userSnapshot.data() as Map<String, dynamic>;
+      var isAssignedCollege =
+          data.containsKey('college') && data['college'] != null;
+      if (!isAssignedCollege) Get.offAll(const ViewCollegeList());
+    }
   }
-  Future <void> registerUserToFirestore(String email, String firstName, String lastName) async {
+
+  Future<void> registerUserToFirestore(
+      String email, String firstName, String lastName) async {
     // TODO: Add college and course here
     await firebaseFirestore.collection('users').doc(auth.currentUser!.uid).set({
       'email': email,

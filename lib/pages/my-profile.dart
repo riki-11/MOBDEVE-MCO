@@ -166,13 +166,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                             print("ARTICLE PRINT: ${articleController.articles[index].content}");
                             final articleModel = articleController.articles[index];
                             return ArticleContainerListView(
-                                authorId: articleModel.author.id ?? "-1",
-                                authorName: articleModel.author.getName(),
-                                title: articleModel.title,
-                                college: articleModel.college.acronym,
-                                date: articleModel.datePosted.toDate(),
-                                articleId: articleModel.id ?? "-1",
-                                content: articleModel.content,
+                                article: articleModel,
                             );
                           }
                       );

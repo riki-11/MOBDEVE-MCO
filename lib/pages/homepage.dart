@@ -56,43 +56,7 @@ class _HomePageState extends State<HomePage> {
               },
               icon: const Icon(Icons.filter_alt_outlined)
           ),
-          SearchAnchor(
-            builder: (BuildContext context, SearchController controller) {
-              return IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  controller.openView();
-                },
-              );
-            },
-            suggestionsBuilder: (BuildContext context, SearchController controller) {
-              return List<ListTile>.generate(5, (int index) {
-                final String article = 'Article $index';
-                return ListTile(
-                    title: Text(article),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const ViewArticle())
-                      );
-                    }
-                );
-              });
-            },
-            viewBuilder: (suggestions){
-              return Column(
-                children: [
 
-                  Flexible(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: suggestions.toList(),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
         ]
       ),
       body: Stack(
@@ -107,13 +71,7 @@ class _HomePageState extends State<HomePage> {
                     print("ARTICLE PRINT: ${articleController.articles[index].content}");
                     final articleModel = articleController.articles[index];
                     return ArticleContainerListView(
-                        authorId: articleModel.author.id ?? "-1",
-                        authorName: articleModel.author.getName(),
-                        title: articleModel.title,
-                        college: articleModel.college.acronym,
-                        date: articleModel.datePosted.toDate(),
-                        articleId: articleModel.id ?? "-1",
-                        content: articleModel.content,
+                        article: articleModel
                     );
                   }
                 );

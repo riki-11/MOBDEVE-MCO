@@ -6,20 +6,21 @@ import 'college.dart';
 
 class Article {
   String? id;
-  late User author;
+  late String authorId;
   late String title;
   late String content;
   late Timestamp datePosted;
-  late College college;
-  late Program program;
+  late String collegeId;
+  late String programId;
+
   Article({
     required this.id,
-    required this.author,
+    required this.authorId,
     required this.title,
     required this.content,
     required this.datePosted,
-    required this.college,
-    required this.program,
+    required this.collegeId,
+    required this.programId,
   });
 
   Article.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot}) {
@@ -27,8 +28,9 @@ class Article {
     title = documentSnapshot[TITLE];
     content = documentSnapshot[CONTENT];
     datePosted = documentSnapshot[DATE_POSTED];
-    // collegeId = documentSnapshot[COLLEGE];
-    // program = documentSnapshot[PROGRAM];
+    collegeId = documentSnapshot[COLLEGE_ID];
+    programId = documentSnapshot[PROGRAM_ID];
+    authorId = documentSnapshot[AUTHOR_ID];
   }
   // factory Article.fromFirestore(Map<String, dynamic> data) {
   //   return Article(

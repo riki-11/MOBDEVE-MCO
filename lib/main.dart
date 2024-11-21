@@ -27,7 +27,6 @@ Future<void> main() async {
   Get.put(UserController());
   Get.put(CollegeController());
   Get.put(ProgramController());
-
   runApp(const MyApp());
   // Uncomment this to add dummy data to Cloud Firestore
   // FirestoreSeeder seeder = FirestoreSeeder();
