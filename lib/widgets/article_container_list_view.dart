@@ -43,7 +43,10 @@ class _ArticleContainerListViewState extends State<ArticleContainerListView> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // Show a loading indicator while fetching data
-              return const Center(child: CircularProgressIndicator());
+              return const SizedBox(
+                height: 170.0,
+                child: Center(child: CircularProgressIndicator()),
+              );
             } else if (snapshot.hasError) {
               // Handle error state
               return Center(child: Text('Error: ${snapshot.error}'));

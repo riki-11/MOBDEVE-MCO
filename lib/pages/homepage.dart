@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
+import 'package:mobdeve_mco/pages/create-article.dart';
 import 'package:mobdeve_mco/pages/view-article.dart';
 import 'package:mobdeve_mco/widgets/article_container_list_view.dart';
 import 'package:mobdeve_mco/widgets/filter_articles_popup.dart';
@@ -88,7 +89,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ViewCollegeList())
+              MaterialPageRoute(builder: (context) => const CreateArticle())
           );
         },
         tooltip: 'Create',

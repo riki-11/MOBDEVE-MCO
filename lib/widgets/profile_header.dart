@@ -31,6 +31,8 @@ class ProfileHeader extends StatelessWidget {
               {
                 UserController controller = UserController.instance;
                 var user = controller.currentUser.value;
+                var userCollege = controller.currentUserCollege.value;
+                var userProgram = controller.currentUserProgram.value;
                 if(user == null) {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -51,12 +53,12 @@ class ProfileHeader extends StatelessWidget {
                                   maxLines: 2, // Optionally limit to 2 lines
                                 ),
                                 Text(
-                                  "${user.colleges} ($collegeAcronym)",
+                                  "${userCollege?.name} (${userCollege?.acronym})",
                                   style: Theme.of(context).textTheme.bodySmall,
                                   softWrap: true,
                                 ),
                                 Text(
-                                  "${user.programs} ($programAcronym)",
+                                  "${userProgram?.name} (${userProgram?.acronym})",
                                   style: Theme.of(context).textTheme.bodySmall,
                                   softWrap: true,
                                 ),

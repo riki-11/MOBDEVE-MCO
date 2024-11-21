@@ -11,6 +11,8 @@ import 'package:mobdeve_mco/widgets/profile_header.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../controllers/article_controller.dart';
+import '../controllers/user_controller.dart';
+import '../models/article.dart';
 import '../widgets/article_container_list_view.dart';
 import '../widgets/standard_scrollbar.dart';
 
@@ -159,18 +161,20 @@ class _MyProfilePageState extends State<MyProfilePage>
                   child: StandardScrollbar(
                     child: GetX<ArticleController>(
                     init: Get.put<ArticleController>(ArticleController()),
-                    builder: (ArticleController articleController) {
-                      return ListView.builder(
-                          itemCount: articleController.articles.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            print("ARTICLE PRINT: ${articleController.articles[index].content}");
-                            final articleModel = articleController.articles[index];
-                            return ArticleContainerListView(
-                                article: articleModel,
-                            );
-                          }
-                      );
-                    }
+                        builder: (ArticleController articleController) {
+                          var currentUserId = UserController.instance.currentUser.value;
+                          print("CURRENT USER ID: ${currentUserId?.id}");
+                          List<Article> articleOfUserList = articleController.articles.where((article) => article.authorId == currentUserId?.id).toList();
+                          return ListView.builder(
+                              itemCount: articleOfUserList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final articleModel = articleOfUserList[index];
+                                return ArticleContainerListView(
+                                    article: articleModel
+                                );
+                              }
+                          );
+                        }
                   ),
                   ),
                 ),

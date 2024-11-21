@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/constants/global_consts.dart';
 
@@ -29,8 +30,22 @@ class ReactionController extends GetxController{
         "${newReaction.userId}_${newReaction.articleId}"
     ).delete();
   }
-  static getLikeCountOfArticle(String articleId){
+  Future<int> getLikeCountOfArticle(String articleId) async {
     // TODO: get like count of article
+    try{
+      AggregateQuerySnapshot res = await firebaseFirestore
+          .collection(REACTION_COLLECTION)
+          .where("articleId", isEqualTo: articleId)
+          .count()
+          .get();
+
+      return res.count ?? -1;
+    } catch (e){
+      print("Getting Like Count Error: $e");
+      return -1;
+    }
+
+
   }
   // void loginUser(String email, String password){
   //   AuthenticationRepository.instance.loginUserWithEmailAndPassword(email, password);
