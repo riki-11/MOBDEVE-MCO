@@ -16,4 +16,12 @@ class College {
     name = documentSnapshot['name'];
     acronym = documentSnapshot['acronym'];
   }
+
+  static College defaultInstance() {
+    return College(
+      id: '-1',
+      name: 'Jeff',
+      acronym: 'JEFF',
+    );
+  }
 }

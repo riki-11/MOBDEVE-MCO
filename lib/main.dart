@@ -26,6 +26,7 @@ Future<void> main() async {
 
   try{
     Get.put(AuthenticationRepository());
+    Get.put(ArticleController());
     Get.put(LoginController());
     Get.put(UserController());
     Get.put(CollegeController());

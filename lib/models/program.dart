@@ -19,4 +19,12 @@ class Program {
     name = documentSnapshot['name'];
     acronym = documentSnapshot['acronym'];
   }
+
+  static defaultInstance() {
+    return Program(
+      id: 'LOL',
+      name: 'LOL',
+      acronym: 'LOL', college: College.defaultInstance(),
+    );
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/controllers/program_controller.dart';
 import 'package:mobdeve_mco/models/college.dart';
 import '../controllers/college_controller.dart';
@@ -146,7 +147,9 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     // TODO: Apply filter and close popup.
-                                    print("selected $selectedCollege, $selectedProgram");
+                                    // Set the obs of both college and program in ArticleController
+                                    ArticleController.instance.collegeFilter.value = selectedCollege;
+                                    ArticleController.instance.programFilter.value = selectedProgram;
 
                                   },
                                   style: TextButton.styleFrom(
