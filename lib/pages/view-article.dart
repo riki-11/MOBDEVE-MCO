@@ -189,7 +189,6 @@ class _ViewArticleState extends State<ViewArticle> {
                                     style: Theme.of(context).textTheme.headlineSmall,
                                   ),
                                   const SizedBox(height: 8.0),
-
                                   QuillEditor.basic(
                                     controller: controlMap[entry.key],
                                   )

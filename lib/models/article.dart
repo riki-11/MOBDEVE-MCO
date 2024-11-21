@@ -26,7 +26,7 @@ class Article {
   Article.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot}) {
     id = documentSnapshot.id;
     title = documentSnapshot[TITLE];
-    content = documentSnapshot[CONTENT];
+    content = Map<String, String>.from(documentSnapshot[CONTENT] as Map);
     datePosted = documentSnapshot[DATE_POSTED];
     collegeId = documentSnapshot[COLLEGE_ID];
     programId = documentSnapshot[PROGRAM_ID];

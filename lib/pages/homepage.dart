@@ -69,7 +69,6 @@ class _HomePageState extends State<HomePage> {
                 return ListView.builder(
                   itemCount: articleController.articles.length,
                   itemBuilder: (BuildContext context, int index) {
-                    print("ARTICLE PRINT: ${articleController.articles[index].content}");
                     final articleModel = articleController.articles[index];
                     return ArticleContainerListView(
                         article: articleModel

@@ -12,6 +12,10 @@ class ArticleController extends GetxController{
   Rx<List<Article>> articleList = Rx<List<Article>>([]);
   List<Article> get articles => articleList.value;
 
+  Rx<bool> isFilterVisible = Rx<bool>(false);
+  void toggleFilter(bool isFilterVisible){
+    this.isFilterVisible.value = isFilterVisible;
+  }
   static Stream<List<Article>> articleStream() {
     return firebaseFirestore.collection('articles')
         .snapshots()
