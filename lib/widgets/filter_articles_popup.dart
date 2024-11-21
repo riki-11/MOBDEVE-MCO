@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mobdeve_mco/controllers/program_controller.dart';
+import 'package:mobdeve_mco/models/college.dart';
 import '../controllers/college_controller.dart';
 import '../models/program.dart';
 import 'custom_multi_select_container.dart';
@@ -14,53 +15,14 @@ class FilterArticlesPopup extends StatefulWidget {
 }
 
 class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
-  String? selectedCollege;
-  String? selectedProgram;
-  List<String> programList = [];
+  College? selectedCollege;
+  Program? selectedProgram;
+  List<Program> programList = [];
 
   // TODO: Grab the data from the firestore database.
-  late Map<String, List<Program>> collegePrograms;
-  // late Map<String, List<String>> collegePrograms = {
-  //   'CCS': [
-  //     'BSCS-ST',
-  //     'BS-IT',
-  //     'BSCS-NIS',
-  //     'BSCS-CSE',
-  //     'BSMS-CS',
-  //   ],
-  //   'GCOE': [
-  //     'BSCE',
-  //     'BSECE',
-  //     'BSME',
-  //   ],
-  //   'CLA': [
-  //     'BSCE',
-  //     'BSECE',
-  //     'BSME',
-  //   ],
-  //   'COS': [
-  //     'BSCE',
-  //     'BSECE',
-  //     'BSME',
-  //   ],
-  //   'COB': [
-  //     'BSCE',
-  //     'BSECE',
-  //     'BSME',
-  //   ],
-  //   'CLTSOE': [
-  //     'BSCE',
-  //     'BSECE',
-  //     'BSME',
-  //   ],
-  //   'BAGCED': [
-  //     'BSCE',
-  //     'BSECE',
-  //     'BSME',
-  //   ],
-  // };
+  late Map<College, List<Program>> collegePrograms;
 
-  late List<String> colleges = ['CCS', 'GCOE', 'CLA', 'COS', 'COB', 'CLTSOE', 'BAGCED'];
+  late List<College> colleges = [];
 
   @override
   void initState() {
@@ -70,27 +32,27 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
     programList = [];
   }
 
-  void updateProgramList(String? college) {
+  void updateProgramList(College? college) {
     setState(() {
       selectedCollege = college;
-      programList = collegePrograms[college]!.map((program) => program.acronym).toList();
+      programList = collegePrograms[college]!.map((program) => program).toList();
     });
   }
 
-  void updateSelectedProgram(String? program) {
+  void updateSelectedProgram(Program? program) {
     setState(() {
       selectedProgram = program;
     });
   }
 
-  Future<Map<String, List<Program>>> fetchCollegeList() async {
+  Future<Map<College, List<Program>>> fetchCollegeList() async {
     ProgramController programController = Get.find();
-    Map<String, List<Program>> result = {};
+    Map<College, List<Program>> result = {};
 
     for(var college in CollegeController.instance.collegeList.value){
       String collegeId = college.id ?? '';
       List<Program> programList = programController.getProgramListFromCollege(collegeId);
-      result[college.acronym] = programList;
+      result[college] = programList;
     }
 
     return result;
@@ -111,8 +73,8 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
           return const Center(child: Text('No data available'));
         }
 
-        colleges = snapshot.data?.keys.toList() ?? <String>[];
-        collegePrograms = snapshot.data ?? <String, List<Program>>{};
+        colleges = snapshot.data?.keys.toList() ?? <College>[];
+        collegePrograms = snapshot.data ?? <College, List<Program>>{};
         return SizedBox(
           width: double.infinity,
           child: Card(
@@ -126,20 +88,22 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomMultiSelectContainer(
-                      items: colleges,
-                      selectedItem: selectedCollege,
+                      items: colleges.map((college) => college.acronym).toList(),
+                      selectedItem: selectedCollege?.acronym,
                       label: "College",
                       onChange: (selectedItem) {
-                        updateProgramList(selectedItem);
+                        updateProgramList(selectedItem != null ? 
+                          colleges.firstWhere((college) => college.acronym == selectedItem) 
+                          : null);
                       },
                     ),
                     const SizedBox(height: 30),
                     CustomMultiSelectContainer(
-                      items: programList,
-                      selectedItem: selectedProgram,
+                      items: programList.map((program) => program.acronym).toList(),
+                      selectedItem: selectedProgram?.acronym,
                       label: "Program",
                       onChange: (selectedItem) {
-                        updateSelectedProgram(selectedItem);
+                        updateSelectedProgram(selectedItem != null ? programList.firstWhere((program) => program.acronym == selectedItem) : null);
                       },
                     ),
                     const SizedBox(height: 20),
