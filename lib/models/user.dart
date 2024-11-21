@@ -19,7 +19,7 @@ class User {
       required this.programs});
 
   User.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot}) {
-    id = documentSnapshot.data().toString().contains('id') ? documentSnapshot.get('id') : '';
+    id = documentSnapshot.id;
     email = documentSnapshot['email'];
     firstName = documentSnapshot['firstName'];
     lastName = documentSnapshot['lastName'];
