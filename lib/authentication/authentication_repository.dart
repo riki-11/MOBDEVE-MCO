@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
+import 'package:mobdeve_mco/controllers/college_controller.dart';
 import 'package:mobdeve_mco/controllers/login_controller.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/pages/login.dart';
@@ -23,6 +24,7 @@ class AuthenticationRepository extends GetxController{
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.userChanges());
     ever(firebaseUser, _setInitialScreen);
+    UserController.instance.loadCurrentUser();
   }
 
   _setInitialScreen(User? user) async {
