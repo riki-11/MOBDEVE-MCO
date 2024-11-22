@@ -10,33 +10,43 @@ import 'package:mobdeve_mco/models/user.dart';
 class ListController extends GetxController{
   static ListController get instance => Get.find();
 
-  Rxn<ListModel> currentUserList = Rxn<ListModel>();
-  // Maybe we can make a stream? but make the stream only for the current user
+  Rx<List<ListModel>> currentUserList = Rx<List<ListModel>>([]);
+// Maybe we can make a stream? but make the stream only for the current user
 
-  static Stream<ListModel?> currentUserListStream() {
-    final controller = StreamController<ListModel?>();
+  static Stream<List<ListModel>> currentUserListStream() {
+    final controller = StreamController<List<ListModel>>();
     UserController.instance.currentUser.stream.listen((currentUser) {
       // Cancel previous subscriptions if needed (not shown here for simplicity)
       if (currentUser == null) {
-        controller.add(null);
+        controller.add([]);
       } else {
         firebaseFirestore
-            .collection('lists')
+            .collection('users')
             .doc(currentUser.id)
+            .collection('lists')
             .snapshots()
             .listen((snapshot) {
-          if (snapshot.exists) {
-            final listModel = ListModel.fromDocumentSnapshot(documentSnapshot: snapshot);
-            print("CURRENT STREAM LISTMODEL ID: ${listModel.id}");
-            controller.add(listModel);
-          } else {
-            controller.add(null);
-          }
+              // Map snapshot document
+              final listModels = snapshot.docs.map((list) {
+                final listModel = ListModel.fromDocumentSnapshot(documentSnapshot: list);
+                print('ListModel for User: ${listModel.id}');
+                return listModel;
+              }).toList();
+              controller.add(listModels);
         });
       }
     });
   
     return controller.stream;
+  }
+
+  // Generate List for user
+  Future<void> generateListForCurrentUser(User user) async {
+    firebaseFirestore.collection('lists').doc(user.id).set({
+      'authorId': user.id,
+
+
+    });
   }
 
 
