@@ -10,7 +10,8 @@ import 'package:mobdeve_mco/models/user.dart';
 class ListController extends GetxController{
   static ListController get instance => Get.find();
 
-  Rx<List<ListModel>> currentUserList = Rx<List<ListModel>>([]);
+  // Use this stream to get the list of lists of user
+  Rx<List<ListModel>> currentUserLists = Rx<List<ListModel>>([]);
 // Maybe we can make a stream? but make the stream only for the current user
 
 
@@ -51,23 +52,43 @@ class ListController extends GetxController{
       throw Exception("Error creating List, current user doesn't match ID found in list");
     }
 
-    firebaseFirestore.collection('users').doc(currentUserId).collection('lists').add({
+    await firebaseFirestore.collection('users').doc(currentUserId).collection('lists').add({
       'articleIds': [],
       'authorId': listToAdd.id,
       'title': listToAdd.title,
       'description': listToAdd.description,
     });
-
   }
   // Edit List
+  Future<void> editListOfUser(ListModel listToEdit) async {
+    // This also assumes that the id found in list parameter corresponds to the list to edit
+    // It also assumes that you are editing the list of the current user
+    // Make sure use is logged in
+    String? currentUserId = UserController.instance.currentUser.value?.id;
+    if (currentUserId == null){
+      throw Exception("Error editing List, current user is null");
+    }
+    final documentRef = firebaseFirestore.collection('users').doc(currentUserId).collection('lists').doc(listToEdit.id);
+    
+    // Check if document exists first, if not throw an error:
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+    if(documentSnapshot.exists){
+      throw Exception("Error editing list, List ID not found");
+    }
 
-  // Delete List 
+    // Since it exists, we edit the title and description
+    await documentRef.set({
+      'title': listToEdit.title,
+      'description': listToEdit.description,
+    });
+  }
+    // Delete List 
 
   // Delete from List
 
   // Add Article to List
   @override
   void onReady() {
-    currentUserList.bindStream(currentUserListStream());
+    currentUserLists.bindStream(currentUserListStream());
   }
 }
