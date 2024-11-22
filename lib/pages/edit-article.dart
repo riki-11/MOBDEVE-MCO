@@ -63,7 +63,6 @@ class _EditArticleState extends State<EditArticle> {
     }
   }
 
-  // TODO: Update database
   void updateArticle() async {
     late String json;
     late Map<String, String> data = {};

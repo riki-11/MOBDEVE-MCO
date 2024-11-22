@@ -5,7 +5,6 @@ import 'package:mobdeve_mco/constants/global_consts.dart';
 
 import '../models/college.dart';
 import '../models/program.dart';
-import '../models/user.dart';
 
 class ArticleController extends GetxController{
   static ArticleController get instance => Get.find();
@@ -78,7 +77,15 @@ class ArticleController extends GetxController{
     }
   }
 
-
+  Future<void> deleteArticle(String articleId) async {
+    try {
+      await firebaseFirestore.collection('articles').doc(articleId).delete();
+      print('Successfully deleted article!');
+    } catch (e) {
+      print('Failed to delete article: $e');
+      rethrow;
+    }
+  }
 
 
   @override
