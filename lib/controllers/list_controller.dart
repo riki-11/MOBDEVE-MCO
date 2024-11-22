@@ -82,8 +82,22 @@ class ListController extends GetxController{
       'description': listToEdit.description,
     });
   }
-    // Delete List 
+  // Delete List 
+  Future<void> deleteListOfUser(ListModel listToDelete) async {
+    String? currentUserId = UserController.instance.currentUser.value?.id;
+    if (currentUserId == null){
+      throw Exception("Error creating List, current user is null");
+    }
+    final documentRef = firebaseFirestore.collection('users').doc(currentUserId).collection('lists').doc(listToDelete.id);
+    
+    // Check if document exists first, if not throw an error:
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+    if(!documentSnapshot.exists){
+      throw Exception("Error deleting list, List ID not found");
+    }
+    await documentRef.delete();
 
+  }
   // Delete from List
 
   // Add Article to List
