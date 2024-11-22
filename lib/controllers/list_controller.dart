@@ -48,9 +48,6 @@ class ListController extends GetxController{
     if (currentUserId == null){
       throw Exception("Error creating List, current user is null");
     }
-    if (currentUserId != listToAdd.id){
-      throw Exception("Error creating List, current user doesn't match ID found in list");
-    }
 
     await firebaseFirestore.collection('users').doc(currentUserId).collection('lists').add({
       'articleIds': [],
@@ -72,7 +69,7 @@ class ListController extends GetxController{
     
     // Check if document exists first, if not throw an error:
     DocumentSnapshot documentSnapshot = await documentRef.get();
-    if(documentSnapshot.exists){
+    if(!documentSnapshot.exists){
       throw Exception("Error editing list, List ID not found");
     }
 
