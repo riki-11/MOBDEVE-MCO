@@ -44,7 +44,7 @@ class ListController extends GetxController{
   }
 
   // Create List
-  Future<void> createListForCurrentUser(ListModel listToAdd) async {
+  Future<void> createListForCurrentUser(String listTitle, String listDescription) async {
     String? currentUserId = UserController.instance.currentUser.value?.id;
     if (currentUserId == null){
       throw Exception("Error creating List, current user is null");
@@ -52,9 +52,9 @@ class ListController extends GetxController{
 
     await firebaseFirestore.collection('users').doc(currentUserId).collection('lists').add({
       'articleIds': [],
-      'authorId': listToAdd.id,
-      'title': listToAdd.title,
-      'description': listToAdd.description,
+      'authorId': currentUserId,
+      'title': listTitle,
+      'description': listDescription,
     });
   }
   // Edit List

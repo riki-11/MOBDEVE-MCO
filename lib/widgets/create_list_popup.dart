@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobdeve_mco/controllers/list_controller.dart';
 
 class CreateListPopup extends StatefulWidget {
   const CreateListPopup({super.key});
@@ -10,6 +12,8 @@ class CreateListPopup extends StatefulWidget {
 class _CreateListPopupState extends State<CreateListPopup> {
   final _formKey = GlobalKey<FormState>();
 
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,7 @@ class _CreateListPopupState extends State<CreateListPopup> {
                   Text('List Title', style: Theme.of(context).textTheme.bodyLarge),
                   TextFormField(
                     // TODO: Insert controller
+                      controller: titleController,
                       validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a name for your list.';
@@ -52,6 +57,7 @@ class _CreateListPopupState extends State<CreateListPopup> {
                   Text('List Description (optional)', style: Theme.of(context).textTheme.bodyLarge),
                   TextFormField(
                     // TODO: Insert controller
+                    controller: descriptionController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a description for your list.';
@@ -74,8 +80,33 @@ class _CreateListPopupState extends State<CreateListPopup> {
                           Theme.of(context).colorScheme.primary
                         )
                       ),
-                      onPressed: () {
-                        // TODO: Handle creating new list
+                      onPressed: () async {
+                       if (_formKey.currentState!.validate()) {
+                         // Retrieve title and description
+                         String listTitle = titleController.text.trim();
+                         String listDescription = descriptionController.text.trim();
+
+                         try {
+                           // Call the ListController to create the list
+                           await ListController.instance.createListForCurrentUser(listTitle, listDescription);
+
+                           // Close the popup after success
+                           Navigator.of(context).pop();
+                           titleController.clear();
+                           descriptionController.clear();
+                           // Optionally show a success message
+                           Get.snackbar('Success', 'List created successfully!',
+                               snackPosition: SnackPosition.BOTTOM,
+                               backgroundColor: Colors.green,
+                               colorText: Colors.white);
+                         } catch (e) {
+                           // Handle errors gracefully
+                           Get.snackbar('Error', e.toString(),
+                               snackPosition: SnackPosition.BOTTOM,
+                               backgroundColor: Colors.red,
+                               colorText: Colors.white);
+                         }
+                       }
                       },
                       child: Text(
                         'Create',
