@@ -95,6 +95,7 @@ class _RegisterPageState extends State<RegisterPage>{
                           borderSide: BorderSide(color: Colors.red.shade200)
                         )
                       ),
+                      // TODO: Double check password regex constraints.
                       passwordConstraint: r'^(?=.*\d).+$',
                       errorMessage: 'Must contain at least one digit (0-9)',
                     ),

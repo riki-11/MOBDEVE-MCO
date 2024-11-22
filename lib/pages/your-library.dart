@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/widgets/create_list_popup.dart';
 import 'package:mobdeve_mco/widgets/library_tab_bar.dart';
 import 'package:mobdeve_mco/widgets/list_container_view.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
@@ -31,7 +32,14 @@ class _YourLibraryState extends State<YourLibrary> {
             title: 'Your Library',
             actions: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CreateListPopup();
+                      }
+                    );
+                  },
                   icon: const Icon(Icons.add),
                   tooltip: 'Add to library'
               )
