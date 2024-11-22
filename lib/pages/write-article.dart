@@ -132,8 +132,6 @@ class _WriteArticleState extends State<WriteArticle> {
               ))
         ],
       ),
-
-      // TODO: Add edit text for title
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
