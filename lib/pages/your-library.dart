@@ -29,7 +29,7 @@ class _YourLibraryState extends State<YourLibrary> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: 0,
-      length: 3,
+      length: 1,
       child: Scaffold(
         appBar: StandardAppBar(
             title: 'Your Library',
@@ -47,7 +47,7 @@ class _YourLibraryState extends State<YourLibrary> {
                   tooltip: 'Add to library'
               )
             ],
-        ),
+        ), 
         body: 
                GetX<ListController>(
                 init: Get.put<ListController>(ListController()),
