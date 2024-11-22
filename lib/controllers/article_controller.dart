@@ -12,6 +12,9 @@ class ArticleController extends GetxController{
   Rx<List<Article>> articleList = Rx<List<Article>>([]);
   List<Article> get articles => articleList.value;
 
+  Rxn<College> collegeFilter = Rxn<College>();
+  Rxn<Program> programFilter = Rxn<Program>(); 
+
   Rx<bool> isFilterVisible = Rx<bool>(false);
   void toggleFilter(bool isFilterVisible){
     this.isFilterVisible.value = isFilterVisible;

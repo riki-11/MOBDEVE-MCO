@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
 import 'package:mobdeve_mco/authentication/authentication_repository.dart';
 import 'package:mobdeve_mco/controllers/college_controller.dart';
+import 'package:mobdeve_mco/controllers/list_controller.dart';
 import 'package:mobdeve_mco/controllers/login_controller.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
@@ -26,11 +27,13 @@ Future<void> main() async {
 
   try{
     Get.put(AuthenticationRepository());
+    Get.put(ArticleController());
     Get.put(LoginController());
     Get.put(UserController());
     Get.put(CollegeController());
     Get.put(ProgramController());
     Get.put(ReactionController());
+    Get.put(ListController());
   }
   catch (e){
     print("Get.put Error in main: $e");

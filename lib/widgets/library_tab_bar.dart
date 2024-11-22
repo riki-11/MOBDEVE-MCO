@@ -11,14 +11,6 @@ class LibraryTabBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.symmetric(vertical: 8.0), // Add vertical padding
           child: Text("Your Lists"),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0), // Add vertical padding
-          child: Text("Highlighted"),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0), // Add vertical padding
-          child: Text("Recently Read"),
-        ),
       ],
     );
   }
