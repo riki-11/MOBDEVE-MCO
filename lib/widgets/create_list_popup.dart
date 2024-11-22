@@ -13,11 +13,12 @@ class _CreateListPopupState extends State<CreateListPopup> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: MediaQuery.sizeOf(context).height * 0.8,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom
+        ),
         child: Flex(
           direction: Axis.vertical,
           mainAxisSize: MainAxisSize.min,
@@ -84,13 +85,14 @@ class _CreateListPopupState extends State<CreateListPopup> {
                         )
                       )
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 16.0)
                 ]
               ),
-            )
+            ),
           ]
         ),
-        )
+      ),
       );
   }
 }

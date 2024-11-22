@@ -35,8 +35,9 @@ class _YourLibraryState extends State<YourLibrary> {
                   onPressed: () {
                     showModalBottomSheet(
                       context: context,
+                      isScrollControlled: true,
                       builder: (BuildContext context) {
-                        return CreateListPopup();
+                        return const CreateListPopup();
                       }
                     );
                   },
