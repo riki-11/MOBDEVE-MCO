@@ -13,10 +13,11 @@ class ListController extends GetxController{
   Rx<List<ListModel>> currentUserList = Rx<List<ListModel>>([]);
 // Maybe we can make a stream? but make the stream only for the current user
 
+
+  
   static Stream<List<ListModel>> currentUserListStream() {
     final controller = StreamController<List<ListModel>>();
     UserController.instance.currentUser.stream.listen((currentUser) {
-      // Cancel previous subscriptions if needed (not shown here for simplicity)
       if (currentUser == null) {
         controller.add([]);
       } else {
@@ -40,18 +41,24 @@ class ListController extends GetxController{
     return controller.stream;
   }
 
-  // Generate List for user
-  Future<void> generateListForCurrentUser(User user) async {
-    firebaseFirestore.collection('lists').doc(user.id).set({
-      'authorId': user.id,
+  // Create List
+  Future<void> createListForCurrentUser(ListModel listToAdd) async {
+    String? currentUserId = UserController.instance.currentUser.value?.id;
+    if (currentUserId == null){
+      throw Exception("Error creating List, current user is null");
+    }
+    if (currentUserId != listToAdd.id){
+      throw Exception("Error creating List, current user doesn't match ID found in list");
+    }
 
-
+    firebaseFirestore.collection('users').doc(currentUserId).collection('lists').add({
+      'articleIds': [],
+      'authorId': listToAdd.id,
+      'title': listToAdd.title,
+      'description': listToAdd.description,
     });
+
   }
-
-
-  // Add List
-
   // Edit List
 
   // Delete List 
