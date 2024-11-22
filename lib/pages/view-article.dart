@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:mobdeve_mco/controllers/article_controller.dart';
+import 'package:mobdeve_mco/pages/edit-article.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 
 import 'package:mobdeve_mco/widgets/article_bottom_bar.dart';
@@ -143,7 +144,7 @@ class _ViewArticleState extends State<ViewArticle> {
                     onSelected: (String value) {
                       print("Selected option: $value");
                       if (value == 'edit-article') {
-                        Get.to(() => HomePage(controller: ArticleController.instance));
+                        Get.to(() => EditArticle(article: widget.article));
                       }
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

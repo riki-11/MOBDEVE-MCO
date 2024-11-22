@@ -56,6 +56,27 @@ class ArticleController extends GetxController{
     }
   }
 
+  Future<void> updateArticle(String articleId, Article updatedArticle) async {
+    try {
+
+      Map<String, dynamic> updatedData = {
+        AUTHOR_ID: updatedArticle.authorId,
+        TITLE: updatedArticle.title,
+        CONTENT: updatedArticle.content,
+        DATE_POSTED: updatedArticle.datePosted,
+        COLLEGE_ID: updatedArticle.collegeId,
+        PROGRAM_ID: updatedArticle.programId,
+      };
+
+      // Update the article in the "articles" collection
+      await firebaseFirestore.collection('articles').doc(articleId).update(updatedData);
+
+      print('Article updated successfully!');
+    } catch (e) {
+      print('Failed to update article: $e');
+      rethrow;
+    }
+  }
 
 
 
