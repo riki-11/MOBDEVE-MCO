@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+import 'package:mobdeve_mco/controllers/list_controller.dart';
+import 'package:mobdeve_mco/models/list.dart';
 
 import '../controllers/article_controller.dart';
 import '../models/article.dart';
@@ -12,17 +14,11 @@ import '../widgets/social_media_sharing_popup.dart';
 import '../widgets/standard_scrollbar.dart';
 
 class ViewArticlesList extends StatefulWidget {
-  final String listTitle;
-  final String listDescription;
-  final String createdBy;
+  final ListModel list;
 
-  final ArticleController controller;
   const ViewArticlesList({
     super.key,
-    required this.listTitle,
-    required this.listDescription,
-    required this.createdBy,
-    required this.controller
+    required this.list,
   });
 
   @override
@@ -30,19 +26,7 @@ class ViewArticlesList extends StatefulWidget {
 }
 
 class _ViewArticlesListState extends State<ViewArticlesList> {
-  late String listTitle;
-  late String listDescription;
-  late String createdBy;
-
-  @override
-  void initState() {
-    super.initState();
-    listTitle = widget.listTitle;
-    listDescription = widget.listDescription;
-    createdBy = widget.createdBy;
-  }
-
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +42,7 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
                     context: context,
                     builder:  (BuildContext context) {
                       return const SocialMediaSharingPopup();
-                    }
+             }
                 );
               },
               icon: const Icon(Icons.ios_share_rounded)
@@ -81,17 +65,12 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  listTitle,
+                  widget.list.title,
                   style: Theme.of(context).textTheme.headlineLarge
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  "List by $createdBy",
-                  style: Theme.of(context).textTheme.bodyMedium
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  listDescription,
+                  widget.list.description,
                   style: Theme.of(context).textTheme.bodyLarge
                 )
               ]
@@ -99,6 +78,37 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
           ),
           const SizedBox(height: 8.0),
           // TODO: Insert articles here.
+          FutureBuilder(
+            future: ListController.instance.getArticlesFromArticleArray(widget.list.articleIds), 
+            builder: (context, snapshot){
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // Show a loading indicator while fetching data
+                return const SizedBox(
+                  height: 170.0,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else if (snapshot.hasError) {
+                // Handle error state
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData) {
+                // Handle the case where there's no data
+                return const Center(child: Text('No data available'));
+              }
+              List<Article> articles = snapshot.data! as List<Article>;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: articles.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final articleModel = articles[index];
+                  return ArticleContainerListView(article: articleModel);
+                }
+              ); 
+                  
+                
+              
+            },
+            ),
         ],
       )
     );

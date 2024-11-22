@@ -160,10 +160,9 @@ class _MyProfilePageState extends State<MyProfilePage>
                 Expanded(
                   child: StandardScrollbar(
                     child: GetX<ArticleController>(
-                    init: Get.put<ArticleController>(ArticleController()),
+                        init: Get.put<ArticleController>(ArticleController()),
                         builder: (ArticleController articleController) {
                           var currentUserId = UserController.instance.currentUser.value;
-                          print("CURRENT USER ID: ${currentUserId?.id}");
                           List<Article> articleOfUserList = articleController.articles.where((article) => article.authorId == currentUserId?.id).toList();
                           return ListView.builder(
                               itemCount: articleOfUserList.length,

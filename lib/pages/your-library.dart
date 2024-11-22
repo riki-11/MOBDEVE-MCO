@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobdeve_mco/controllers/list_controller.dart';
+import 'package:mobdeve_mco/models/list.dart';
 import 'package:mobdeve_mco/widgets/create_list_popup.dart';
 import 'package:mobdeve_mco/widgets/library_tab_bar.dart';
 import 'package:mobdeve_mco/widgets/list_container_view.dart';
@@ -45,19 +48,22 @@ class _YourLibraryState extends State<YourLibrary> {
                   tooltip: 'Add to library'
               )
             ],
-            tabBar: const LibraryTabBar()
-        ),
-        body: const TabBarView(
-          children: <Widget>[
-            // Your Lists Tab
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ListContainerView()
-              ],
-            ),
-          ]
-        ),
+        ), 
+        body: 
+               GetX<ListController>(
+                init: Get.put<ListController>(ListController()),
+                builder: (ListController listController) {
+                  List<ListModel> listOfUserList = ListController.instance.currentUserLists.value;
+                  return ListView.builder(
+                    itemCount: listOfUserList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final listModel = listOfUserList[index];
+                      return ListContainerView(list: listModel);
+                    },
+                  );
+                }
+              ),
+            
         bottomNavigationBar: StandardBottomBar(curPageIndex: pageIndex),
       ),
     );}
