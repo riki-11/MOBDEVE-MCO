@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobdeve_mco/models/list.dart';
 
 class ListContainerView extends StatelessWidget {
-  const ListContainerView({super.key});
+  final ListModel list;
+  const ListContainerView({super.key, required this.list});
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +25,13 @@ class ListContainerView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Freshman Year",
+                    list.title,
                     style: Theme.of(context).textTheme.titleLarge
                   ),
                   Text(
-                    "List by riki11",
-                    style: Theme.of(context).textTheme.bodyMedium
-                  ),
-                  Text(
-                    "A list with guides for all my 1st year subjects in ComSci at DLSU.",
+                    list.description,
                     style: Theme.of(context).textTheme.bodyLarge
                   ),
-                  Text(
-                    "7 articles from Enrique Lejano, Cornars, Joshbb, and more. ",
-                    style: Theme.of(context).textTheme.bodyMedium
-                  )
                 ],
               )
             )
