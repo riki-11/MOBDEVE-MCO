@@ -7,14 +7,14 @@ class ListModel{
   late String title;
   late String description;
   // This stores the ID
-  late List<String> articlesBookmarked;
+  late List<String> articleIds;
 
   ListModel({
     required this.id,
     required this.authorId,
     required this.title,
     required this.description,
-    required this.articlesBookmarked,
+    required this.articleIds,
   });
 
   ListModel.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot}) {
@@ -22,6 +22,6 @@ class ListModel{
     title = documentSnapshot[TITLE];
     description = documentSnapshot['description'];
     authorId = documentSnapshot['authorId'];    
-    // articlesBookmarked = List<String>.from(documentSnapshot['articlesBookmarked'] as List);
+    articleIds = List<String>.from(documentSnapshot['articleIds'] as List);
   }
 }

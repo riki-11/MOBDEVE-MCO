@@ -119,9 +119,9 @@ class ListController extends GetxController{
     ListModel listInCollection = ListModel.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
 
     // If article was in the list, and was removed
-    if(listInCollection.articlesBookmarked.remove(article.id)){
+    if(listInCollection.articleIds.remove(article.id)){
       await documentRef.set({
-        'articlesBookmarked': listInCollection.articlesBookmarked,
+        'articlesBookmarked': listInCollection.articleIds,
       });
     } else {
       throw Exception("Error deleting article from list, article not found");
@@ -154,16 +154,38 @@ class ListController extends GetxController{
     // This is the collection
     ListModel listInCollection = ListModel.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
 
-    if(listInCollection.articlesBookmarked.contains(article.id)){
+    if(listInCollection.articleIds.contains(article.id)){
       throw Exception("Error adding article to list, is already in the list");
     } else {
-      listInCollection.articlesBookmarked.add(article.id!);
+      listInCollection.articleIds.add(article.id!);
       await documentRef.set({
-        'articlesBookmarked': listInCollection.articlesBookmarked,
+        'articlesBookmarked': listInCollection.articleIds,
       });
     }
   }
 
+  Future<List<Article>> getArticlesFromArticleArray(List<String> articleIds) async {
+    try {
+      if (articleIds.isEmpty) return [];
+  
+      // Use Firestore's whereIn clause to fetch all matching documents in a single query
+      final querySnapshot = await firebaseFirestore
+          .collection('articles')
+          .where(FieldPath.documentId, whereIn: articleIds)
+          .get();
+  
+      // Map each document into an Article object
+      return querySnapshot.docs
+          .map((doc) => Article.fromDocumentSnapshot(documentSnapshot: doc))
+          .toList();
+    } catch (e) {
+      print('Error fetching articles: $e');
+      rethrow;
+    }
+  }
+
+
+  
   // Add Article to List
   @override
   void onReady() {

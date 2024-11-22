@@ -12,7 +12,6 @@ class ListContainerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Replace this with real data.
     return InkWell(
       child: Container(
         margin: const EdgeInsets.only(bottom: 8.0),
@@ -47,10 +46,7 @@ class ListContainerView extends StatelessWidget {
       onTap: () {
         // TODO: Lead to real list page.
         Get.to(() => ViewArticlesList(
-            listTitle: 'Freshman Year',
-            listDescription: 'A list with guides for all my 1st year subjects in ComSci at DLSU.',
-            createdBy: "riki11",
-            controller: ArticleController()
+            list: list
           )
         );
       }

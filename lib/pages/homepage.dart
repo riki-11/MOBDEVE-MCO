@@ -71,9 +71,6 @@ class _HomePageState extends State<HomePage> {
               init: Get.put<ArticleController>(ArticleController()),
               builder: (ArticleController articleController) {
                 // Filter by college filter and program filter found in ArticleController
-
-                print("Current Program Filter: ${articleController.programFilter}");
-                print("Current College Filter: ${articleController.collegeFilter}");
                   List<Article> filteredArticles = articleController.articles.where((article) {
                     ArticleController articleController = ArticleController
                         .instance;
