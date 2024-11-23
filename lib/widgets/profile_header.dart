@@ -26,51 +26,39 @@ class ProfileHeader extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 8.0),
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child:
-          Obx(()
-              {
-                UserController controller = UserController.instance;
-                var user = controller.currentUser.value;
-                var userCollege = controller.currentUserCollege.value;
-                var userProgram = controller.currentUserProgram.value;
-                if(user == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+      child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            const Icon(Icons.account_circle_outlined, size: 64.0),
+            // TODO: Replace with display picture.
+            Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const Icon(Icons.account_circle_outlined, size: 64.0), // TODO: Replace with display picture.
-                      Flexible( // Allow the text content to take only the required space
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  user.getName(),
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                  softWrap: true, // Enable wrapping
-                                  maxLines: 2, // Optionally limit to 2 lines
-                                ),
-                                Text(
-                                  "${userCollege?.name} (${userCollege?.acronym})",
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  softWrap: true,
-                                ),
-                                Text(
-                                  "${userProgram?.name} (${userProgram?.acronym})",
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  softWrap: true,
-                                ),
-                              ],
-                            ),
-                          )
-                      )
-                    ]
-                );
-              }
-          ),
-
+                      Text(
+                        username,
+                        style: Theme.of(context).textTheme.titleLarge,
+                        softWrap: true,
+                        maxLines: 2,
+                      ),
+                      Text(
+                        "$collegeName ($collegeAcronym)",
+                        style: Theme.of(context).textTheme.bodySmall,
+                        softWrap: true,
+                      ),
+                      Text(
+                        "$programName ($programAcronym)",
+                        style: Theme.of(context).textTheme.bodySmall,
+                        softWrap: true,
+                      ),
+                    ],
+                  ),
+                )
+            )
+          ]
+      )
     );
   }
 }
