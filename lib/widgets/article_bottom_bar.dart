@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/controllers/reaction_controller.dart';
+import 'package:mobdeve_mco/widgets/add_article_to_list.dart';
 
 class ArticleBottomBar extends StatefulWidget {
   final String articleId;
@@ -71,6 +72,12 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
             ),
             onPressed: () {
               setState(() {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AddArticleToList(articleId: widget.articleId);
+                    }
+                );
                 isBookmarked = !isBookmarked;
               });
             },
