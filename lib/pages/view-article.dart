@@ -59,6 +59,12 @@ class _ViewArticleState extends State<ViewArticle> {
   late String formattedTitle;
   late String formattedAuthorName;
 
+  // Flag to check if data is loaded
+  bool isLoading = true;
+  // Stores potential error messages.
+  String? errorMessage;
+  bool hasData = false;
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +79,7 @@ class _ViewArticleState extends State<ViewArticle> {
 
     loadData();
     checkUserisAuthor();
+    fetchCollegeAndAuthor();
   }
 
   void loadData() {
@@ -106,16 +113,39 @@ class _ViewArticleState extends State<ViewArticle> {
     }
   }
 
-  Future<Map<String, dynamic>> fetchCollegeAndAuthor() async {
-    // college = await CollegeController.instance.getCollege(widget.article.collegeId);
-    college = CollegeController.instance.collegeList.value.firstWhere(
+
+  Future<void> fetchCollegeAndAuthor() async {
+    try {
+      // Fetch data and assign to variables
+      college = CollegeController.instance.collegeList.value.firstWhere(
             (college) => college.id == widget.article.collegeId,
-        orElse: () => throw Exception("College not Found"));
-    program =
-    await ProgramController.instance.getProgram(widget.article.programId);
-    author = await UserController.instance.getUserData(widget.article.authorId);
-    return {'college': college, 'program': program, 'author': author};
+        orElse: () => throw Exception("College not Found"),
+      );
+      program = await ProgramController.instance.getProgram(widget.article.programId);
+      author = await UserController.instance.getUserData(widget.article.authorId);
+
+      // Check if the data is non-null and valid
+      if (college != null && program != null && author != null) {
+        setState(() {
+          isLoading = false;
+          hasData = true;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+          hasData = false;
+        });
+      }
+    } catch (error) {
+      // Capture the error message
+      setState(() {
+        isLoading = false;
+        errorMessage = error.toString();
+      });
+    }
   }
+
+
   void onScroll(Notification notif) {
     if (notif is UserScrollNotification) {
       final scrollDirection = notif.direction;
@@ -129,152 +159,152 @@ class _ViewArticleState extends State<ViewArticle> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: fetchCollegeAndAuthor(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while fetching data
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          // Handle error state
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData) {
-          // Handle the case where there's no data
-          return const Center(child: Text('No data available'));
-        }
 
-        return Scaffold(
-          body: DisappearingTopBar(
-              actions: [
-                IconButton(
+    // If data is still being loaded, indicate so.
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    // If error, display message.
+    if (errorMessage != null) {
+      return Center(child: Text('Error: $errorMessage'));
+    }
+
+    // Handle the case where there's no data
+    if (!hasData) {
+      return Center(child: Text('No data available', style: Theme.of(context).textTheme.headlineSmall));
+    }
+
+    return Scaffold(
+        body: DisappearingTopBar(
+            actions: [
+              IconButton(
                   onPressed: () async {
                     formattedTitle = widget.article.title.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
                     formattedAuthorName = author.getName().toLowerCase().replaceAll(RegExp(r'\s+'), '-');
                     final result = await Share.share(
-                      'Read "${widget.article.title}", an article by ${author.getName()}, at https://uniguide.com/$formattedAuthorName/$formattedTitle.'
+                        'Read "${widget.article.title}", an article by ${author.getName()}, at https://uniguide.com/$formattedAuthorName/$formattedTitle.'
                     );
                   },
                   icon: const Icon(Icons.ios_share_rounded)),
-                PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_horiz),
-                    onSelected: (String value) {
-                      print("Selected option: $value");
-                      if (value == 'edit-article') {
-                        Get.to(() => EditArticle(article: widget.article));
-                      }
-                      if (value == 'delete-article') {
-                        showDialog<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DeleteDialogue(
-                              deleteFunction: deleteArticle,
-                            );
-                          },
-                        );
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      PopupMenuItem<String>(
-                        value: 'report-article',
-                        child: Text('Report article', style: Theme.of(context).textTheme.bodyMedium),
-                      ),
-                      if (isAuthor)
-                        PopupMenuItem<String> (
+              PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_horiz),
+                  onSelected: (String value) {
+                    print("Selected option: $value");
+                    if (value == 'edit-article') {
+                      Get.to(() => EditArticle(article: widget.article));
+                    }
+                    if (value == 'delete-article') {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DeleteDialogue(
+                            deleteFunction: deleteArticle,
+                          );
+                        },
+                      );
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'report-article',
+                      child: Text('Report article', style: Theme.of(context).textTheme.bodyMedium),
+                    ),
+                    if (isAuthor)
+                      PopupMenuItem<String> (
                           value: 'edit-article',
                           child: Text('Edit article',
                               style: Theme.of(context).textTheme.bodyMedium)
-                        ),
-                      if (isAuthor)
-                        PopupMenuItem<String> (
+                      ),
+                    if (isAuthor)
+                      PopupMenuItem<String> (
                           value: 'delete-article',
-                            child: Text('Delete article',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red)
-                            )
-                        )
-                    ]
-                ),
-              ],
-              body: NotificationListener<UserScrollNotification>(
-                onNotification: (notif) {
-                  onScroll(notif);
-                  return true;
-                },
-                child: StandardScrollbar(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.article.title,
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                          const SizedBox(height: 8.0),
-                          Text(
-                              "This is a short description of the article",
-                              style: Theme.of(context).textTheme.bodyLarge
-                          ),
-                          const SizedBox(height: 8.0),
-                          Row(
-                            children: [
-                              Flex(
-                                direction: Axis.vertical,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      author.getName(),
-                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          child: Text('Delete article',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red)
+                          )
+                      )
+                  ]
+              ),
+            ],
+            body: NotificationListener<UserScrollNotification>(
+              onNotification: (notif) {
+                onScroll(notif);
+                return true;
+              },
+              child: StandardScrollbar(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.article.title,
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                            "This is a short description of the article",
+                            style: Theme.of(context).textTheme.bodyLarge
+                        ),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          children: [
+                            Flex(
+                              direction: Axis.vertical,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    author.getName(),
+                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                         fontWeight: FontWeight.w600
-                                      )
-                                  ),
-                                  Text(
+                                    )
+                                ),
+                                Text(
                                     DateFormat.yMMMd().format(widget.article.datePosted.toDate()),
                                     style: Theme.of(context).textTheme.bodySmall
-                                  ),
-                                ],
-                              ),
-                              const Expanded(
-                                  child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Icon(Icons.account_circle_rounded)
-                                  )
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 32.0), // Spacing between title and content
-                          ...widget.article.content.entries.map((entry) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    entry.key, // Section title
-                                    style: Theme.of(context).textTheme.headlineSmall,
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  QuillEditor.basic(
-                                    controller: controlMap[entry.key],
-                                  )
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ],
-                      ),
-                    )
-                ),
-              )
+                                ),
+                              ],
+                            ),
+                            const Expanded(
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(Icons.account_circle_rounded)
+                                )
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32.0), // Spacing between title and content
+                        ...widget.article.content.entries.map((entry) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  entry.key, // Section title
+                                  style: Theme.of(context).textTheme.headlineSmall,
+                                ),
+                                const SizedBox(height: 8.0),
+                                QuillEditor.basic(
+                                  controller: controlMap[entry.key],
+                                )
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  )
+              ),
+            )
+        ),
+        bottomNavigationBar: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: showBottomBar ? kBottomNavigationBarHeight : 0.0,
+          child: ArticleBottomBar(
+            articleId: widget.article.id!,
           ),
-          bottomNavigationBar: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            height: showBottomBar ? kBottomNavigationBarHeight : 0.0,
-            child: ArticleBottomBar(
-              articleId: widget.article.id!,
-            ),
-          )
-        );
-      }
+        )
     );
   }
 
@@ -286,5 +316,3 @@ class _ViewArticleState extends State<ViewArticle> {
     super.dispose();
   }
 }
-
-
