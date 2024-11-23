@@ -15,6 +15,7 @@ import 'package:mobdeve_mco/widgets/delete_dialogue.dart';
 import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
 import 'package:mobdeve_mco/widgets/disappearing_top_bar.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../constants/global_consts.dart';
 import '../controllers/college_controller.dart';
@@ -53,6 +54,10 @@ class _ViewArticleState extends State<ViewArticle> {
   late College college;
   late Program program;
   late User author;
+
+  // Formatted variables for link-sharing
+  late String formattedTitle;
+  late String formattedAuthorName;
 
   @override
   void initState() {
@@ -142,15 +147,14 @@ class _ViewArticleState extends State<ViewArticle> {
           body: DisappearingTopBar(
               actions: [
                 IconButton(
-                    onPressed: (){
-                      showModalBottomSheet(
-                        context: context,
-                        builder:  (BuildContext context) {
-                          return const SocialMediaSharingPopup();
-                        }
-                      );
-                    },
-                    icon: const Icon(Icons.ios_share_rounded)),
+                  onPressed: () async {
+                    formattedTitle = widget.article.title.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+                    formattedAuthorName = author.getName().toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+                    final result = await Share.share(
+                      'Read "${widget.article.title}", an article by ${author.getName()}, at https://uniguide.com/$formattedAuthorName/$formattedTitle.'
+                    );
+                  },
+                  icon: const Icon(Icons.ios_share_rounded)),
                 PopupMenuButton<String>(
                     icon: const Icon(Icons.more_horiz),
                     onSelected: (String value) {

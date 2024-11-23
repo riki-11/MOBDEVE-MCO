@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:mobdeve_mco/controllers/list_controller.dart';
 import 'package:mobdeve_mco/models/list.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../controllers/article_controller.dart';
 import '../models/article.dart';
@@ -26,7 +27,12 @@ class ViewArticlesList extends StatefulWidget {
 }
 
 class _ViewArticlesListState extends State<ViewArticlesList> {
-    @override
+  // Formatted variables for link-sharing
+  late String formattedTitle;
+  // TODO: Add the username into the list info as well.
+  late String formattedCreatorName;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,15 +43,13 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
         ),
         actions: <Widget>[
           IconButton(
-              onPressed: (){
-                showModalBottomSheet(
-                    context: context,
-                    builder:  (BuildContext context) {
-                      return const SocialMediaSharingPopup();
-             }
-                );
-              },
-              icon: const Icon(Icons.ios_share_rounded)
+            onPressed: () async {
+              formattedTitle = widget.list.title.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+              final result = await Share.share(
+                'Check out "${widget.list.title}", a list containing helpful UniGuide articles at https://uniguide.com/$formattedTitle.'
+              );
+            },
+            icon: const Icon(Icons.ios_share_rounded)
           ),
         ],
       ),

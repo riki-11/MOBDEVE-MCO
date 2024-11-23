@@ -125,7 +125,7 @@ class _WriteArticleState extends State<WriteArticle> {
                 saveArticle();
                 Get.to(() => HomePage(controller: ArticleController()));
               },
-              child: Text("Next",
+              child: Text("Publish",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.primary
                 )
