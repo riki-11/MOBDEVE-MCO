@@ -13,6 +13,7 @@ class ArticleBottomBar extends StatefulWidget {
 class _ArticleBottomBarState extends State<ArticleBottomBar> {
   bool isLiked = false;
   bool isBookmarked = false;
+  String currentLikesNumber = "0";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +53,7 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Show a loading indicator while fetching data
-                    return const Center(child: CircularProgressIndicator());
+                    return Text(currentLikesNumber);
                   } else if (snapshot.hasError) {
                     // Handle error state
                     return Center(child: Text('Error: ${snapshot.error}'));
@@ -60,6 +61,7 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
                     // Handle the case where there's no data
                     return const Center(child: Text('No data available'));
                   }
+                  currentLikesNumber = snapshot.data.toString();
                   return Text(snapshot.data.toString() ?? '-1');
                 }
               ),
