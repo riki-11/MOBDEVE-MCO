@@ -35,6 +35,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   PasswordField(
                     // TODO: Insert controller
                     hintText: 'Old password',
+                    // right now, 'old password' has no constraint.
+                    // consider adding an error message if it has yet to match the old password.
+                    passwordConstraint: r'(.*?)',
+                    errorMessage: '',
                     border: PasswordBorder(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5)
@@ -45,6 +49,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   PasswordField(
                     // TODO: Insert controller
                       hintText: 'New password',
+                      passwordConstraint: r'^(?=.*\d).+$',
+                      errorMessage: 'Must contain at least one digit (0-9)',
                       border: PasswordBorder(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5)
@@ -55,6 +61,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   PasswordField(
                     // TODO: Insert controller
                       hintText: 'Confirm new password',
+                      passwordConstraint: r'^(?=.*\d).+$',
+                      errorMessage: 'Must contain at least one digit (0-9)',
                       border: PasswordBorder(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5)

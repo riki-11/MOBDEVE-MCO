@@ -47,6 +47,9 @@ class _LoginPageState extends State<LoginPage> {
                   PasswordField(
                     controller: controller.password,
                     hintText: 'Password',
+                    // No error message since it just needs to check if it matches password.
+                    passwordConstraint: r'(.*?)',
+                    errorMessage: '',
                     border: PasswordBorder(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5)
