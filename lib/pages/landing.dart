@@ -17,16 +17,37 @@ class LandingPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Welcome to Uniguide',
+              'Welcome to UniGuide',
               style: Theme.of(context).textTheme.displayMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 64.0),
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: 'Your number one resource for\n',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  children: [
+                    TextSpan(
+                      text: 'winning at university.',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold
+                      )
+                    )
+                  ]
+                )
+              )
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(
-                      Theme.of(context).colorScheme.primary
-                  )
+                backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary
+                ),
+                elevation: WidgetStateProperty.all(8.0),
               ),
               onPressed: () {
                 Navigator.push(
