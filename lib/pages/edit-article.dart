@@ -7,24 +7,24 @@ import 'package:get/get.dart';
 import 'package:mobdeve_mco/constants/global_consts.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/models/article.dart';
-import 'package:mobdeve_mco/models/college.dart';
-import 'package:mobdeve_mco/models/program.dart';
-import 'package:mobdeve_mco/models/user.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/widgets/header_plus_textbox.dart';
 
 import '../controllers/article_controller.dart';
 
-class WriteArticle extends StatefulWidget {
-  final Map<String, bool> categoryOptions;
 
-  const WriteArticle({super.key, required this.categoryOptions});
+
+
+class EditArticle extends StatefulWidget {
+  final Article article;
+
+  const EditArticle({super.key, required this.article});
 
   @override
-  State<WriteArticle> createState() => _WriteArticleState();
+  State<EditArticle> createState() => _EditArticleState();
 }
 
-class _WriteArticleState extends State<WriteArticle> {
+class _EditArticleState extends State<EditArticle> {
   // TextController for title
   final TextEditingController _titleController = TextEditingController();
 
@@ -51,10 +51,19 @@ class _WriteArticleState extends State<WriteArticle> {
       HEADER_LNR:       _controllerLnR
     };
 
+    loadData();
   }
 
-  void saveArticle() async {
-    // TODO: Separate data for each quill controller
+  void loadData() {
+    _titleController.text = widget.article.title;
+
+    for (var entry in widget.article.content.entries) {
+      controlMap[entry.key]?.document = Document.fromJson(jsonDecode(entry.value));
+      controlMap[entry.key]?.readOnly = false;
+    }
+  }
+
+  void updateArticle() async {
     late String json;
     late Map<String, String> data = {};
 
@@ -66,15 +75,13 @@ class _WriteArticleState extends State<WriteArticle> {
     var program = UserController.instance.currentUserProgram;
 
 
-    controlMap.forEach((category, controller) {
-      if (controller.document.toPlainText().trim().isNotEmpty) {
-        json = jsonEncode(controller.document.toDelta().toJson());
-        data[category] = json;
-      }
-    });
+    for (var entry in widget.article.content.entries) {
+      json = jsonEncode(controlMap[entry.key]!.document.toDelta().toJson());
+      data[entry.key] = json;
+    }
 
-    Article newArticle = Article(
-        id: null,
+    Article updatedArticle = Article(
+        id: widget.article.id!,
         authorId: currentUser.value!.id.toString(),
         title: title,
         content: data,
@@ -83,7 +90,15 @@ class _WriteArticleState extends State<WriteArticle> {
         programId: program.value!.id.toString()
     );
 
-    await ArticleController.instance.addArticle(newArticle);
+    if (widget.article.id == null) {
+      // Add a new article if no ID exists
+      print('Article has no id');
+      await ArticleController.instance.addArticle(updatedArticle);
+    } else {
+      // Update an existing article
+      print('Article has id');
+      await ArticleController.instance.updateArticle(widget.article.id!, updatedArticle);
+    }
   }
 
 
@@ -96,7 +111,7 @@ class _WriteArticleState extends State<WriteArticle> {
             onPressed: () {
               Navigator.pop(context);
               // TODO: Make pop-up ensuring user wants to delete draft
-              },
+            },
             child: Text("Cancel",
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Colors.grey.shade700
@@ -122,13 +137,13 @@ class _WriteArticleState extends State<WriteArticle> {
           ),
           TextButton(
               onPressed: () {
-                saveArticle();
+                updateArticle();
                 Get.to(() => HomePage(controller: ArticleController()));
               },
-              child: Text("Next",
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.primary
-                )
+              child: Text("Update",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.primary
+                  )
               ))
         ],
       ),
@@ -153,11 +168,10 @@ class _WriteArticleState extends State<WriteArticle> {
                   ),
                 ),
 
-                // Build Header and textbox options of only the selected categories
-                // .where filters entries that are only true
-                ...widget.categoryOptions.entries.where((category) => category.value).map((category) {
-                    return HeaderPlusTextbox(header: category.key, controller: controlMap[category.key],);
-                })
+                //ERROR HERE
+                ...widget.article.content.entries.map((entry) =>
+                    HeaderPlusTextbox(header: entry.key,controller: controlMap[entry.key])
+                ),
               ],
             ),
           ),

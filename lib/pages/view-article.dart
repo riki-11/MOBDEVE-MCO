@@ -3,9 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:mobdeve_mco/controllers/article_controller.dart';
+import 'package:mobdeve_mco/pages/edit-article.dart';
+
 
 import 'package:mobdeve_mco/widgets/article_bottom_bar.dart';
+import 'package:mobdeve_mco/widgets/delete_dialogue.dart';
 import 'package:mobdeve_mco/widgets/social_media_sharing_popup.dart';
 import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
 import 'package:mobdeve_mco/widgets/disappearing_top_bar.dart';
@@ -39,7 +45,11 @@ class _ViewArticleState extends State<ViewArticle> {
   // Category-QuillController map
   late Map<String, QuillController> controlMap;
 
+  // Bool variables
+  bool isAuthor = false;
   bool showBottomBar = true;
+
+  // User variables
   late College college;
   late Program program;
   late User author;
@@ -57,6 +67,7 @@ class _ViewArticleState extends State<ViewArticle> {
     };
 
     loadData();
+    checkUserisAuthor();
   }
 
   void loadData() {
@@ -64,7 +75,30 @@ class _ViewArticleState extends State<ViewArticle> {
       controlMap[entry.key]?.document = Document.fromJson(jsonDecode(entry.value));
       controlMap[entry.key]?.readOnly = true;
     }
+  }
 
+  void deleteArticle() async {
+    var articleId = widget.article.id;
+
+    if (articleId == null) {
+      // TODO: Display error (?)
+
+      return;
+    }
+    await ArticleController.instance.deleteArticle(widget.article.id.toString());
+  }
+
+  void checkUserisAuthor() {
+    // Check if user is author
+
+    var currentUser = UserController.instance.currentUser.value!.id;
+    var articleAuthor = widget.article.authorId;
+
+    if (currentUser == articleAuthor) {
+      setState(() {
+        isAuthor = true;
+      });
+    }
   }
 
   Future<Map<String, dynamic>> fetchCollegeAndAuthor() async {
@@ -121,12 +155,38 @@ class _ViewArticleState extends State<ViewArticle> {
                     icon: const Icon(Icons.more_horiz),
                     onSelected: (String value) {
                       print("Selected option: $value");
+                      if (value == 'edit-article') {
+                        Get.to(() => EditArticle(article: widget.article));
+                      }
+                      if (value == 'delete-article') {
+                        showDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DeleteDialogue(
+                              deleteFunction: deleteArticle,
+                            );
+                          },
+                        );
+                      }
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                       PopupMenuItem<String>(
                         value: 'report-article',
                         child: Text('Report article', style: Theme.of(context).textTheme.bodyMedium),
-                      )
+                      ),
+                      if (isAuthor)
+                        PopupMenuItem<String> (
+                          value: 'edit-article',
+                          child: Text('Edit article',
+                              style: Theme.of(context).textTheme.bodyMedium)
+                        ),
+                      if (isAuthor)
+                        PopupMenuItem<String> (
+                          value: 'delete-article',
+                            child: Text('Delete article',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red)
+                            )
+                        )
                     ]
                 ),
               ],
@@ -216,7 +276,6 @@ class _ViewArticleState extends State<ViewArticle> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     for (var entry in controlMap.entries) {
       controlMap[entry.key]?.dispose();
     }

@@ -5,7 +5,6 @@ import 'package:mobdeve_mco/constants/global_consts.dart';
 
 import '../models/college.dart';
 import '../models/program.dart';
-import '../models/user.dart';
 
 class ArticleController extends GetxController{
   static ArticleController get instance => Get.find();
@@ -56,8 +55,37 @@ class ArticleController extends GetxController{
     }
   }
 
+  Future<void> updateArticle(String articleId, Article updatedArticle) async {
+    try {
 
+      Map<String, dynamic> updatedData = {
+        AUTHOR_ID: updatedArticle.authorId,
+        TITLE: updatedArticle.title,
+        CONTENT: updatedArticle.content,
+        DATE_POSTED: updatedArticle.datePosted,
+        COLLEGE_ID: updatedArticle.collegeId,
+        PROGRAM_ID: updatedArticle.programId,
+      };
 
+      // Update the article in the "articles" collection
+      await firebaseFirestore.collection('articles').doc(articleId).update(updatedData);
+
+      print('Article updated successfully!');
+    } catch (e) {
+      print('Failed to update article: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteArticle(String articleId) async {
+    try {
+      await firebaseFirestore.collection('articles').doc(articleId).delete();
+      print('Successfully deleted article!');
+    } catch (e) {
+      print('Failed to delete article: $e');
+      rethrow;
+    }
+  }
 
 
   @override
