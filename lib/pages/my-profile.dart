@@ -10,12 +10,15 @@ import 'package:mobdeve_mco/widgets/profile_header.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../controllers/article_controller.dart';
+import '../controllers/list_controller.dart';
 import '../controllers/user_controller.dart';
 import '../models/article.dart';
 import '../models/college.dart';
+import '../models/list.dart';
 import '../models/program.dart';
 import '../models/user.dart';
 import '../widgets/article_container_list_view.dart';
+import '../widgets/list_container_view.dart';
 import '../widgets/standard_scrollbar.dart';
 
 class MyProfilePage extends StatefulWidget {
@@ -29,9 +32,11 @@ class MyProfilePage extends StatefulWidget {
 
 class _MyProfilePageState extends State<MyProfilePage>
     with SingleTickerProviderStateMixin {
+  final UserController userController = UserController.instance;
+  final RxString selectedContent = 'Articles'.obs; // Tracks the dropdown selection
+
   late int pageIndex;
   late TabController _tabController;
-  final UserController userController = UserController.instance;
   late User? user;
   late College? userCollege;
   late Program? userProgram;
@@ -109,7 +114,6 @@ class _MyProfilePageState extends State<MyProfilePage>
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextButton(
-                        // TODO: Add sharing functionality.
                         onPressed: () async {
                           var formattedUsername = user.getName().toLowerCase().replaceAll(RegExp(r'\s+'), '-');
                           final result = await Share.share(
@@ -154,52 +158,87 @@ class _MyProfilePageState extends State<MyProfilePage>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               width: double.infinity,
-              child: const ProfileContentDropdown(options: ['Articles', 'Lists']),
-            ),
-            // TabBar and TabBarView
-            Container(
-              color: Theme.of(context).colorScheme.surface,
-              child: TabBar(
-                controller: _tabController,
-                labelColor: Theme.of(context).colorScheme.primary,
-                unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
-                indicatorColor: Theme.of(context).colorScheme.primary,
-                tabs: const [
-                  Tab(text: "Published"),
-                  Tab(text: "Drafts"),
-                ],
+              // TODO: When switching to 'Lists' dropdown, query for lists instead of articles and display them in the same container.
+              child: ProfileContentDropdown(
+                options: ['Articles', 'Lists'],
+                onChanged: (String? selected) {
+                  selectedContent.value = selected!; // Update the selected content
+                },
               ),
             ),
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                  Expanded(
-                    child: StandardScrollbar(
-                      child: GetX<ArticleController>(
-                          init: Get.put<ArticleController>(ArticleController()),
-                          builder: (ArticleController articleController) {
-                            var currentUserId = UserController.instance.currentUser.value;
-                            List<Article> articleOfUserList = articleController.articles.where((article) => article.authorId == currentUserId?.id).toList();
-                            return ListView.builder(
-                                itemCount: articleOfUserList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final articleModel = articleOfUserList[index];
-                                  return ArticleContainerListView(
-                                      article: articleModel
-                                  );
-                                }
-                            );
-                          }
+              child: Obx(() {
+                // display either articles or lists depending on dropdown selection.
+                if (selectedContent.value == 'Articles') {
+                  return Column(
+                    children: [
+                      Container(
+                        color: Theme.of(context).colorScheme.surface,
+                        child: TabBar(
+                          controller: _tabController,
+                          labelColor: Theme.of(context).colorScheme.primary,
+                          unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
+                          indicatorColor: Theme.of(context).colorScheme.primary,
+                          tabs: const [
+                            Tab(text: "Published"),
+                            Tab(text: "Drafts"),
+                          ],
+                        ),
                       ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: <Widget>[
+                            Expanded(
+                              child: StandardScrollbar(
+                                child: GetX<ArticleController>(
+                                  init: Get.put<ArticleController>(ArticleController()),
+                                  builder: (ArticleController articleController) {
+                                    var currentUserId = UserController.instance.currentUser.value;
+                                    List<Article> articleOfUserList = articleController.articles.where((article) => article.authorId == currentUserId?.id).toList();
+                                    return ListView.builder(
+                                      itemCount: articleOfUserList.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        final articleModel = articleOfUserList[index];
+                                        return ArticleContainerListView(
+                                          article: articleModel
+                                        );
+                                      }
+                                    );
+                                  }
+                                ),
+                              ),
+                            ),
+                            Center(child: Text("Drafts here")),
+                          ],
+                        ),
+                      ),
+                    ]
+                  );
+                } else if (selectedContent.value == 'Lists') {
+                  return StandardScrollbar(
+                    child: GetX<ListController>(
+                        init: Get.put<ListController>(ListController()),
+                        builder: (ListController listController) {
+                          List<ListModel> listOfUserList = ListController.instance.currentUserLists.value;
+                          return ListView.builder(
+                            itemCount: listOfUserList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final listModel = listOfUserList[index];
+                              return ListContainerView(list: listModel);
+                            },
+                          );
+                        }
                     ),
-                  ),
-                  Center(child: Text("Drafts here")),
-                ],
-              ),
-            ),
-          ],
-        );
+                  );
+                } else {
+                  return const Center(child: Text("No content available"));
+                }
+              }
+            )
+          ) // TabBar and TabBarView
+        ],
+      );
       }),
       bottomNavigationBar: StandardBottomBar(curPageIndex: pageIndex),
     );

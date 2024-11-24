@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class ProfileContentDropdown extends StatefulWidget {
   final List<String> options;
+  final void Function(String?) onChanged;
 
   const ProfileContentDropdown({
     super.key,
-    required this.options
+    required this.options,
+    required this.onChanged
   });
 
   @override
@@ -23,7 +25,6 @@ class _ProfileContentDropdownState extends State<ProfileContentDropdown> {
     options = widget.options;
   }
 
-  // TODO: find way to remove or edit border around dropdownmenu.
   @override Widget build (BuildContext context) {
     return DropdownMenu<String>(
       width: double.infinity,
@@ -43,6 +44,7 @@ class _ProfileContentDropdownState extends State<ProfileContentDropdown> {
         setState(() {
           selectedOption = newOption;
         });
+        widget.onChanged(newOption);
       }
     );
   }

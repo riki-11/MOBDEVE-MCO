@@ -126,7 +126,6 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
                       color: Colors.grey[600],
                     ),
                   ),
-                // TODO: Add no. of articles within list.
               ]
             ),
           ),
