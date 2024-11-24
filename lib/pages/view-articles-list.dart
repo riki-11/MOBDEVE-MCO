@@ -83,7 +83,7 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
           const SizedBox(height: 8.0),
           // TODO: Insert articles here.
           FutureBuilder(
-            future: ListController.instance.getArticlesFromArticleArray(widget.list.articleIds), 
+            future: ListController.instance.getArticlesFromArticleArray(widget.list.articlesBookmarked), 
             builder: (context, snapshot){
 
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -105,12 +105,42 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
                 itemCount: articles.length,
                 itemBuilder: (BuildContext context, int index) {
                   final articleModel = articles[index];
-                  return ArticleContainerListView(article: articleModel);
+
+                  return Dismissible(
+                    key: Key(articleModel.id.toString()),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      setState(() {
+                        // TODO: Add deletion behavior
+                        // articles.removeAt(index); ?
+                      });
+                      // show notification to confirm deletion
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Removed article from list.'),
+                          action: SnackBarAction(
+                            label: 'Undo',
+                            onPressed: () {
+                              // if user wants to undo deletion, reinsert here.
+                              setState(() {
+                                // TODO: Add reinserting of article behavior.
+                                // articles.insert(index, articleModel); ?
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(Icons.delete, color: Colors.white)
+                    ),
+                    child: ArticleContainerListView(article: articleModel)
+                  );
                 }
-              ); 
-                  
-                
-              
+              );
             },
             ),
         ],
