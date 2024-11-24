@@ -99,4 +99,14 @@ class UserController extends GetxController {
       'lastName': lastName,
     });
   }
+
+  Future<void> updateCurrentUser(User updateUser) async {
+    await firebaseFirestore.collection('users').doc(auth.currentUser!.uid).update({
+      'firstName': updateUser.firstName,
+      'lastName': updateUser.lastName,
+      'college': updateUser.colleges,
+      'program': updateUser.programs,
+    });
+
+  }
 }

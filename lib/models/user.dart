@@ -15,7 +15,6 @@ class User {
       required this.lastName,
       required this.firstName,
       required this.colleges,
-      required this.lists,
       required this.programs});
 
   User.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot}) {

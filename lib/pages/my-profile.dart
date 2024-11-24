@@ -97,13 +97,7 @@ class _MyProfilePageState extends State<MyProfilePage>
 
         return Column(
           children: <Widget>[
-            ProfileHeader(
-              username: user.getName(),
-              collegeName: college.name,
-              collegeAcronym: college.acronym,
-              programName: program.name,
-              programAcronym: program.acronym,
-            ),
+            ProfileHeader(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               margin: const EdgeInsets.symmetric(vertical: 8.0),

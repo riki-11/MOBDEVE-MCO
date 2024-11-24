@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/program_controller.dart';
+import 'package:mobdeve_mco/controllers/user_controller.dart';
+import 'package:mobdeve_mco/models/user.dart';
 import '../controllers/article_controller.dart';
 import '../controllers/college_controller.dart';
 import '../models/college.dart';
@@ -25,6 +27,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final CollegeController collegeController = Get.put(CollegeController());
   final ProgramController programController = Get.put(ProgramController());
 
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
   // Map to store programs by college id
   late Map<College, List<Program>> collegePrograms;
   late List<College> colleges = [];
@@ -66,6 +70,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
+                controller: firstNameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
                   hintText: 'First Name',
@@ -73,6 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: lastNameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
                   hintText: 'Last Name',
@@ -99,7 +105,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                  ),
+                ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please select your college';
@@ -151,6 +157,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   onPressed: () {
                     // TODO: Edit profile according to form.
+                    // Selected College, Selected Program, firstname lastname
+                    User? currentUser = UserController.instance.currentUser.value;
+                    if(currentUser == null){
+                      Get.snackbar("Error", "User not found");
+                      return;
+                    }
+                    if(selectedProgramId == null || selectedCollegeId == null){
+                      Get.snackbar("Error", "Please select a college and program");
+                      return;
+                    }
+                    UserController.instance.updateCurrentUser(User(
+                        id: currentUser.id,
+                        firstName: firstNameController.text.trim(),
+                        lastName: lastNameController.text.trim(),
+                        programs: selectedProgramId as String,
+                        colleges: selectedCollegeId as String,
+                        email: currentUser.email,
+                      ));
                   },
                   child: Text(
                     'Edit Profile',
