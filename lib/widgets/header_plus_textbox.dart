@@ -4,16 +4,15 @@ import "package:flutter_quill/flutter_quill.dart";
 class HeaderPlusTextbox extends StatelessWidget {
   final String header;
   final QuillController? controller;
+  final FocusNode focusNode;
   const HeaderPlusTextbox({super.key,
     required this.header,
     required this.controller,
+    required this.focusNode
   });
 
   @override
   Widget build(BuildContext context) {
-
-  // final FocusNode _focusNode = FocusNode();
-  // final ScrollController _scrollController = ScrollController();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,11 +24,9 @@ class HeaderPlusTextbox extends StatelessWidget {
           textAlign: TextAlign.left,
         ),
 
-        // TODO: Toolbar above keyboard
         QuillEditor.basic(
-          // focusNode: _focusNode,
-          // scrollController: _scrollController,
           controller: controller,
+          focusNode: focusNode,
           configurations: const QuillEditorConfigurations(
               placeholder: 'Start typing here...',
               padding: EdgeInsets.only(top: 8.0)
