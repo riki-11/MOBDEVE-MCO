@@ -42,6 +42,7 @@ class ArticleController extends GetxController{
         DATE_POSTED: article.datePosted,
         COLLEGE_ID: article.collegeId,
         PROGRAM_ID: article.programId,
+        'isPublished': article.isPublished,
       };
 
 
