@@ -109,22 +109,24 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
                   return Dismissible(
                     key: Key(articleModel.id.toString()),
                     direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      setState(() {
-                        // TODO: Add deletion behavior
-                        // articles.removeAt(index); ?
-                      });
+                    onDismissed: (direction) async {
+                      // TODO: Add deletion behavior
+                      Article articleRemoved = articles.removeAt(index);
+                      if(articleRemoved.id == null){
+                        throw Exception("Error removing article: article has no id");
+                      }
+                      await ListController.instance.deleteArticleFromList(widget.list, articleRemoved.id as String);
                       // show notification to confirm deletion
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: const Text('Removed article from list.'),
                           action: SnackBarAction(
                             label: 'Undo',
-                            onPressed: () {
-                              // if user wants to undo deletion, reinsert here.
+                            onPressed: () async {
+                              // Reinstate the article to the list
+                              await ListController.instance.addArticleFromList(widget.list, articleRemoved.id as String);
                               setState(() {
-                                // TODO: Add reinserting of article behavior.
-                                // articles.insert(index, articleModel); ?
+                                articles.insert(index, articleRemoved);
                               });
                             },
                           ),
