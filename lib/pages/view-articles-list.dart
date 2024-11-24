@@ -13,6 +13,7 @@ import '../models/program.dart';
 import '../models/user.dart';
 import '../widgets/article_container_list_view.dart';
 import '../widgets/social_media_sharing_popup.dart';
+import '../widgets/standard_app_bar.dart';
 import '../widgets/standard_scrollbar.dart';
 
 class ViewArticlesList extends StatefulWidget {
@@ -48,8 +49,9 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
+      appBar: StandardAppBar(
+        title: '',
+        automaticallyImplyleading: true,
         actions: <Widget>[
           IconButton(
             onPressed: () async {
@@ -137,69 +139,74 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
             ),
           ),
           const SizedBox(height: 16.0),
-          FutureBuilder(
-            future: ListController.instance.getArticlesFromArticleArray(widget.list.articlesBookmarked), 
-            builder: (context, snapshot){
+          Expanded(
+            child: FutureBuilder(
+              future: ListController.instance.getArticlesFromArticleArray(widget.list.articlesBookmarked),
+              builder: (context, snapshot){
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // Show a loading indicator while fetching data
-                return const SizedBox(
-                  height: 170.0,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              } else if (snapshot.hasError) {
-                // Handle error state
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData) {
-                // Handle the case where there's no data
-                return const Center(child: Text('No data available'));
-              }
-              List<Article> articles = snapshot.data! as List<Article>;
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: articles.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final articleModel = articles[index];
-
-                  return Dismissible(
-                    key: Key(articleModel.id.toString()),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) async {
-                      // TODO: Add deletion behavior
-                      Article articleRemoved = articles.removeAt(index);
-                      if(articleRemoved.id == null){
-                        throw Exception("Error removing article: article has no id");
-                      }
-                      await ListController.instance.deleteArticleFromList(widget.list, articleRemoved.id as String);
-                      // show notification to confirm deletion
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('Removed article from list.'),
-                          action: SnackBarAction(
-                            label: 'Undo',
-                            onPressed: () async {
-                              // Reinstate the article to the list
-                              await ListController.instance.addArticleFromList(widget.list, articleRemoved.id as String);
-                              setState(() {
-                                articles.insert(index, articleRemoved);
-                              });
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Icon(Icons.delete, color: Colors.white)
-                    ),
-                    child: ArticleContainerListView(article: articleModel)
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show a loading indicator while fetching data
+                  return const SizedBox(
+                    height: 170.0,
+                    child: Center(child: CircularProgressIndicator()),
                   );
+                } else if (snapshot.hasError) {
+                  // Handle error state
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData) {
+                  // Handle the case where there's no data
+                  return const Center(child: Text('No data available'));
                 }
-              );
-            },
+                List<Article> articles = snapshot.data! as List<Article>;
+
+                return StandardScrollbar(
+                  child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: articles.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final articleModel = articles[index];
+
+                          return Dismissible(
+                              key: Key(articleModel.id.toString()),
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) async {
+                                // TODO: Add deletion behavior
+                                Article articleRemoved = articles.removeAt(index);
+                                if(articleRemoved.id == null){
+                                  throw Exception("Error removing article: article has no id");
+                                }
+                                await ListController.instance.deleteArticleFromList(widget.list, articleRemoved.id as String);
+                                // show notification to confirm deletion
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text('Removed article from list.'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () async {
+                                        // Reinstate the article to the list
+                                        await ListController.instance.addArticleFromList(widget.list, articleRemoved.id as String);
+                                        setState(() {
+                                          articles.insert(index, articleRemoved);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              background: Container(
+                                  color: Colors.red,
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: const Icon(Icons.delete, color: Colors.white)
+                              ),
+                              child: ArticleContainerListView(article: articleModel)
+                          );
+                        }
+                )
+                );
+              },
             ),
+          )
         ],
       )
     );

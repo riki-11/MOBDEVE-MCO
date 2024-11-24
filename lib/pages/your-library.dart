@@ -7,6 +7,7 @@ import 'package:mobdeve_mco/widgets/library_tab_bar.dart';
 import 'package:mobdeve_mco/widgets/list_container_view.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:mobdeve_mco/widgets/standard_bottom_bar.dart';
+import 'package:mobdeve_mco/widgets/standard_scrollbar.dart';
 
 class YourLibrary extends StatefulWidget {
   final int pageIndex;
@@ -54,12 +55,14 @@ class _YourLibraryState extends State<YourLibrary> {
           init: Get.put<ListController>(ListController()),
           builder: (ListController listController) {
             List<ListModel> listOfUserList = ListController.instance.currentUserLists.value;
-            return ListView.builder(
-              itemCount: listOfUserList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final listModel = listOfUserList[index];
-                return ListContainerView(list: listModel);
-              },
+            return StandardScrollbar(
+              child: ListView.builder(
+                  itemCount: listOfUserList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final listModel = listOfUserList[index];
+                    return ListContainerView(list: listModel);
+                  },
+                )
             );
           }
         ),

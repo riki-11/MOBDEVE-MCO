@@ -55,7 +55,7 @@ class _CreateListPopupState extends State<CreateListPopup> {
                     )
                   ),
                   const SizedBox(height: 16),
-                  Text('List Description (optional)', style: Theme.of(context).textTheme.bodyLarge),
+                  Text('List Description', style: Theme.of(context).textTheme.bodyLarge),
                   TextFormField(
                     // TODO: Insert controller
                     controller: descriptionController,

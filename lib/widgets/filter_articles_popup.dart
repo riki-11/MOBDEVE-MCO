@@ -149,11 +149,9 @@ class _FilterArticlesPopupState extends State<FilterArticlesPopup> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    // TODO: Apply filter and close popup.
                                     // Set the obs of both college and program in ArticleController
                                     ArticleController.instance.collegeFilter.value = selectedCollege;
                                     ArticleController.instance.programFilter.value = selectedProgram;
-
                                   },
                                   style: TextButton.styleFrom(
                                     backgroundColor: Theme.of(context).colorScheme.primary,
