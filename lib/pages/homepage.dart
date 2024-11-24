@@ -78,6 +78,10 @@ class _HomePageState extends State<HomePage> {
                     Program programFilter = articleController.programFilter.value ?? Program.defaultInstance();
 
                     // If no filter, show everything
+                    return article.isPublished == true &&
+                      (articleController.collegeFilter.value == null ||
+                      (article.collegeId == collegeFilter.id && article.programId == programFilter.id) ||
+                      (article.collegeId == collegeFilter.id));
                     return articleController.collegeFilter.value == null ||
                         (article.collegeId == collegeFilter.id &&
                             article.programId == programFilter.id) || (article.collegeId == collegeFilter.id);
