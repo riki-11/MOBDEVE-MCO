@@ -122,11 +122,11 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
                           content: const Text('Removed article from list.'),
                           action: SnackBarAction(
                             label: 'Undo',
-                            onPressed: () {
-                              // if user wants to undo deletion, reinsert here.
+                            onPressed: () async {
+                              // Reinstate the article to the list
+                              await ListController.instance.addArticleFromList(widget.list, articleRemoved.id as String);
                               setState(() {
-                                // TODO: Add reinserting of article behavior.
-                                // articles.insert(index, articleModel); ?
+                                articles.insert(index, articleRemoved);
                               });
                             },
                           ),
