@@ -16,7 +16,6 @@ class _AddArticleToListState extends State<AddArticleToList> {
 
   final MultiSelectController<ListModel> _controller = MultiSelectController();
 
-
   // Key: List object, Value: List Name
   late Map<ListModel, String> listOptions;
 
@@ -24,8 +23,10 @@ class _AddArticleToListState extends State<AddArticleToList> {
   void initState() {
     super.initState();
     articleId = widget.articleId;
+    // Set the options
     listOptions = {for(ListModel list in ListController.instance.currentUserLists.value)
       list: list.title};
+    // TODO: Set the Lists that the article is already in to Selected
   }
 
   @override
@@ -68,6 +69,7 @@ class _AddArticleToListState extends State<AddArticleToList> {
                     Text(entry.value),
                   ],
                 ),
+                selected: entry.key.articleIds.contains(articleId),
               );
             }).toList(),
             onChange: (allSelectedItems, selectedItem) {
@@ -81,8 +83,8 @@ class _AddArticleToListState extends State<AddArticleToList> {
             ),
             onPressed: ()  async {
               // TODO: Save to all the articles.
-              // Lists that were previously selected that were deselected will be removed from the array
-              // Lists that were selected
+              // TODO: Lists that were previously selected that were deselected will be removed from the array
+              // TODO: Lists that were selected
             },
             child: Text(
               "Confirm",
