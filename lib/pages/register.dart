@@ -141,9 +141,10 @@ class _RegisterPageState extends State<RegisterPage>{
                       );
                     }
                     else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Passwords do not match')),
-                      );
+                      Get.snackbar('Error', 'Passwords do not match.',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white);
                     }
                   }
                 },

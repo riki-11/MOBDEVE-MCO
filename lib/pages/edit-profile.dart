@@ -160,12 +160,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     // Selected College, Selected Program, firstname lastname
                     User? currentUser = UserController.instance.currentUser.value;
                     if(currentUser == null){
-                      Get.snackbar("Error", "User not found");
+                      Get.snackbar("Error", "User not found",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white);
                       return;
                     }
                     if(selectedProgramId == null || selectedCollegeId == null){
-                      Get.snackbar("Error", "Please select a college and program");
-                      return;
+                      Get.snackbar("Error", "Please select a college and program",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white);
+                        return;
                     }
                     UserController.instance.updateCurrentUser(User(
                         id: currentUser.id,

@@ -113,9 +113,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         String confirmNewPassword = _confirmNewPasswordController.text;
 
         if (newPassword != confirmNewPassword) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("New password and confirm password do not match")),
-          );
+          Get.snackbar('Error', 'New password and confirm password do not match.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
           return;
         }
 
@@ -123,12 +124,18 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         await AuthenticationRepository.instance.changePassword(oldPassword, newPassword);
 
         // Notify the user
-        Get.snackbar("Success", "Password successfully changed");
+        Get.snackbar("Success", "Password successfully changed",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
 
         // Optionally, navigate away or log out
         // _auth.signOut();
       } catch (e) {
-        Get.snackbar("Error", "Error changing password: $e");
+        Get.snackbar("Error", "Error changing password: $e",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       }
     }
   }

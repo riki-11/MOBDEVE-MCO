@@ -106,10 +106,16 @@ class _ViewCourseListState extends State<ViewCourseList> {
                           Get.offAll(() => HomePage(controller: ArticleController()));
                         } catch (e) {
                           print("Error assigning college and program: $e");
-                          Get.snackbar("Error", "Failed to update your details. Please try again.");
+                          Get.snackbar("Error", "Failed to update your details. Please try again.",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white);
                         }
                       } else {
-                        Get.snackbar("Selection Required", "Please select a program before proceeding.");
+                        Get.snackbar("Selection Required", "Please select a program before proceeding.",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white);
                       }
                     },
                     child: Text("Next",
