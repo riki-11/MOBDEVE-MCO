@@ -10,16 +10,19 @@ import '../controllers/article_controller.dart';
 import '../models/article.dart';
 import '../models/college.dart';
 import '../models/program.dart';
+import '../models/user.dart';
 import '../widgets/article_container_list_view.dart';
 import '../widgets/social_media_sharing_popup.dart';
 import '../widgets/standard_scrollbar.dart';
 
 class ViewArticlesList extends StatefulWidget {
   final ListModel list;
+  final User listCreator;
 
   const ViewArticlesList({
     super.key,
     required this.list,
+    required this.listCreator
   });
 
   @override
@@ -27,26 +30,33 @@ class ViewArticlesList extends StatefulWidget {
 }
 
 class _ViewArticlesListState extends State<ViewArticlesList> {
+  late ListModel list;
+  late User listCreator;
+
   // Formatted variables for link-sharing
   late String formattedTitle;
   // TODO: Add the username into the list info as well.
   late String formattedCreatorName;
 
   @override
+  void initState() {
+    super.initState();
+    list = widget.list;
+    listCreator = widget.listCreator;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(''),
-        bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1.0),
-            child: Container(color: Colors.grey, height: 1.0)
-        ),
         actions: <Widget>[
           IconButton(
             onPressed: () async {
               formattedTitle = widget.list.title.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+              formattedCreatorName = "${listCreator.firstName} ${listCreator.lastName}".toLowerCase().replaceAll(RegExp(r'\s+'), '-');
               final result = await Share.share(
-                'Check out "${widget.list.title}", a list containing helpful UniGuide articles at https://uniguide.com/$formattedTitle.'
+                'Check out "${list.title}", a list containing helpful articles about doing well in university at https://uniguide.com/$formattedCreatorName/$formattedTitle.'
               );
             },
             icon: const Icon(Icons.ios_share_rounded)
@@ -58,8 +68,8 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
         children: <Widget>[
           Container(
             width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 8.0),
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(16.0),
+            // TODO: Redesign the divider here.
             decoration: const BoxDecoration(
                 border: Border(bottom: BorderSide(color: Colors.grey))
             ),
@@ -69,19 +79,57 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  widget.list.title,
-                  style: Theme.of(context).textTheme.headlineLarge
+                  list.title,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 4.0),
+                RichText(
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.black54,
+                    ),
+                    children: [
+                      const WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.account_circle_outlined,
+                          size: 16.0,
+                          color: Colors.black54,
+                        ),
+                      ),
+                      const WidgetSpan(
+                        child: SizedBox(width: 4.0),
+                      ),
+                      TextSpan(
+                        text: '${listCreator.firstName} ${listCreator.lastName}',
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  widget.list.description,
-                  style: Theme.of(context).textTheme.bodyLarge
-                )
+                  list.description,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 16.0),
+                if (list.articlesBookmarked.isNotEmpty)
+                  Text(
+                    '${list.articlesBookmarked.length} articles',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                if (list.articlesBookmarked.isEmpty)
+                  Text(
+                    'No articles',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
               ]
             ),
           ),
-          const SizedBox(height: 8.0),
-          // TODO: Insert articles here.
+          const SizedBox(height: 16.0),
           FutureBuilder(
             future: ListController.instance.getArticlesFromArticleArray(widget.list.articlesBookmarked), 
             builder: (context, snapshot){

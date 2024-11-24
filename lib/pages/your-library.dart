@@ -50,20 +50,19 @@ class _YourLibraryState extends State<YourLibrary> {
             ],
         ), 
         body: 
-               GetX<ListController>(
-                init: Get.put<ListController>(ListController()),
-                builder: (ListController listController) {
-                  List<ListModel> listOfUserList = ListController.instance.currentUserLists.value;
-                  return ListView.builder(
-                    itemCount: listOfUserList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final listModel = listOfUserList[index];
-                      return ListContainerView(list: listModel);
-                    },
-                  );
-                }
-              ),
-            
+         GetX<ListController>(
+          init: Get.put<ListController>(ListController()),
+          builder: (ListController listController) {
+            List<ListModel> listOfUserList = ListController.instance.currentUserLists.value;
+            return ListView.builder(
+              itemCount: listOfUserList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final listModel = listOfUserList[index];
+                return ListContainerView(list: listModel);
+              },
+            );
+          }
+        ),
         bottomNavigationBar: StandardBottomBar(curPageIndex: pageIndex),
       ),
     );}
