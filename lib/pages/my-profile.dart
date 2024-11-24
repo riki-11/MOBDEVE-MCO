@@ -195,7 +195,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                                   init: Get.put<ArticleController>(ArticleController()),
                                   builder: (ArticleController articleController) {
                                     var currentUserId = UserController.instance.currentUser.value;
-                                    List<Article> articleOfUserList = articleController.articles.where((article) => article.authorId == currentUserId?.id).toList();
+                                    List<Article> articleOfUserList = articleController.articles.where((article) => article.authorId == currentUserId?.id && article.isPublished).toList();
                                     return ListView.builder(
                                       itemCount: articleOfUserList.length,
                                       itemBuilder: (BuildContext context, int index) {
@@ -209,7 +209,26 @@ class _MyProfilePageState extends State<MyProfilePage>
                                 ),
                               ),
                             ),
-                            Center(child: Text("Drafts here")),
+                            Expanded(
+                              child: StandardScrollbar(
+                                child: GetX<ArticleController>(
+                                  init: Get.put<ArticleController>(ArticleController()),
+                                  builder: (ArticleController articleController) {
+                                    var currentUserId = UserController.instance.currentUser.value;
+                                    List<Article> articleOfUserList = articleController.articles.where((article) => article.authorId == currentUserId?.id && !article.isPublished).toList();
+                                    return ListView.builder(
+                                      itemCount: articleOfUserList.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        final articleModel = articleOfUserList[index];
+                                        return ArticleContainerListView(
+                                          article: articleModel
+                                        );
+                                      }
+                                    );
+                                  }
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
