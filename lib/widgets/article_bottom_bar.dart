@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobdeve_mco/controllers/reaction_controller.dart';
 import 'package:mobdeve_mco/widgets/add_article_to_list.dart';
 
+import '../controllers/list_controller.dart';
+
 class ArticleBottomBar extends StatefulWidget {
   final String articleId;
   const ArticleBottomBar({super.key, required this.articleId});
@@ -14,13 +16,19 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
   bool isLiked = false;
   bool isBookmarked = false;
   String currentLikesNumber = "0";
+
+  void _handleBookmarkStatusChanged(bool isBookmarkedNow) {
+    setState(() {
+      isBookmarked = isBookmarkedNow;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      //color: Theme.of(context).colorScheme.surface,
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.grey, width: 1.0))
+        border: Border(top: BorderSide(color: Colors.grey, width: 1.0)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -30,7 +38,6 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
               IconButton(
                 icon: Icon(
                   isLiked ? Icons.favorite : Icons.favorite_border_rounded,
-                  // TODO: Change this to darker shade of red
                   color: isLiked ? Colors.red : null,
                 ),
                 onPressed: () async {
@@ -52,18 +59,15 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
                 future: ReactionController.instance.getLikeCountOfArticle(widget.articleId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    // Show a loading indicator while fetching data
                     return Text(currentLikesNumber);
                   } else if (snapshot.hasError) {
-                    // Handle error state
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData) {
-                    // Handle the case where there's no data
                     return const Center(child: Text('No data available'));
                   }
                   currentLikesNumber = snapshot.data.toString();
                   return Text(snapshot.data.toString() ?? '-1');
-                }
+                },
               ),
             ],
           ),
@@ -73,37 +77,40 @@ class _ArticleBottomBarState extends State<ArticleBottomBar> {
               color: isBookmarked ? Theme.of(context).colorScheme.primary : null,
             ),
             onPressed: () {
-              setState(() {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AddArticleToList(articleId: widget.articleId);
-                    }
-                );
-                isBookmarked = !isBookmarked;
-              });
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return AddArticleToList(
+                    articleId: widget.articleId,
+                    onBookmarkStatusChanged: _handleBookmarkStatusChanged,
+                  );
+                },
+              );
             },
           ),
         ],
       ),
     );
   }
+
   @override
   void initState() {
     super.initState();
     _initializeState();
   }
-  _initializeState() async {
-    // Simulate an asynchronous operation, like fetching data or checking a condition
+
+  Future<void> _initializeState() async {
     bool liked = await ReactionController.isArticleLikedByUser(widget.articleId);
 
-    // Update state after the async operation is done
+    // Determine if the article is bookmarked
+    bool bookmarked = ListController.instance.currentUserLists.value.any(
+          (list) => list.articlesBookmarked.contains(widget.articleId),
+    );
+
     setState(() {
       isLiked = liked;
+      isBookmarked = bookmarked;
     });
-    print("THE ARTICLE ${widget.articleId} isLiked: $isLiked");
   }
-  // Future<void> initLikes() async {
-  //   isLiked = await ReactionController.isArticleLikedByUser()
-  // }
 }
+
