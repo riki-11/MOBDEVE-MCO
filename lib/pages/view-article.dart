@@ -187,44 +187,41 @@ class _ViewArticleState extends State<ViewArticle> {
                     );
                   },
                   icon: const Icon(Icons.ios_share_rounded)),
-              PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_horiz),
-                  onSelected: (String value) {
-                    print("Selected option: $value");
-                    if (value == 'edit-article') {
-                      Get.to(() => EditArticle(article: widget.article));
-                    }
-                    if (value == 'delete-article') {
-                      showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DeleteDialogue(
-                            deleteFunction: deleteArticle,
-                          );
-                        },
-                      );
-                    }
-                  },
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      value: 'report-article',
-                      child: Text('Report article', style: Theme.of(context).textTheme.bodyMedium),
-                    ),
-                    if (isAuthor)
-                      PopupMenuItem<String> (
-                          value: 'edit-article',
-                          child: Text('Edit article',
-                              style: Theme.of(context).textTheme.bodyMedium)
-                      ),
-                    if (isAuthor)
-                      PopupMenuItem<String> (
-                          value: 'delete-article',
-                          child: Text('Delete article',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red)
-                          )
-                      )
-                  ]
-              ),
+              if (isAuthor)
+                PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_horiz),
+                    onSelected: (String value) {
+                      print("Selected option: $value");
+                      if (value == 'edit-article') {
+                        Get.to(() => EditArticle(article: widget.article));
+                      }
+                      if (value == 'delete-article') {
+                        showDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DeleteDialogue(
+                              deleteFunction: deleteArticle,
+                            );
+                          },
+                        );
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      if (isAuthor)
+                        PopupMenuItem<String> (
+                            value: 'edit-article',
+                            child: Text('Edit article',
+                                style: Theme.of(context).textTheme.bodyMedium)
+                        ),
+                      if (isAuthor)
+                        PopupMenuItem<String> (
+                            value: 'delete-article',
+                            child: Text('Delete article',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red)
+                            )
+                        )
+                    ]
+                ),
             ],
             body: NotificationListener<UserScrollNotification>(
               onNotification: (notif) {
