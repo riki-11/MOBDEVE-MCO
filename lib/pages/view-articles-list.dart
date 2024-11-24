@@ -83,7 +83,7 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
           const SizedBox(height: 8.0),
           // TODO: Insert articles here.
           FutureBuilder(
-            future: ListController.instance.getArticlesFromArticleArray(widget.list.articleIds), 
+            future: ListController.instance.getArticlesFromArticleArray(widget.list.articlesBookmarked), 
             builder: (context, snapshot){
 
               if (snapshot.connectionState == ConnectionState.waiting) {

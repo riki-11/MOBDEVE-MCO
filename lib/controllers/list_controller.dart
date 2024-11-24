@@ -119,9 +119,9 @@ class ListController extends GetxController{
     ListModel listInCollection = ListModel.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
 
     // If article was in the list, and was removed
-    if(listInCollection.articleIds.remove(article)){
+    if(listInCollection.articlesBookmarked.remove(article)){
       await documentRef.update({
-        'articlesBookmarked': listInCollection.articleIds,
+        'articlesBookmarked': listInCollection.articlesBookmarked,
       });
     } else {
       throw Exception("Error deleting article from list, article not found");
@@ -151,12 +151,12 @@ class ListController extends GetxController{
     // This is the collection
     ListModel listInCollection = ListModel.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
 
-    if(listInCollection.articleIds.contains(article)){
+    if(listInCollection.articlesBookmarked.contains(article)){
       throw Exception("Error adding article to list, is already in the list");
     } else {
-      listInCollection.articleIds.add(article);
+      listInCollection.articlesBookmarked.add(article);
       await documentRef.update({
-        'articlesBookmarked': listInCollection.articleIds,
+        'articlesBookmarked': listInCollection.articlesBookmarked,
       });
     }
   }

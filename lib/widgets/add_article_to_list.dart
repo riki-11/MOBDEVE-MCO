@@ -36,13 +36,13 @@ class _AddArticleToListState extends State<AddArticleToList> {
     ListController listController = ListController.instance;
     // Update values in cloud firestore
     for (var list in listOptions.keys){
-      if(!list.articleIds.contains(articleId) && currentlySelectedLists.contains(list)){
+      if(!list.articlesBookmarked.contains(articleId) && currentlySelectedLists.contains(list)){
         // Add article to list if not preselected and is selected
         listController.addArticleFromList(list, articleId);
         print("ADD ARTICLE $articleId TO ${list.title}");
         itemsUpdated = true;
 
-      } else if(list.articleIds.contains(articleId) && !currentlySelectedLists.contains(list)){
+      } else if(list.articlesBookmarked.contains(articleId) && !currentlySelectedLists.contains(list)){
         // Delete article from list if preselected and not selected
         print("DELETE ARTICLE $articleId FROM ${list.title}");
         listController.deleteArticleFromList(list, articleId);
@@ -98,7 +98,7 @@ class _AddArticleToListState extends State<AddArticleToList> {
                     Text(entry.value),
                   ],
                 ),
-                selected: entry.key.articleIds.contains(articleId),
+                selected: entry.key.articlesBookmarked.contains(articleId),
               );
             }).toList(),
             onChange: (allSelectedItems, selectedItem) {
