@@ -6,7 +6,13 @@ import 'package:mobdeve_mco/models/list.dart';
 
 class AddArticleToList extends StatefulWidget {
   final String articleId;
-  const AddArticleToList({super.key, required this.articleId});
+  final Function(bool isBookmarked) onBookmarkStatusChanged;
+
+  const AddArticleToList({
+    super.key,
+    required this.articleId,
+    required this.onBookmarkStatusChanged,
+  });
 
   @override
   State<AddArticleToList> createState() => _AddArticleToListState();
@@ -32,7 +38,7 @@ class _AddArticleToListState extends State<AddArticleToList> {
   Future<void> _saveSelections() async {
     // Get selected items list
     List<ListModel> currentlySelectedLists = _controller.getSelectedItems();
-    bool itemsUpdated = false; 
+    bool itemsUpdated = false;
     ListController listController = ListController.instance;
     // Update values in cloud firestore
     for (var list in listOptions.keys){
@@ -47,17 +53,24 @@ class _AddArticleToListState extends State<AddArticleToList> {
         print("DELETE ARTICLE $articleId FROM ${list.title}");
         listController.deleteArticleFromList(list, articleId);
         itemsUpdated = true;
-      }     
+      }
     }
-    if(itemsUpdated){
-      Get.snackbar('Success', 'Selections updated successfully!',
+    if (itemsUpdated){
+      // Check if the article is still bookmarked in any list
+      bool isNowBookmarked = listOptions.keys.any(
+            (list) => list.articlesBookmarked.contains(articleId),
+      );
+
+      // Notify parent widget of the updated bookmark state
+      widget.onBookmarkStatusChanged(isNowBookmarked);
+
+      Get.snackbar('Success', 'Lists updated.',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white);
     }
-
-    
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -75,28 +88,40 @@ class _AddArticleToListState extends State<AddArticleToList> {
           ),
           MultiSelectContainer(
             controller: _controller,
-            maxSelectableCount: 3, // Adjust as per requirements
+            maxSelectableCount: listOptions.length,
             itemsDecoration: MultiSelectDecorations(
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 border: Border.all(color: Colors.black12),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10.0),
               ),
               selectedDecoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 border: Border.all(color: Theme.of(context).primaryColor),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10.0),
               ),
             ),
             items: listOptions.entries.map((entry) {
               return MultiSelectCard(
                 value: entry.key,
                 label: entry.value,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(entry.value),
-                  ],
+                textStyles: MultiSelectItemTextStyles(
+                  textStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                  ),
+                  selectedTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold, // Optional, for emphasis
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.9,
+                    child: Text(
+                      entry.value,
+                    ),
+                  ),
                 ),
                 selected: entry.key.articlesBookmarked.contains(articleId),
               );
@@ -111,9 +136,6 @@ class _AddArticleToListState extends State<AddArticleToList> {
               backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
             ),
             onPressed: ()  async {
-              // TODO: Save to all the articles.
-              // TODO: Lists that were previously selected that were deselected will be removed from the array
-              // TODO: Lists that were selected
               await _saveSelections();
             },
             child: Text(
