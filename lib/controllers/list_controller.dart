@@ -51,7 +51,7 @@ class ListController extends GetxController{
     }
 
     await firebaseFirestore.collection('users').doc(currentUserId).collection('lists').add({
-      'articleIds': [],
+      'articlesBookmarked': [],
       'authorId': currentUserId,
       'title': listTitle,
       'description': listDescription,
@@ -75,7 +75,7 @@ class ListController extends GetxController{
     }
 
     // Since it exists, we edit the title and description
-    await documentRef.set({
+    await documentRef.update({
       'title': listToEdit.title,
       'description': listToEdit.description,
     });
@@ -96,7 +96,7 @@ class ListController extends GetxController{
     await documentRef.delete();
   }
   // Delete from List
-  Future<void> deleteArticleFromList(ListModel list, Article article) async {
+  Future<void> deleteArticleFromList(ListModel list, String article) async {
     // Given an article, we delete the list from a users List of lists. 
     String? currentUserId = UserController.instance.currentUser.value?.id;
 
@@ -119,8 +119,8 @@ class ListController extends GetxController{
     ListModel listInCollection = ListModel.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
 
     // If article was in the list, and was removed
-    if(listInCollection.articleIds.remove(article.id)){
-      await documentRef.set({
+    if(listInCollection.articleIds.remove(article)){
+      await documentRef.update({
         'articlesBookmarked': listInCollection.articleIds,
       });
     } else {
@@ -129,7 +129,7 @@ class ListController extends GetxController{
   }
 
 
-  Future<void> addArticleFromList(ListModel list, Article article) async {
+  Future<void> addArticleFromList(ListModel list, String article) async {
     // Given an article, we delete the list from a users List of lists. 
     String? currentUserId = UserController.instance.currentUser.value?.id;
     // Check if the user is logged in
@@ -139,9 +139,6 @@ class ListController extends GetxController{
     // Check if this list is owned by the user 
     if(list.authorId != currentUserId){
       throw Exception("Error adding article to list, list is not owned by user");
-    }
-    if(article.id == null){
-      throw Exception("Error adding article to list, Article ID not found.");
     }
 
     final documentRef = firebaseFirestore.collection('users').doc(currentUserId).collection('lists').doc(list.id);
@@ -154,11 +151,11 @@ class ListController extends GetxController{
     // This is the collection
     ListModel listInCollection = ListModel.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
 
-    if(listInCollection.articleIds.contains(article.id)){
+    if(listInCollection.articleIds.contains(article)){
       throw Exception("Error adding article to list, is already in the list");
     } else {
-      listInCollection.articleIds.add(article.id!);
-      await documentRef.set({
+      listInCollection.articleIds.add(article);
+      await documentRef.update({
         'articlesBookmarked': listInCollection.articleIds,
       });
     }

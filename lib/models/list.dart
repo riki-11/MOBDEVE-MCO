@@ -22,6 +22,6 @@ class ListModel{
     title = documentSnapshot[TITLE];
     description = documentSnapshot['description'];
     authorId = documentSnapshot['authorId'];    
-    articleIds = List<String>.from(documentSnapshot['articleIds'] as List);
+    articleIds = List<String>.from(documentSnapshot['articlesBookmarked'] as List);
   }
 }

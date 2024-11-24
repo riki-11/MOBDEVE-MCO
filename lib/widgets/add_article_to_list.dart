@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
+import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/list_controller.dart';
 import 'package:mobdeve_mco/models/list.dart';
 
@@ -26,9 +27,37 @@ class _AddArticleToListState extends State<AddArticleToList> {
     // Set the options
     listOptions = {for(ListModel list in ListController.instance.currentUserLists.value)
       list: list.title};
-    // TODO: Set the Lists that the article is already in to Selected
   }
 
+  Future<void> _saveSelections() async {
+    // Get selected items list
+    List<ListModel> currentlySelectedLists = _controller.getSelectedItems();
+    bool itemsUpdated = false; 
+    ListController listController = ListController.instance;
+    // Update values in cloud firestore
+    for (var list in listOptions.keys){
+      if(!list.articleIds.contains(articleId) && currentlySelectedLists.contains(list)){
+        // Add article to list if not preselected and is selected
+        listController.addArticleFromList(list, articleId);
+        print("ADD ARTICLE $articleId TO ${list.title}");
+        itemsUpdated = true;
+
+      } else if(list.articleIds.contains(articleId) && !currentlySelectedLists.contains(list)){
+        // Delete article from list if preselected and not selected
+        print("DELETE ARTICLE $articleId FROM ${list.title}");
+        listController.deleteArticleFromList(list, articleId);
+        itemsUpdated = true;
+      }     
+    }
+    if(itemsUpdated){
+      Get.snackbar('Success', 'Selections updated successfully!',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white);
+    }
+
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -85,6 +114,7 @@ class _AddArticleToListState extends State<AddArticleToList> {
               // TODO: Save to all the articles.
               // TODO: Lists that were previously selected that were deselected will be removed from the array
               // TODO: Lists that were selected
+              await _saveSelections();
             },
             child: Text(
               "Confirm",
