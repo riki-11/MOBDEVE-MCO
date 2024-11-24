@@ -32,7 +32,7 @@ class ArticleController extends GetxController{
     });
   }
 
-  Future<void> addArticle(Article article) async {
+  Future<String> addArticle(Article article) async {
     try {
       // Map the article to a Firestore-compatible format
       Map<String, dynamic> articleData = {
@@ -46,9 +46,9 @@ class ArticleController extends GetxController{
 
 
       // Add the article to the "articles" collection
-      await firebaseFirestore.collection('articles').add(articleData);
-
+      DocumentReference docRef = await firebaseFirestore.collection('articles').add(articleData);
       print('Article added successfully!');
+      return docRef.id;
     } catch (e) {
       print('Failed to add article: $e');
       rethrow;
@@ -65,6 +65,7 @@ class ArticleController extends GetxController{
         DATE_POSTED: updatedArticle.datePosted,
         COLLEGE_ID: updatedArticle.collegeId,
         PROGRAM_ID: updatedArticle.programId,
+        'isPublished': updatedArticle.isPublished,
       };
 
       // Update the article in the "articles" collection
@@ -86,7 +87,6 @@ class ArticleController extends GetxController{
       rethrow;
     }
   }
-
 
   @override
   void onReady() {
