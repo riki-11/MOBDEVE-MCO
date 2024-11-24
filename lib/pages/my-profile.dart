@@ -113,7 +113,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                         onPressed: () async {
                           var formattedUsername = user.getName().toLowerCase().replaceAll(RegExp(r'\s+'), '-');
                           final result = await Share.share(
-                              'Check out my profile at https://uniguide.com/$formattedUsername'
+                              'Check out my profile at https://uniguide.com/$formattedUsername.'
                           );
                         },
                         style: TextButton.styleFrom(
