@@ -100,16 +100,23 @@ class ListContainerView extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 16.0),
-                      if (list.articlesBookmarked.isNotEmpty)
+                      if (list.articlesBookmarked.isEmpty)
                         Text(
-                          '${list.articlesBookmarked.length} articles',
+                          'No articles',
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: Colors.grey[600],
                           ),
                         ),
-                      if (list.articlesBookmarked.isEmpty)
+                      if (list.articlesBookmarked.length == 1)
                         Text(
-                          'No articles',
+                          '1 article',
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      if (list.articlesBookmarked.length > 1)
+                        Text(
+                          '${list.articlesBookmarked.length} articles',
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: Colors.grey[600],
                           ),
