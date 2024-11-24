@@ -8,6 +8,7 @@ import 'package:mobdeve_mco/constants/global_consts.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/models/article.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
+import 'package:mobdeve_mco/pages/my-profile.dart';
 import 'package:mobdeve_mco/widgets/header_plus_textbox.dart';
 
 import '../controllers/article_controller.dart';
@@ -63,7 +64,7 @@ class _EditArticleState extends State<EditArticle> {
     }
   }
 
-  void updateArticle() async {
+  void updateArticle(bool isPublished) async {
     late String json;
     late Map<String, String> data = {};
 
@@ -87,7 +88,8 @@ class _EditArticleState extends State<EditArticle> {
         content: data,
         datePosted: Timestamp.now(),
         collegeId: college.value!.id.toString(),
-        programId: program.value!.id.toString()
+        programId: program.value!.id.toString(),
+        isPublished: isPublished, // this is default for now, whoops
     );
 
     if (widget.article.id == null) {
@@ -131,13 +133,16 @@ class _EditArticleState extends State<EditArticle> {
               PopupMenuItem<String>(
                 value: 'Option 1',
                 child: Text('Save as draft', style: Theme.of(context).textTheme.bodyMedium),
-                onTap: (){}, // TODO: Implement Draft function
+                onTap: (){
+                  updateArticle(false);
+                  Get.to(const MyProfilePage());
+                }, 
               )
             ],
           ),
           TextButton(
               onPressed: () {
-                updateArticle();
+                updateArticle(true);
                 Get.to(() => HomePage(controller: ArticleController()));
               },
               child: Text("Update",

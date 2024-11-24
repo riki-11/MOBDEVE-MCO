@@ -81,12 +81,11 @@ class _WriteArticleState extends State<WriteArticle> {
         content: data,
         datePosted: Timestamp.now(),
         collegeId: college.value!.id.toString(),
-        programId: program.value!.id.toString()
+        programId: program.value!.id.toString(),
+        isPublished: isPublished,
     );
 
-    String articleId = await ArticleController.instance.addArticle(newArticle);
-    newArticle.id = articleId;
-    await ArticleController.instance.setPublishedOfArticle(newArticle, isPublished);
+    await ArticleController.instance.addArticle(newArticle);
   }
 
 

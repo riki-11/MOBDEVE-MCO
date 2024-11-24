@@ -65,6 +65,7 @@ class ArticleController extends GetxController{
         DATE_POSTED: updatedArticle.datePosted,
         COLLEGE_ID: updatedArticle.collegeId,
         PROGRAM_ID: updatedArticle.programId,
+        'isPublished': updatedArticle.isPublished,
       };
 
       // Update the article in the "articles" collection
@@ -84,16 +85,6 @@ class ArticleController extends GetxController{
     } catch (e) {
       print('Failed to delete article: $e');
       rethrow;
-    }
-  }
-
-  Future<void> setPublishedOfArticle(Article articleToEdit, bool isPublished) async {
-    try{
-    await firebaseFirestore.collection('articles').doc(articleToEdit.id).update({
-      'isPublished': isPublished
-    });
-    } catch (e) {
-      print('Failed to set publish article: $e');
     }
   }
 

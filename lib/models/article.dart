@@ -12,6 +12,7 @@ class Article {
   late Timestamp datePosted;
   late String collegeId;
   late String programId;
+  late bool isPublished;
 
   Article({
     required this.id,
@@ -21,6 +22,7 @@ class Article {
     required this.datePosted,
     required this.collegeId,
     required this.programId,
+    required this.isPublished
   });
 
   Article.fromDocumentSnapshot({required DocumentSnapshot documentSnapshot}) {
@@ -31,6 +33,13 @@ class Article {
     collegeId = documentSnapshot[COLLEGE_ID];
     programId = documentSnapshot[PROGRAM_ID];
     authorId = documentSnapshot[AUTHOR_ID];
+    // Check if the field exists, default to true if not
+    try{
+      isPublished = documentSnapshot['isPublished'];
+    } catch (e) {
+      print('Error with isPublished, setting to true. Error: $e');
+      isPublished = true;
+    }
   }
   // factory Article.fromFirestore(Map<String, dynamic> data) {
   //   return Article(
