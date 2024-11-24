@@ -60,11 +60,11 @@ class _RegisterPageState extends State<RegisterPage>{
                           return null;
                         },
                         decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5)
-                        ),
-                        hintText: 'First Name'
-                      )
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5)
+                          ),
+                          hintText: 'First Name'
+                        )
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
