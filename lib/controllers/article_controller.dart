@@ -32,7 +32,7 @@ class ArticleController extends GetxController{
     });
   }
 
-  Future<void> addArticle(Article article) async {
+  Future<String> addArticle(Article article) async {
     try {
       // Map the article to a Firestore-compatible format
       Map<String, dynamic> articleData = {
@@ -46,9 +46,9 @@ class ArticleController extends GetxController{
 
 
       // Add the article to the "articles" collection
-      await firebaseFirestore.collection('articles').add(articleData);
-
+      DocumentReference docRef = await firebaseFirestore.collection('articles').add(articleData);
       print('Article added successfully!');
+      return docRef.id;
     } catch (e) {
       print('Failed to add article: $e');
       rethrow;
@@ -87,6 +87,15 @@ class ArticleController extends GetxController{
     }
   }
 
+  Future<void> setPublishedOfArticle(Article articleToEdit, bool isPublished) async {
+    try{
+    await firebaseFirestore.collection('articles').doc(articleToEdit.id).update({
+      'isPublished': isPublished
+    });
+    } catch (e) {
+      print('Failed to set publish article: $e');
+    }
+  }
 
   @override
   void onReady() {

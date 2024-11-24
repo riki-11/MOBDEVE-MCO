@@ -11,6 +11,7 @@ import 'package:mobdeve_mco/models/college.dart';
 import 'package:mobdeve_mco/models/program.dart';
 import 'package:mobdeve_mco/models/user.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
+import 'package:mobdeve_mco/pages/my-profile.dart';
 import 'package:mobdeve_mco/widgets/header_plus_textbox.dart';
 
 import '../controllers/article_controller.dart';
@@ -53,7 +54,7 @@ class _WriteArticleState extends State<WriteArticle> {
 
   }
 
-  void saveArticle() async {
+  void saveArticle(bool isPublished) async {
     // TODO: Separate data for each quill controller
     late String json;
     late Map<String, String> data = {};
@@ -83,7 +84,9 @@ class _WriteArticleState extends State<WriteArticle> {
         programId: program.value!.id.toString()
     );
 
-    await ArticleController.instance.addArticle(newArticle);
+    String articleId = await ArticleController.instance.addArticle(newArticle);
+    newArticle.id = articleId;
+    await ArticleController.instance.setPublishedOfArticle(newArticle, isPublished);
   }
 
 
@@ -116,13 +119,16 @@ class _WriteArticleState extends State<WriteArticle> {
               PopupMenuItem<String>(
                 value: 'Option 1',
                 child: Text('Save as draft', style: Theme.of(context).textTheme.bodyMedium),
-                onTap: (){}, // TODO: Implement Draft function
+                onTap: (){
+                  saveArticle(false);
+                  Get.to(const MyProfilePage());
+                }, // TODO: Implement Draft function
               )
             ],
           ),
           TextButton(
               onPressed: () {
-                saveArticle();
+                saveArticle(true);
                 Get.to(() => HomePage(controller: ArticleController()));
               },
               child: Text("Publish",
