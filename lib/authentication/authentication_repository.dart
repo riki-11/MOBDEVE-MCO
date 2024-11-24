@@ -46,6 +46,37 @@ class AuthenticationRepository extends GetxController{
     LoginController.instance.checkUserInCloudFirestore();
   }
   
+    /// Reauthenticate the user using their old password
+  Future<void> reauthenticateUser(String oldPassword) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        final credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: oldPassword,
+        );
+        await user.reauthenticateWithCredential(credential);
+      } catch (e) {
+        print("Reauthentication failed: $e");
+        throw Exception("Reauthentication failed");
+      }
+    }
+  }
+
+  /// Change the user's password
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    try {
+      await reauthenticateUser(oldPassword);
+      final user = _auth.currentUser;
+      if (user != null) {
+        await user.updatePassword(newPassword);
+      }
+    } catch (e) {
+      print("Error changing password: $e");
+      throw Exception("Error changing password");
+    }
+  }
+
   Future<void> createUserWithEmailAndPassword(String email, String password, String firstName, String lastName) async {
     try{
       await _auth.createUserWithEmailAndPassword(email: email, password: password);

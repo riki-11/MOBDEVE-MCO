@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobdeve_mco/authentication/authentication_repository.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
 import 'package:passwordfield/passwordfield.dart';
 
@@ -11,7 +13,9 @@ class ChangePasswordPage extends StatefulWidget {
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final _formKey = GlobalKey<FormState>();
-
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmNewPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +38,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 children: [
                   PasswordField(
                     // TODO: Insert controller
+                    controller: _oldPasswordController,
                     hintText: 'Old password',
                     // right now, 'old password' has no constraint.
                     // consider adding an error message if it has yet to match the old password.
@@ -48,26 +53,28 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   const SizedBox(height: 16),
                   PasswordField(
                     // TODO: Insert controller
-                      hintText: 'New password',
-                      passwordConstraint: r'^(?=.*\d).+$',
-                      errorMessage: 'Must contain at least one digit (0-9)',
-                      border: PasswordBorder(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5)
-                          )
+                    controller: _newPasswordController,
+                    hintText: 'New password',
+                    passwordConstraint: r'^(?=.*\d).+$',
+                    errorMessage: 'Must contain at least one digit (0-9)',
+                    border: PasswordBorder(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5)
                       )
+                    )
                   ),
                   const SizedBox(height: 16),
                   PasswordField(
                     // TODO: Insert controller
-                      hintText: 'Confirm new password',
-                      passwordConstraint: r'^(?=.*\d).+$',
-                      errorMessage: 'Must contain at least one digit (0-9)',
-                      border: PasswordBorder(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5)
-                          )
+                    controller: _confirmNewPasswordController,
+                    hintText: 'Confirm new password',
+                    passwordConstraint: r'^(?=.*\d).+$',
+                    errorMessage: 'Must contain at least one digit (0-9)',
+                    border: PasswordBorder(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5)
                       )
+                    )
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -79,9 +86,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                     Theme.of(context).colorScheme.primary
                                 ),
                               ),
-                              onPressed: () {
-                                // TODO: Insert change password functionality.
-                              },
+                              onPressed: _changePassword,
                               child: Text(
                                   'Change password',
                                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -99,5 +104,32 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         )
     )
     );
+  }
+  Future<void> _changePassword() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        String oldPassword = _oldPasswordController.text;
+        String newPassword = _newPasswordController.text;
+        String confirmNewPassword = _confirmNewPasswordController.text;
+
+        if (newPassword != confirmNewPassword) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("New password and confirm password do not match")),
+          );
+          return;
+        }
+
+        // Call the method from AuthenticationRepository
+        await AuthenticationRepository.instance.changePassword(oldPassword, newPassword);
+
+        // Notify the user
+        Get.snackbar("Success", "Password successfully changed");
+
+        // Optionally, navigate away or log out
+        // _auth.signOut();
+      } catch (e) {
+        Get.snackbar("Error", "Error changing password: $e");
+      }
+    }
   }
 }
