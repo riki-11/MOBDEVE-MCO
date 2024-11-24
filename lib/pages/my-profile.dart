@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+import 'package:mobdeve_mco/pages/edit-profile.dart';
 import 'package:mobdeve_mco/pages/settings.dart';
 import 'package:mobdeve_mco/widgets/profile_content_dropdown.dart';
 import 'package:mobdeve_mco/widgets/standard_app_bar.dart';
@@ -137,7 +138,11 @@ class _MyProfilePageState extends State<MyProfilePage>
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextButton(
-                        onPressed: () {}, // TODO: Add editing functionality.
+                        onPressed: () {
+                          Get.to(
+                            const EditProfilePage()
+                          );
+                        },
                         style: TextButton.styleFrom(
                           side: BorderSide(
                             color: Theme.of(context).dividerColor,
