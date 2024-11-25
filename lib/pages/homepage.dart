@@ -80,8 +80,7 @@ class _HomePageState extends State<HomePage> {
                     // If no filter, show everything
                     return article.isPublished == true &&
                       (articleController.collegeFilter.value == null ||
-                      (article.collegeId == collegeFilter.id && article.programId == programFilter.id) ||
-                      (article.collegeId == collegeFilter.id));
+                      (article.collegeId == collegeFilter.id && article.programId == programFilter.id));
                     return articleController.collegeFilter.value == null ||
                         (article.collegeId == collegeFilter.id &&
                             article.programId == programFilter.id) || (article.collegeId == collegeFilter.id);
