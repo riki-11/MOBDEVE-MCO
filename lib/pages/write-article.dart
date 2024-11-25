@@ -7,9 +7,6 @@ import 'package:get/get.dart';
 import 'package:mobdeve_mco/constants/global_consts.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/models/article.dart';
-import 'package:mobdeve_mco/models/college.dart';
-import 'package:mobdeve_mco/models/program.dart';
-import 'package:mobdeve_mco/models/user.dart';
 import 'package:mobdeve_mco/pages/homepage.dart';
 import 'package:mobdeve_mco/pages/my-profile.dart';
 import 'package:mobdeve_mco/widgets/header_plus_textbox.dart';
@@ -39,6 +36,12 @@ class _WriteArticleState extends State<WriteArticle> {
   // Category-QuillController map
   late Map<String, QuillController> controlMap;
 
+  // Category-FocusNodes map
+  late Map<String, FocusNode> focusNodes;
+
+  // Determine currently active Controller
+  String? activeCategory;
+
   @override
   void initState() {
     super.initState();
@@ -52,10 +55,23 @@ class _WriteArticleState extends State<WriteArticle> {
       HEADER_LNR:       _controllerLnR
     };
 
+    // Initialize focusnodes
+    focusNodes = {
+      for (var key in controlMap.keys) key: FocusNode()
+    };
+
+    // Set focusNode listeners
+    focusNodes.forEach((category, focusnode) {
+      focusnode.addListener(() {
+        setState(() {
+          activeCategory = focusnode.hasFocus ? category : null;
+        });
+      });
+    });
+
   }
 
   void saveArticle(bool isPublished) async {
-    // TODO: Separate data for each quill controller
     late String json;
     late Map<String, String> data = {};
 
@@ -97,7 +113,6 @@ class _WriteArticleState extends State<WriteArticle> {
         leading: TextButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Make pop-up ensuring user wants to delete draft
               },
             child: Text("Cancel",
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -111,17 +126,16 @@ class _WriteArticleState extends State<WriteArticle> {
             icon: const Icon(Icons.more_horiz),
             onSelected: (String value) {
               // Handle the selected value from the dropdown
-              print("Selected option: $value");
+              if (value == 'draft') {
+                saveArticle(false);
+                Get.to(() => const MyProfilePage());
+              }
               // Add additional actions based on the selection if needed
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
-                value: 'Option 1',
+                value: 'draft',
                 child: Text('Save as draft', style: Theme.of(context).textTheme.bodyMedium),
-                onTap: (){
-                  saveArticle(false);
-                  Get.to(const MyProfilePage());
-                }, // TODO: Implement Draft function
               )
             ],
           ),
@@ -137,36 +151,79 @@ class _WriteArticleState extends State<WriteArticle> {
               ))
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  textAlign: TextAlign.center,
-                  controller: _titleController,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  decoration: InputDecoration(
-                    border: InputBorder.none, // Removes the border
-                    hintText: '<TITLE HERE>', // Adds hint text
-                    hintStyle: Theme.of(context)
-                        .textTheme
-                        .headlineMedium
-                        ?.copyWith(color: Colors.grey),
-                  ),
-                ),
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    textAlign: TextAlign.left,
+                    controller: _titleController,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                    decoration: InputDecoration(
 
-                // Build Header and textbox options of only the selected categories
-                // .where filters entries that are only true
-                ...widget.categoryOptions.entries.where((category) => category.value).map((category) {
-                    return HeaderPlusTextbox(header: category.key, controller: controlMap[category.key],);
-                })
-              ],
+                      contentPadding: const EdgeInsets.only(top: 28.0, bottom: 16.0),
+                      border: InputBorder.none, // Removes the border
+                      hintText: '<TITLE HERE>', // Adds hint text
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(color: Colors.grey),
+                    ),
+                    keyboardType: TextInputType.multiline, // Allow multi-line input
+                    maxLines: null, // Expands input to wrap text automatically
+                  ),
+
+                  // Build Header and textbox options of only the selected categories
+                  // .where filters entries that are only true
+                  ...widget.categoryOptions.entries.where((category) => category.value).map((category) {
+                    return HeaderPlusTextbox(header: category.key, controller: controlMap[category.key], focusNode: focusNodes[category.key]!);
+                  })
+                ],
+              ),
             ),
           ),
-        ),
+
+          if (activeCategory != null)
+            // Show toolbar
+            Positioned(
+              left: 0,
+              right: 0,
+              child: Material(
+                color: Colors.grey[200],
+                elevation: 5,
+                child: QuillSimpleToolbar(
+                    controller: controlMap[activeCategory]!,
+                    configurations: const QuillSimpleToolbarConfigurations(
+                      toolbarIconAlignment: WrapAlignment.start,
+                      showFontFamily: false,
+                      showFontSize: false,
+                      showBoldButton: true,
+                      showItalicButton: true,
+                      showUnderLineButton: true,
+                      showStrikeThrough: true,
+                      showInlineCode: false,
+                      showCodeBlock: false,
+                      showListNumbers: true,
+                      showListBullets: true,
+                      showListCheck: false,
+                      showHeaderStyle: false,
+                      showQuote: true,
+                      showIndent: true,
+                      showLink: true,
+                      showUndo: true,
+                      showRedo: true,
+                      showBackgroundColorButton: false,
+                      multiRowsDisplay: false,
+                    )
+
+                )
+              )
+            ),
+        ]
       ),
     );
   }
@@ -176,11 +233,13 @@ class _WriteArticleState extends State<WriteArticle> {
 
     // Dispose Controllers
     _titleController.dispose();
-    _controllerTips.dispose();
-    _controllerLnR.dispose();
-    _controllerProjects.dispose();
-    _controllerWYL.dispose();
-    _controllerThoughts.dispose();
+    for (var controller in controlMap.values) {
+      controller.dispose();
+    }
+
+    for (var focusnode in focusNodes.values) {
+      focusnode.dispose();
+    }
 
     super.dispose();
   }
