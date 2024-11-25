@@ -63,7 +63,45 @@ class _YourLibraryState extends State<YourLibrary> {
                     itemCount: listOfUserList.length,
                     itemBuilder: (BuildContext context, int index) {
                       final listModel = listOfUserList[index];
-                      return ListContainerView(list: listModel);
+
+                      return Dismissible(
+                        key: Key(listModel.id.toString()),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) async {
+                          // TODO: Add deletion
+                          ListModel listRemoved = listOfUserList.removeAt(index);
+                          if (listRemoved.id == null) {
+                            throw Exception("Error removing article: article has no id");
+                          }
+                          await ListController.instance.deleteListOfUser(listRemoved);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Deleted list.'),
+                              action: SnackBarAction(
+                                label: 'Undo',
+                                onPressed: () async {
+                                  // Reinstate the list.
+                                  // await ListController.instance.addArticleFromList(widget.list, articleRemoved.id as String);
+                                  await ListController.instance.createListForCurrentUser(listRemoved.title, listRemoved.description);
+                                  setState(() {
+                                    listOfUserList.insert(index, listRemoved);
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: const Icon(Icons.delete, color: Colors.white)
+                        ),
+                        child: ListContainerView(list: listModel)
+                      );
+
+
+                      //return ListContainerView(list: listModel);
                     },
                   )
               );
