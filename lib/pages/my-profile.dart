@@ -85,17 +85,7 @@ class _MyProfilePageState extends State<MyProfilePage>
           )
         ],
       ),
-      body: Obx(() {
-        var user = userController.currentUser.value;
-        var college = userController.currentUserCollege.value;
-        var program = userController.currentUserProgram.value;
-
-        // Show a loading spinner while data is being fetched
-        if (user == null || college == null || program == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return Column(
+      body: Column(
           children: <Widget>[
             ProfileHeader(),
             Container(
@@ -110,7 +100,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextButton(
                         onPressed: () async {
-                          var formattedUsername = user.getName().toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+                          var formattedUsername = userController.currentUser.value?.getName().toLowerCase().replaceAll(RegExp(r'\s+'), '-');
                           final result = await Share.share(
                               'Check out my profile at https://uniguide.com/$formattedUsername.'
                           );
@@ -256,8 +246,7 @@ class _MyProfilePageState extends State<MyProfilePage>
             )
           ) // TabBar and TabBarView
         ],
-      );
-      }),
+      ),
       bottomNavigationBar: StandardBottomBar(curPageIndex: pageIndex),
     );
   }

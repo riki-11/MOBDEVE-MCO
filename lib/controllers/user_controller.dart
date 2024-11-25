@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:mobdeve_mco/authentication/authentication_repository.dart';
 import 'package:mobdeve_mco/controllers/college_controller.dart';
@@ -63,8 +64,12 @@ class UserController extends GetxController {
         'college': collegeId,
         'program': programId,
       });
+      final updatedUserSnapshot = await userDocRef.get();
+      currentUser.value = User.fromDocumentSnapshot(documentSnapshot: updatedUserSnapshot);
 
+      await refreshCollegeAndProgram();
       print("Successfully assigned college and program.");
+
     } catch (e) {
       print("Error assigning college and program: $e");
 
@@ -73,8 +78,22 @@ class UserController extends GetxController {
         print("User document does not exist.");
       }
     }
+    await refreshCollegeAndProgram();
   }
 
+  Future<void> refreshCollegeAndProgram() async {
+    if (currentUser.value?.colleges != null) {
+      currentUserCollege.value = await CollegeController.instance.getCollege(currentUser.value!.colleges);
+    } else {
+      currentUserCollege.value = null;
+    }
+
+    if (currentUser.value?.programs != null) {
+      currentUserProgram.value = await ProgramController.instance.getProgram(currentUser.value!.programs);
+    } else {
+      currentUserProgram.value = null;
+    }
+  }
   Future<void> checkIfAssignedCollege() async {
     final userSnapshot = await firebaseFirestore
         .collection('users')
@@ -98,6 +117,8 @@ class UserController extends GetxController {
       'firstName': firstName,
       'lastName': lastName,
     });
+    var documentSnapshot = await firebaseFirestore.collection('users').doc(auth.currentUser!.uid).get();
+    currentUser.value = User.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
   }
 
   Future<void> updateCurrentUser(User updateUser) async {
@@ -107,6 +128,13 @@ class UserController extends GetxController {
       'college': updateUser.colleges,
       'program': updateUser.programs,
     });
-
+    if(currentUser.value == null){
+      throw Exception("ERROR UPDATING USER: current user is null");
+    }
+    currentUser.value?.firstName = updateUser.firstName;
+    currentUser.value?.lastName = updateUser.lastName;
+    currentUser.value?.colleges = updateUser.colleges;
+    currentUser.value?.programs = updateUser.programs;
+    refreshCollegeAndProgram();
   }
 }
