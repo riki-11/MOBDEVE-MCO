@@ -170,7 +170,6 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
                               key: Key(articleModel.id.toString()),
                               direction: DismissDirection.endToStart,
                               onDismissed: (direction) async {
-                                // TODO: Add deletion behavior
                                 Article articleRemoved = articles.removeAt(index);
                                 if(articleRemoved.id == null){
                                   throw Exception("Error removing article: article has no id");
