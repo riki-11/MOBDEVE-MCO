@@ -16,7 +16,6 @@ class ProgramController extends GetxController {
       try{
       for (var program in query.docs) {
 
-        print("PROGRAM IN STREAM: $program");
         final programModel =
             Program.fromDocumentSnapshot(documentSnapshot: program);
         final collegeSnapshot = await firebaseFirestore
@@ -24,7 +23,6 @@ class ProgramController extends GetxController {
             .doc(program[COLLEGE_ID])
             .get();
         programModel.college = College.fromDocumentSnapshot(documentSnapshot: collegeSnapshot);
-        print("PROGRAM HAS COLLEGE ${programModel.college}");
         programs.add(programModel);
       }} on Exception catch(e){
         print("EXCEPTION IN PROGRAM WAS THROWN");

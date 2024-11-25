@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mobdeve_mco/controllers/program_controller.dart';
 import 'package:mobdeve_mco/controllers/user_controller.dart';
 import 'package:mobdeve_mco/models/user.dart';
+import 'package:mobdeve_mco/pages/my-profile.dart';
 import '../controllers/article_controller.dart';
 import '../controllers/college_controller.dart';
 import '../models/college.dart';
@@ -155,7 +156,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     // TODO: Edit profile according to form.
                     // Selected College, Selected Program, firstname lastname
                     User? currentUser = UserController.instance.currentUser.value;
@@ -173,7 +174,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         colorText: Colors.white);
                         return;
                     }
-                    UserController.instance.updateCurrentUser(User(
+                    await UserController.instance.updateCurrentUser(User(
                         id: currentUser.id,
                         firstName: firstNameController.text.trim(),
                         lastName: lastNameController.text.trim(),
@@ -181,6 +182,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         colleges: selectedCollegeId as String,
                         email: currentUser.email,
                       ));
+
+                    Get.snackbar('Success', 'Successfully edited your profile!',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white);
+
+                    Get.to(const MyProfilePage());
                   },
                   child: Text(
                     'Edit Profile',
