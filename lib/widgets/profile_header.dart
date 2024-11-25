@@ -36,7 +36,11 @@ class _ProfileHeaderState extends State<ProfileHeader> {
 
     // If any of the data is missing, show an error message.
     if (currentUser == null || currentCollege == null || currentProgram == null) {
-      Get.snackbar("Error", "Data is missing");
+      Get.snackbar("Error", "Data is missing",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white);
+
     }
 
     // Trigger a re-render to update the UI when data is fetched
