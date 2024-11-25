@@ -176,10 +176,21 @@ class _ViewArticlesListState extends State<ViewArticlesList> {
                                 }
                                 await ListController.instance.deleteArticleFromList(widget.list, articleRemoved.id as String);
                                 // show notification to confirm deletion
-                                Get.snackbar("Undo", "Remove article from list.",
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  backgroundColor: Colors.green,
-                                  colorText: Colors.white);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text('Removed article from list.'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () async {
+                                        // Reinstate the article to the list
+                                        await ListController.instance.addArticleFromList(widget.list, articleRemoved.id as String);
+                                        setState(() {
+                                          articles.insert(index, articleRemoved);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
                               },
                               background: Container(
                                   color: Colors.red,
