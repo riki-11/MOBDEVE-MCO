@@ -59,75 +59,79 @@ class _ArticleContainerListViewState extends State<ArticleContainerListView> {
             final college = snapshot.data!['college'] as College;
             final author = snapshot.data!['author'] as User;
             return Container(
-                margin: const EdgeInsets.only(bottom: 8.0),
-                padding: const EdgeInsets.all(10),
-                height: 170.0,
-                // color: Colors.green,
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: Theme.of(context).dividerColor,
-                            width: 1.0))),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(author.getName()),
-                            Expanded(
-                              child: Text(
-                                widget.article.title,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ),
-                            Card(
-                              color: Colors.black, // ← And also this.
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 5, right: 5),
-                                child: Text(college.acronym,
+              width: double.infinity, // Ensures the container takes up the full width
+              margin: const EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(author.getName()),
+                          const SizedBox(height: 4.0),
+                          Text(
+                            widget.article.title,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 16.0),
+                          Row(
+                            children: [
+                              Card(
+                                color: Colors.black,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    college.acronym,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Center(
-                                    child: Container(
-                                      color:
-                                          Colors.green, // Inner green container
-                                      height:
-                                          65, // Adjust height to fit inside the purple container
                                     ),
                                   ),
                                 ),
-                                Text(DateFormat.yMMMd().format(
-                                    widget.article.datePosted.toDate())),
-                              ],
-                            ),
-                          )),
-                    ],
-                  ),
-                ));
+                              ),
+                              const SizedBox(width: 8),
+                              Card(
+                                color: Colors.black,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    program.acronym,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  DateFormat.yMMMd()
+                                  .format(widget.article.datePosted.toDate()),
+                                  textAlign: TextAlign.right,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }),
       onTap: () {
         Get.to(ViewArticle(article: widget.article),
