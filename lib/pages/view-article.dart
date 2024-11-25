@@ -239,11 +239,6 @@ class _ViewArticleState extends State<ViewArticle> {
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         const SizedBox(height: 8.0),
-                        Text(
-                            "This is a short description of the article",
-                            style: Theme.of(context).textTheme.bodyLarge
-                        ),
-                        const SizedBox(height: 8.0),
                         Row(
                           children: [
                             Flex(
